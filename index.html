@@ -4,9 +4,15 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const liveId = urlParams.get('liveId') || 'default';
-        // Thay bằng link livestream thật nếu có
-        const tiktokLiveUrl = liveId; // Bot sẽ gửi link thật vào đây
-        window.location.href = tiktokLiveUrl;
+        // Deep link TikTok để mở ứng dụng
+        const tiktokDeepLink = `snssdk1233://live?liveId=${liveId}`;
+        // Link fallback nếu không mở được ứng dụng (mở trình duyệt)
+        const tiktokFallbackUrl = `https://www.tiktok.com/@jimmyhoang99/live?liveId=${liveId}`;
+        // Thử mở deep link, nếu không được thì mở fallback
+        window.location.href = tiktokDeepLink;
+        setTimeout(() => {
+            window.location.href = tiktokFallbackUrl;
+        }, 1000);
     </script>
 </body>
 </html>
