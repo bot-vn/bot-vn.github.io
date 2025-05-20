@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const liveId = urlParams.get('liveId') || 'default';
+        const tiktokLiveUrl = `https://www.tiktok.com/@jimmyhoang99/live?liveId=${liveId}`;
+        window.location.href = tiktokLiveUrl;
+    </script>
+</body>
+</html>
