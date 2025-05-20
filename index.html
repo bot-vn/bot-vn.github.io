@@ -4,7 +4,8 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const liveId = urlParams.get('liveId') || 'default';
-        const tiktokLiveUrl = `https://www.tiktok.com/@jimmyhoang99/live?liveId=${liveId}`;
+        // Thay bằng link livestream thật nếu có
+        const tiktokLiveUrl = liveId; // Bot sẽ gửi link thật vào đây
         window.location.href = tiktokLiveUrl;
     </script>
 </body>
