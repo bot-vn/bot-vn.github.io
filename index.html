@@ -1,18 +1,72 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <title>Chuyển hướng đến TikTok Livestream</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .message {
+            text-align: center;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
 <body>
+    <div class="message">
+        Đang chuyển hướng đến TikTok Livestream...<br>
+        Nếu không tự động chuyển hướng, <a id="fallbackLink" href="#">nhấn vào đây</a>.
+    </div>
     <script>
+        // Hàm giải mã username từ mã
+        function decodeUsername(code) {
+            const encodedUsername = code.substring(10);
+            return atob(encodedUsername);
+        }
+
         const urlParams = new URLSearchParams(window.location.search);
-        const liveId = urlParams.get('liveId') || 'default';
-        const realLink = urlParams.get('realLink') || 'https://www.tiktok.com';
-        // Deep link TikTok để mở ứng dụng trên iOS
-        const tiktokDeepLink = `snssdk1233://live?link=${encodeURIComponent(realLink)}`;
-        // Thử mở deep link trước
-        window.location.href = tiktokDeepLink;
-        // Nếu không mở được ứng dụng, fallback về link thật
-        setTimeout(() => {
-            window.location.href = realLink;
-        }, 1000);
+        const code = urlParams.keys().next().value || ''; // Lấy mã từ query string (không có key cụ thể)
+
+        if (!code) {
+            document.querySelector('.message').innerHTML = 'Lỗi: Mã không hợp lệ<br><a href="https://www.tiktok.com">Quay lại TikTok</a>';
+        } else {
+            try {
+                const username = decodeUsername(code);
+                const realLink = `https://www.tiktok.com/@${username}/live`;
+
+                // Kiểm tra thiết bị để chọn deep link
+                const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+                const isAndroid = /Android/i.test(navigator.userAgent);
+                let tiktokDeepLink;
+                if (isIOS) {
+                    tiktokDeepLink = `snssdk1233://live?link=${encodeURIComponent(realLink)}`;
+                } else if (isAndroid) {
+                    tiktokDeepLink = `tiktok://live?link=${encodeURIComponent(realLink)}`;
+                } else {
+                    tiktokDeepLink = realLink;
+                }
+
+                // Cập nhật link fallback
+                document.getElementById('fallbackLink').href = realLink;
+
+                // Thử mở deep link
+                window.location.href = tiktokDeepLink;
+
+                // Fallback nếu không mở được ứng dụng
+                setTimeout(() => {
+                    window.location.href = realLink;
+                }, 2000);
+            } catch (error) {
+                document.querySelector('.message').innerHTML = `Lỗi: ${error.message}<br><a href="https://www.tiktok.com">Quay lại TikTok</a>`;
+            }
+        }
     </script>
 </body>
 </html>
