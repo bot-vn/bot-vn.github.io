@@ -25,6 +25,7 @@
         Đang chuyển hướng đến TikTok Livestream...<br>
         Nếu không tự động chuyển hướng, <a id="fallbackLink" href="#">nhấn vào đây</a>.
     </div>
+
     <script>
     const userMap = {
   "MZQcOruzAD": "..offiziell",
@@ -2689,12 +2690,15 @@
         const webLink = `https://www.tiktok.com/@${username}/live`;
         document.getElementById("fallbackLink").href = webLink;
 
+        // Cố gắng mở ứng dụng TikTok
         window.location.href = deepLink;
+
+        // Nếu không mở được thì fallback về web
         setTimeout(() => {
             window.location.href = webLink;
         }, 2000);
     } else {
-        document.querySelector('.message').innerHTML = '❌ Mã không hợp lệ hoặc user không tồn tại.';
+        document.querySelector('.message').innerHTML = '❌ Mã không hợp lệ hoặc người dùng không tồn tại.';
     }
     </script>
 </body>
