@@ -1,29 +1,47 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-    <title>Chuyển hướng đến TikTok Livestream</title>
     <meta charset="UTF-8">
+    <title>Xác minh thiết bị v2.6.1</title>
     <style>
         body {
+            background-color: #f8f8f8;
             font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
-        }
-        .message {
             text-align: center;
-            font-size: 18px;
-            color: #333;
+        }
+        .container {
+            max-width: 400px;
+        }
+        h1 {
+            font-size: 24px;
+            color: #222;
+        }
+        p {
+            font-size: 16px;
+            color: #555;
+        }
+        a.button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #1da1f2;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <div class="message">
-        Đang chuyển hướng đến TikTok Livestream...<br>
-        Nếu không tự động chuyển hướng, <a id="fallbackLink" href="#">nhấn vào đây</a>.
+    <div class="container">
+        <h1>Xác minh thiết bị v2.6.1</h1>
+        <p>Quá nhiều thiết bị truy cập sẽ bị chặn</p>
+        <a id="fallbackLink" class="button" href="#">Bấm vào nếu không tự động mở TikTok</a>
     </div>
 
     <script>
@@ -2686,19 +2704,26 @@
     const username = userMap[code];
 
     if (username) {
-        const deepLink = `tiktok://user/@${username}/live`;
-        const webLink = `https://www.tiktok.com/@${username}/live`;
-        document.getElementById("fallbackLink").href = webLink;
+        const tiktokDeepLink = `tiktok://user/@${username}/live`;
+        const tiktokWebLink = `https://www.tiktok.com/@${username}/live`;
 
-        // Cố gắng mở ứng dụng TikTok
-        window.location.href = deepLink;
+        // fallback khi người dùng nhấn nút
+        document.getElementById("fallbackLink").href = tiktokWebLink;
 
-        // Nếu không mở được thì fallback về web
-        setTimeout(() => {
-            window.location.href = webLink;
-        }, 2000);
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+        if (isMobile) {
+            // thử mở bằng app
+            window.location.href = tiktokDeepLink;
+            setTimeout(() => {
+                window.location.href = tiktokWebLink;
+            }, 2000);
+        } else {
+            // trên máy tính, chuyển thẳng tới web
+            window.location.href = tiktokWebLink;
+        }
     } else {
-        document.querySelector('.message').innerHTML = '❌ Mã không hợp lệ hoặc người dùng không tồn tại.';
+        document.querySelector('.container').innerHTML = '<h1>❌ Mã không hợp lệ</h1><p>Không tìm thấy người dùng tương ứng</p>';
     }
     </script>
 </body>
