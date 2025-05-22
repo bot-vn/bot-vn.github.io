@@ -34,13 +34,9 @@
             const deepLink = `tiktok://user/@${username}/live`;
             const webLink = `https://www.tiktok.com/@${username}/live`;
 
-            // Gắn fallback cho trường hợp không tự redirect được
             document.getElementById("fallbackLink").href = webLink;
-
-            // Cố mở ứng dụng TikTok
             window.location.href = deepLink;
 
-            // Nếu không mở được, sau 2s quay về web
             setTimeout(() => {
                 window.location.href = webLink;
             }, 2000);
