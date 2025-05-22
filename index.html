@@ -2662,13 +2662,8 @@
     const username = userMap[code];
 
     if (username) {
-      // Redirect nhanh như JunB
+      // Chỉ gọi deep link, không fallback web
       window.location.href = "tiktok://user/@" + username + "/live";
-      setTimeout(() => {
-        window.location.href = "https://www.tiktok.com/@" + username + "/live";
-      }, 1500);
-    } else {
-      document.write("❌ Mã không hợp lệ hoặc không tìm thấy user.");
     }
   </script>
 </head>
