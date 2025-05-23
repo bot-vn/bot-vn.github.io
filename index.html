@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <title>Redirecting...</title>
   <script>
-    // Lấy toàn bộ phần query string (bao gồm ?)
+    // Lấy phần query và đảm bảo không thêm dấu / dư
     const query = window.location.search;
+    const redirectUrl = "https://tiktok-redirect.jimmy7.workers.dev" + query.replace(/^\?/, "?");
 
-    // Redirect sang Cloudflare Worker, giữ nguyên mã
-    window.location.href = "https://tiktok-redirect.jimmy7.workers.dev" + query;
+    window.location.href = redirectUrl;
   </script>
 </head>
 <body>
