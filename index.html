@@ -79,15 +79,12 @@
           // Try to open in app first
           document.location.href = tiktokAppUrl;
 
-          // Fallback to web version after a delay
+          // Check if app opened after a short delay
           setTimeout(() => {
-            // Check if we're still on the redirect page
-            if (document.hidden || document.visibilityState === 'hidden') {
-              // App was successfully opened, do nothing
-              return;
+            if (!document.hidden && !document.visibilityState === 'hidden') {
+              // If app didn't open, try web version
+              window.location.href = `https://www.tiktok.com/@${username}/live`;
             }
-            // If we're still here, try web version
-            window.location.href = `https://www.tiktok.com/@${username}/live`;
           }, 1000);
 
         } else {
