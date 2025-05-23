@@ -1,8 +1,7 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <title>Xác minh thiết bị v2.6.1</title>
   <meta name="robots" content="noindex,nofollow">
   <meta property="og:title" content="">
@@ -13,14 +12,15 @@
     body {
       font-family: sans-serif;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       height: 100vh;
-      text-align: center;
     }
     #container {
+      text-align: center;
       border: 2px solid red;
-      padding: 40px;
+      padding: 30px;
+      border-radius: 8px;
     }
     button {
       background: #1080f0;
@@ -29,35 +29,46 @@
       border: none;
       font-size: 16px;
       border-radius: 4px;
+      margin-top: 15px;
     }
   </style>
 </head>
 <body>
   <div id="container">
     <h2>Xác minh thiết bị v2.6.1</h2>
-    <p>Quá nhiều thiết bị truy cập sẽ bị chặn</p>
-    <button onclick="redirect()">Bấm vào nếu không tự động mở TikTok</button>
+    <p id="status">Đang kiểm tra thiết bị và trạng thái LIVE...</p>
+    <button onclick="retry()">Thử lại nếu không mở TikTok</button>
   </div>
 
   <script>
-    const roomIdMap = {
-      'kVUqNHp8E8EUS': '7138123456789012345'
-    };
+    async function redirectToTikTokLive() {
+      try {
+        const encoded = location.search.slice(1);
+        const padded = encoded.padEnd(Math.ceil(encoded.length / 4) * 4, '=');
+        const username = atob(padded);
 
-    const code = location.search.slice(1);
-    const roomId = roomIdMap[code];
+        const res = await fetch(`https://tiktok.eulerstream.com/webcast/room_info?uniqueId=${username}`, {
+          headers: { 'x-api-key': 'YzU5NmUzYWZkYjViZGE1ZjU1ZWZjZmQ0ZTQyOGY0NzI3NjgxMDM3Mjk4ZmJiNDU4NGUzZjQ4' }
+        });
 
-    if (roomId) {
-      setTimeout(() => {
-        location.href = `https://www.tiktok.com/live/room/${roomId}`;
-      }, 100);
-    }
+        const json = await res.json();
+        const roomId = json?.data?.room_info?.id;
 
-    function redirect() {
-      if (roomId) {
-        location.href = `https://www.tiktok.com/live/room/${roomId}`;
+        if (roomId) {
+          location.href = `https://www.tiktok.com/live/room/${roomId}`;
+        } else {
+          document.getElementById("status").innerText = "❌ Không tìm thấy phòng LIVE.";
+        }
+      } catch (e) {
+        document.getElementById("status").innerText = "❌ Lỗi kết nối API.";
       }
     }
+
+    function retry() {
+      redirectToTikTokLive();
+    }
+
+    redirectToTikTokLive();
   </script>
 </body>
 </html>
