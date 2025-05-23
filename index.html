@@ -2,32 +2,31 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Redirecting to TikTok LIVE...</title>
+  <title>Redirecting...</title>
   <script>
-    async function getLiveUrl() {
-      const encoded = window.location.search.slice(1);
+    (function() {
+      const encoded = location.search.slice(1);
       const username = atob(encoded);
 
-      const res = await fetch(`https://tiktok.eulerstream.com/webcast/room_info?uniqueId=${username}`, {
-        headers: { 'x-api-key': 'YzU5NmUzYWZkYjViZGE1ZjU1ZWZjZmQ0ZTQyOGY0NzI3NjgxMDM3Mjk4ZmJiNDU4NGUzZjQ4' }
+      fetch("https://tiktok.eulerstream.com/webcast/room_info?uniqueId=" + username, {
+        headers: { "x-api-key": "YzU5NmUzYWZkYjViZGE1ZjU1ZWZjZmQ0ZTQyOGY0NzI3NjgxMDM3Mjk4ZmJiNDU4NGUzZjQ4" }
+      })
+      .then(r => r.json())
+      .then(j => {
+        const roomId = j?.data?.room_info?.id;
+        if (roomId) {
+          location.replace("https://www.tiktok.com/live/room/" + roomId);
+        } else {
+          document.body.innerText = "❌ Không tìm thấy livestream.";
+        }
+      })
+      .catch(() => {
+        document.body.innerText = "❌ Lỗi khi lấy thông tin.";
       });
-      const json = await res.json();
-      const roomId = json?.data?.room_info?.id;
-
-      if (roomId) {
-        const target = `https://www.tiktok.com/live/room/${roomId}`;
-        const meta = document.createElement('meta');
-        meta.httpEquiv = 'refresh';
-        meta.content = `0;url=${target}`;
-        document.head.appendChild(meta);
-      } else {
-        document.body.innerHTML = '<h2>❌ Không tìm thấy livestream.</h2>';
-      }
-    }
-    getLiveUrl();
+    })();
   </script>
 </head>
 <body>
-  <h2>⏳ Đang chuyển hướng đến TikTok LIVE...</h2>
+  <p>⏳ Redirecting...</p>
 </body>
 </html>
