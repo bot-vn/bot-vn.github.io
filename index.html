@@ -69,17 +69,10 @@
           // Create platform-specific deep links
           let tiktokAppUrl;
           if (isIOS) {
-            // iOS deep links
-            tiktokAppUrl = `tiktok://user/${username}/live`;
-            // Thử các scheme khác nếu không hoạt động
-            setTimeout(() => {
-              if (!document.hidden) {
-                tiktokAppUrl = `snssdk1233://live/${roomId}`;
-                document.location.href = tiktokAppUrl;
-              }
-            }, 500);
+            // iOS deep link
+            tiktokAppUrl = `snssdk1180://live?room_id=${roomId}`;
           } else {
-            // Android deep links
+            // Android deep link
             tiktokAppUrl = `tiktok://live/${roomId}`;
           }
 
@@ -93,12 +86,8 @@
               // App was successfully opened, do nothing
               return;
             }
-            // If we're still here, try alternative URLs
-            if (isIOS) {
-              window.location.href = `https://vm.tiktok.com/${username}/live`;
-            } else {
-              window.location.href = `https://www.tiktok.com/@${username}/live`;
-            }
+            // If we're still here, try web version
+            window.location.href = `https://www.tiktok.com/@${username}/live`;
           }, 1000);
 
         } else {
