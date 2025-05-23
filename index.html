@@ -1,57 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Redirecting to TikTok LIVE</title>
-  <style>
-    body { font-family: sans-serif; text-align: center; padding: 50px; }
-  </style>
+  <title>Redirecting to TikTok LIVE...</title>
+  <script>
+    async function getLiveUrl() {
+      const encoded = window.location.search.slice(1);
+      const username = atob(encoded);
+
+      const res = await fetch(`https://tiktok.eulerstream.com/webcast/room_info?uniqueId=${username}`, {
+        headers: { 'x-api-key': 'YzU5NmUzYWZkYjViZGE1ZjU1ZWZjZmQ0ZTQyOGY0NzI3NjgxMDM3Mjk4ZmJiNDU4NGUzZjQ4' }
+      });
+      const json = await res.json();
+      const roomId = json?.data?.room_info?.id;
+
+      if (roomId) {
+        const target = `https://www.tiktok.com/live/room/${roomId}`;
+        const meta = document.createElement('meta');
+        meta.httpEquiv = 'refresh';
+        meta.content = `0;url=${target}`;
+        document.head.appendChild(meta);
+      } else {
+        document.body.innerHTML = '<h2>❌ Không tìm thấy livestream.</h2>';
+      }
+    }
+    getLiveUrl();
+  </script>
 </head>
 <body>
-  <h2>⏳ Đang chuyển đến TikTok LIVE...</h2>
-  <p>Nếu không tự mở, hãy nhấn vào nút bên dưới:</p>
-  <a id="manualLink" href="#" style="font-size: 18px;">🔗 Mở TikTok LIVE</a>
-
-  <script>
-    function getBase64Param() {
-      const query = location.search.slice(1);
-      return query;
-    }
-
-    const username = atob(getBase64Param());
-
-    fetch(`https://tiktok.eulerstream.com/webcast/room_info?uniqueId=${username}`, {
-      headers: { 'x-api-key': 'YzU5NmUzYWZkYjViZGE1ZjU1ZWZjZmQ0ZTQyOGY0NzI3NjgxMDM3Mjk4ZmJiNDU4NGUzZjQ4' }
-    })
-    .then(res => res.json())
-    .then(data => {
-      const roomId = data?.data?.room_info?.id;
-      if (roomId) {
-        const tiktokUrl = `https://www.tiktok.com/live/room/${roomId}`;
-        document.getElementById('manualLink').href = tiktokUrl;
-
-        // 🧠 Deep link iOS & Android
-        const ua = navigator.userAgent.toLowerCase();
-        const isIOS = /iphone|ipad|ipod/.test(ua);
-        const isAndroid = /android/.test(ua);
-
-        if (isIOS) {
-          window.location = `tiktok://live/${roomId}`;
-          setTimeout(() => window.location = tiktokUrl, 1500); // fallback
-        } else if (isAndroid) {
-          window.location = `intent://www.tiktok.com/live/room/${roomId}#Intent;package=com.zhiliaoapp.musically;scheme=https;end`;
-          setTimeout(() => window.location = tiktokUrl, 1500); // fallback
-        } else {
-          window.location = tiktokUrl;
-        }
-
-      } else {
-        document.body.innerHTML = '<h2>❌ Không tìm thấy livestream</h2>';
-      }
-    })
-    .catch(err => {
-      document.body.innerHTML = `<h2>❌ Lỗi: ${err.message}</h2>`;
-    });
-  </script>
+  <h2>⏳ Đang chuyển hướng đến TikTok LIVE...</h2>
 </body>
 </html>
