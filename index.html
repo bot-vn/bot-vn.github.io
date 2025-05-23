@@ -8,6 +8,12 @@
   <meta property="og:description" content="">
   <meta property="og:image" content="">
   <meta property="twitter:card" content="summary">
+  <!-- Add meta tags for better mobile handling -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <!-- Prevent page from being added to browser history -->
+  <meta name="robots" content="noindex,nofollow">
   <style>
     body {
       font-family: sans-serif;
@@ -36,7 +42,7 @@
 <body>
   <div id="container">
     <h2>Xác minh thiết bị v2.6.1</h2>
-    <p id="status">Đang kiểm tra thiết bị và trạng thái LIVE...</p>
+    <p id="status">Đang chuyển hướng tới TikTok LIVE...</p>
     <button onclick="retry()">Thử lại nếu không mở TikTok</button>
   </div>
 
@@ -55,7 +61,32 @@
         const roomId = json?.data?.room_info?.id;
 
         if (roomId) {
-          location.href = `https://www.tiktok.com/live/room/${roomId}`;
+          // Get user agent to detect platform
+          const userAgent = navigator.userAgent.toLowerCase();
+          const isIOS = /iphone|ipad|ipod/.test(userAgent);
+          const isAndroid = /android/.test(userAgent);
+
+          // Create platform-specific deep links
+          const tiktokAppUrl = isIOS 
+            ? `tiktok://live/room/${roomId}`
+            : `tiktok://live?room_id=${roomId}`;
+          
+          const webUrl = `https://www.tiktok.com/live/room/${roomId}`;
+
+          // Try to open in app first
+          window.location.replace(tiktokAppUrl);
+
+          // Fallback to web version after a short delay
+          setTimeout(() => {
+            // Check if we're still on the redirect page
+            if (document.hidden || document.visibilityState === 'hidden') {
+              // App was successfully opened, do nothing
+              return;
+            }
+            // If we're still here, app probably didn't open
+            window.location.replace(webUrl);
+          }, 1500);
+
         } else {
           document.getElementById("status").innerText = "❌ Không tìm thấy phòng LIVE.";
         }
@@ -66,6 +97,11 @@
 
     function retry() {
       redirectToTikTokLive();
+    }
+
+    // Remove this page from browser history
+    if (window.history && window.history.replaceState) {
+      window.history.replaceState(null, document.title, window.location.href);
     }
 
     redirectToTikTokLive();
