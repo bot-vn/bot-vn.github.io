@@ -2665,8 +2665,8 @@
     if (!username) {
       document.write("❌ Invalid or unknown code.");
     } else {
-      //const deepLink = `tiktok://user/${username}/live`;
-      const deepLink = 'snssdk1180://live?room_id=7507363662455786262';
+      const deepLink = `tiktok://user/${username}/live`;
+      //const deepLink = 'snssdk1180://live?room_id=7507363662455786262';
       const fallback = "https://www.tiktok.com/@" + username + "/live";
       window.location = deepLink;
       setTimeout(() => { window.location = fallback }, 2000);
