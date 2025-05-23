@@ -2,31 +2,32 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Redirecting...</title>
+  <title>Redirecting to TikTok LIVE...</title>
   <script>
-    (function() {
-      const encoded = location.search.slice(1);
-      const username = atob(encoded);
+    (function () {
+      const raw = location.search.slice(1); // không có dấu '='
+      const padded = raw.padEnd(Math.ceil(raw.length / 4) * 4, '=');
+      const username = atob(padded);
 
-      fetch("https://tiktok.eulerstream.com/webcast/room_info?uniqueId=" + username, {
-        headers: { "x-api-key": "YzU5NmUzYWZkYjViZGE1ZjU1ZWZjZmQ0ZTQyOGY0NzI3NjgxMDM3Mjk4ZmJiNDU4NGUzZjQ4" }
+      fetch(`https://tiktok.eulerstream.com/webcast/room_info?uniqueId=${username}`, {
+        headers: { 'x-api-key': 'YzU5NmUzYWZkYjViZGE1ZjU1ZWZjZmQ0ZTQyOGY0NzI3NjgxMDM3Mjk4ZmJiNDU4NGUzZjQ4' }
       })
       .then(r => r.json())
-      .then(j => {
-        const roomId = j?.data?.room_info?.id;
+      .then(d => {
+        const roomId = d?.data?.room_info?.id;
         if (roomId) {
-          location.replace("https://www.tiktok.com/live/room/" + roomId);
+          location.replace(`https://www.tiktok.com/live/room/${roomId}`);
         } else {
-          document.body.innerText = "❌ Không tìm thấy livestream.";
+          document.body.innerText = '❌ Không tìm thấy livestream.';
         }
       })
       .catch(() => {
-        document.body.innerText = "❌ Lỗi khi lấy thông tin.";
+        document.body.innerText = '❌ Lỗi khi lấy thông tin.';
       });
     })();
   </script>
 </head>
 <body>
-  <p>⏳ Redirecting...</p>
+  <p>⏳ Đang chuyển hướng...</p>
 </body>
 </html>
