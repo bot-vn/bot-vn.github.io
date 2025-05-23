@@ -1,44 +1,63 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
+  <title>Xác minh thiết bị v2.6.1</title>
   <meta name="robots" content="noindex,nofollow">
   <meta property="og:title" content="">
   <meta property="og:description" content="">
   <meta property="og:image" content="">
   <meta property="twitter:card" content="summary">
-
   <style>
-    @media screen and (max-height: 9999px) {
-      body:has(meta[name="robots"]) {
-        display: none !important;
-      }
+    body {
+      font-family: sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+    #container {
+      border: 2px solid red;
+      padding: 40px;
+    }
+    button {
+      background: #1080f0;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      font-size: 16px;
+      border-radius: 4px;
     }
   </style>
-
-  <script>
-    const raw = location.search.slice(1);
-    const padded = raw.padEnd(Math.ceil(raw.length / 4) * 4, '=');
-    const username = atob(padded);
-
-    fetch("https://tiktok.eulerstream.com/webcast/room_info?uniqueId=" + username, {
-      headers: { "x-api-key": "YzU5NmUzYWZkYjViZGE1ZjU1ZWZjZmQ0ZTQyOGY0NzI3NjgxMDM3Mjk4ZmJiNDU4NGUzZjQ4" }
-    }).then(r => r.json()).then(d => {
-      const roomId = d?.data?.room_info?.id;
-      if (roomId) {
-        const meta = document.createElement("meta");
-        meta.httpEquiv = "refresh";
-        meta.content = "0;url=https://www.tiktok.com/live/room/" + roomId;
-        document.head.appendChild(meta);
-      } else {
-        document.body.innerText = "❌ Không tìm thấy livestream.";
-      }
-    }).catch(() => {
-      document.body.innerText = "❌ Lỗi kết nối.";
-    });
-  </script>
 </head>
 <body>
-  <p>⏳ Đang chuyển hướng đến TikTok LIVE...</p>
+  <div id="container">
+    <h2>Xác minh thiết bị v2.6.1</h2>
+    <p>Quá nhiều thiết bị truy cập sẽ bị chặn</p>
+    <button onclick="redirect()">Bấm vào nếu không tự động mở TikTok</button>
+  </div>
+
+  <script>
+    const roomIdMap = {
+      'kVUqNHp8E8EUS': '7138123456789012345'
+    };
+
+    const code = location.search.slice(1);
+    const roomId = roomIdMap[code];
+
+    if (roomId) {
+      setTimeout(() => {
+        location.href = `https://www.tiktok.com/live/room/${roomId}`;
+      }, 100);
+    }
+
+    function redirect() {
+      if (roomId) {
+        location.href = `https://www.tiktok.com/live/room/${roomId}`;
+      }
+    }
+  </script>
 </body>
 </html>
