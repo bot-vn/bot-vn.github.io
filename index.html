@@ -59,7 +59,6 @@
 
         const json = await res.json();
         const roomId = json?.data?.room_info?.id;
-        console.log('roomId ' + roomId);
 
         if (roomId) {
           // Get user agent to detect platform
@@ -68,25 +67,39 @@
           const isAndroid = /android/.test(userAgent);
 
           // Create platform-specific deep links
-          const tiktokAppUrl = isIOS 
-            ? `tiktok://live/room/${roomId}`
-            : `tiktok://live?room_id=${roomId}`;
-          
-          const webUrl = `https://www.tiktok.com/live/room/${roomId}`;
+          let tiktokAppUrl;
+          if (isIOS) {
+            // iOS deep links
+            tiktokAppUrl = `tiktok://user/${username}/live`;
+            // Thử các scheme khác nếu không hoạt động
+            setTimeout(() => {
+              if (!document.hidden) {
+                tiktokAppUrl = `snssdk1233://live/${roomId}`;
+                document.location.href = tiktokAppUrl;
+              }
+            }, 500);
+          } else {
+            // Android deep links
+            tiktokAppUrl = `tiktok://live/${roomId}`;
+          }
 
           // Try to open in app first
-          window.location.replace(tiktokAppUrl);
+          document.location.href = tiktokAppUrl;
 
-          // Fallback to web version after a short delay
+          // Fallback to web version after a delay
           setTimeout(() => {
             // Check if we're still on the redirect page
             if (document.hidden || document.visibilityState === 'hidden') {
               // App was successfully opened, do nothing
               return;
             }
-            // If we're still here, app probably didn't open
-            window.location.replace(webUrl);
-          }, 1500);
+            // If we're still here, try alternative URLs
+            if (isIOS) {
+              window.location.href = `https://vm.tiktok.com/${username}/live`;
+            } else {
+              window.location.href = `https://www.tiktok.com/@${username}/live`;
+            }
+          }, 1000);
 
         } else {
           document.getElementById("status").innerText = "❌ Không tìm thấy phòng LIVE.";
