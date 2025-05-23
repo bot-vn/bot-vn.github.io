@@ -2667,7 +2667,7 @@
     } else {
       const deepLink = `tiktok://user/${username}/live`;
       const fallback = "https://www.tiktok.com/@" + username + "/live";
-      window.location = fallback;
+      window.location = deepLink;
       setTimeout(() => { window.location = fallback }, 2000);
       setTimeout(() => { window.close(); }, 3000);
     }
