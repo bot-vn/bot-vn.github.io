@@ -4,16 +4,7 @@
   <meta charset="UTF-8">
   <title>Xác minh thiết bị v2.6.1</title>
   <meta name="robots" content="noindex,nofollow">
-  <meta property="og:title" content="">
-  <meta property="og:description" content="">
-  <meta property="og:image" content="">
-  <meta property="twitter:card" content="summary">
-  <!-- Add meta tags for better mobile handling -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="mobile-web-app-capable" content="yes">
-  <!-- Prevent page from being added to browser history -->
-  <meta name="robots" content="noindex,nofollow">
   <style>
     body {
       font-family: sans-serif;
@@ -51,50 +42,34 @@
       try {
         const encoded = location.search.slice(1);
         const padded = encoded.padEnd(Math.ceil(encoded.length / 4) * 4, '=');
-        const username = atob(padded);
+        const roomId = atob(padded);
 
-        const res = await fetch(`https://tiktok.eulerstream.com/webcast/room_info?uniqueId=${username}`, {
-          headers: { 'x-api-key': 'YzU5NmUzYWZkYjViZGE1ZjU1ZWZjZmQ0ZTQyOGY0NzI3NjgxMDM3Mjk4ZmJiNDU4NGUzZjQ4' }
-        });
+        // Detect platform
+        const userAgent = navigator.userAgent.toLowerCase();
+        const isIOS = /iphone|ipad|ipod/.test(userAgent);
+        const isAndroid = /android/.test(userAgent);
 
-        const json = await res.json();
-        const roomId = json?.data?.room_info?.id;
-
-        if (roomId) {
-          // Get user agent to detect platform
-          const userAgent = navigator.userAgent.toLowerCase();
-          const isIOS = /iphone|ipad|ipod/.test(userAgent);
-          const isAndroid = /android/.test(userAgent);
-
-          // Create platform-specific deep links
-          let tiktokAppUrl;
-          if (isIOS) {
-            // iOS deep link
-            tiktokAppUrl = `snssdk1180://live?room_id=${roomId}`;
-          } else {
-            // Android deep link
-            tiktokAppUrl = `tiktok://live/${roomId}`;
-          }
-
-          // Try to open in app first
-          document.location.href = tiktokAppUrl;
-
-          // Close this window if app opens successfully
-          setTimeout(() => {
-            if (document.hidden || document.visibilityState === 'hidden') {
-              // App opened successfully, close this window
-              window.close();
-            } else {
-              // If app didn't open, try web version
-              window.location.href = `https://www.tiktok.com/@${username}/live`;
-            }
-          }, 1000);
-
+        let tiktokAppUrl;
+        if (isIOS) {
+          tiktokAppUrl = `snssdk1180://live?room_id=${roomId}`;
         } else {
-          document.getElementById("status").innerText = "❌ Không tìm thấy phòng LIVE.";
+          tiktokAppUrl = `tiktok://live/${roomId}`;
         }
+
+        // Try open in app
+        document.location.href = tiktokAppUrl;
+
+        // Fallback to web
+        setTimeout(() => {
+          if (document.hidden || document.visibilityState === 'hidden') {
+            window.close();
+          } else {
+            window.location.href = `https://www.tiktok.com/live/room/${roomId}`;
+          }
+        }, 1000);
+
       } catch (e) {
-        document.getElementById("status").innerText = "❌ Lỗi kết nối API.";
+        document.getElementById("status").innerText = "❌ Lỗi xử lý roomId.";
       }
     }
 
@@ -102,7 +77,6 @@
       redirectToTikTokLive();
     }
 
-    // Remove this page from browser history
     if (window.history && window.history.replaceState) {
       window.history.replaceState(null, document.title, window.location.href);
     }
