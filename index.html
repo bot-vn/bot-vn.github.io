@@ -1,92 +1,87 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
+  <title>Bot</title>
+  <meta name="robots" content="noindex,nofollow">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BOT JIMMY-HOANG V2.1</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: sans-serif;
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       height: 100vh;
-      margin: 0;
-      background-color: #f0f0f0;
-      color: #333;
+    }
+    #container {
       text-align: center;
+      border: 2px solid red;
+      padding: 30px;
+      border-radius: 8px;
     }
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-    }
-    p {
-      font-size: 1.2rem;
-      margin: 0.5rem 0;
-    }
-    a {
-      display: inline-block;
-      padding: 0.75rem 1.5rem;
-      background-color: #fe2c55;
+    button {
+      background: #0000FF;
       color: white;
-      text-decoration: none;
-      border-radius: 5px;
-      font-size: 1.1rem;
-      margin-top: 1rem;
-    }
-    a:hover {
-      background-color: #e0264b;
-    }
-    .error {
-      color: #d32f2f;
-      font-weight: bold;
+      padding: 10px 20px;
+      border: none;
+      font-size: 16px;
+      border-radius: 4px;
+      margin-top: 15px;
     }
   </style>
 </head>
 <body>
-  <h1>BOT JIMMY-HOANG V2.1</h1>
-  <p id="status">Đang triệu hồi TikTok LIVE...</p>
-  <p id="username"></p>
-  <div id="link"></div>
+  <div id="container">
+    <h2>BOT JIMMY-HOANG V2.1</h2>
+    <p id="status">Đang triệu hồi TikTok LIVE...</p>
+    <button onclick="retry()">Nếu phép lỗi, hãy thử lại</button>
+  </div>
 
   <script>
-    function getQueryParam() {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get('') || null; // Lấy query param rỗng (dạng ?encodedUsername)
-    }
-
-    function decodeBase64(str) {
+    async function redirectToTikTokLive() {
       try {
-        return atob(str);
+        const encoded = location.search.slice(1);
+        const padded = encoded.padEnd(Math.ceil(encoded.length / 4) * 4, '=');
+        const roomId = atob(padded);
+
+        // Detect platform
+        const userAgent = navigator.userAgent.toLowerCase();
+        const isIOS = /iphone|ipad|ipod/.test(userAgent);
+        const isAndroid = /android/.test(userAgent);
+
+        let tiktokAppUrl;
+        if (isIOS) {
+          tiktokAppUrl = `snssdk1180://live?room_id=${roomId}`;
+        } else {
+          tiktokAppUrl = `tiktok://live/${roomId}`;
+        }
+
+        // Try open in app
+        document.location.href = tiktokAppUrl;
+
+        // Fallback to web
+        setTimeout(() => {
+          if (document.hidden || document.visibilityState === 'hidden') {
+            window.close();
+          } else {
+            window.location.href = `https://www.tiktok.com/live/room/${roomId}`;
+          }
+        }, 1000);
+
       } catch (e) {
-        return null;
+        document.getElementById("status").innerText = "❌ Có lỗi rồi - Liên hệ Telegram: @JimmyHoang68.";
       }
     }
 
-    window.onload = () => {
-      const encodedUsername = getQueryParam();
-      const usernameElement = document.getElementById('username');
-      const linkElement = document.getElementById('link');
-      const statusElement = document.getElementById('status');
+    function retry() {
+      redirectToTikTokLive();
+    }
 
-      if (encodedUsername) {
-        const username = decodeBase64(encodedUsername);
-        if (username) {
-          usernameElement.textContent = `@${username}`;
-          const tiktokLiveLink = `https://www.tiktok.com/@${username}/live`;
-          linkElement.innerHTML = `<a href="${tiktokLiveLink}">Xem LIVE của @${username} trên TikTok</a>`;
-        } else {
-          statusElement.textContent = 'Lỗi: Không thể giải mã username!';
-          statusElement.classList.add('error');
-          linkElement.textContent = 'Nếu phép lỗi, hãy thử lại';
-        }
-      } else {
-        statusElement.textContent = 'Lỗi: Không tìm thấy username!';
-        statusElement.classList.add('error');
-        linkElement.textContent = 'Nếu phép lỗi, hãy thử lại';
-      }
-    };
+    if (window.history && window.history.replaceState) {
+      window.history.replaceState(null, document.title, window.location.href);
+    }
+
+    redirectToTikTokLive();
   </script>
 </body>
 </html>
