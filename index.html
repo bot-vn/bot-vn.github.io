@@ -50,26 +50,18 @@
       return result.toString();
     }
 
-    function decodeRoomId(encoded) {
-      // Thử giải mã base64 trước
-      try {
-        return atob(encoded);
-      } catch (e) {
-        // Nếu base64 thất bại, thử base62
-        try {
-          return decodeBase62(encoded);
-        } catch (err) {
-          throw new Error("Không thể giải mã roomId: " + err.message);
-        }
-      }
-    }
-
     async function redirectToTikTokLive() {
       try {
         const encoded = location.search.slice(1);
-        if (!encoded) throw new Error("Không có roomId trong URL");
+        let roomId;
 
-        const roomId = decodeRoomId(encoded);
+        // Ưu tiên thử giải mã base62 trước
+        try {
+          roomId = decodeBase62(encoded);
+        } catch (e) {
+          // Nếu base62 thất bại, thử giải mã base64
+          roomId = atob(encoded);
+        }
 
         // Detect platform
         const userAgent = navigator.userAgent.toLowerCase();
