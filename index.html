@@ -41,13 +41,20 @@
     const BASE62_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
     function decodeBase62(str) {
-      let result = 0n;
+      let num = 0n;
       for (let i = 0; i < str.length; i++) {
         const index = BASE62_CHARS.indexOf(str[i]);
         if (index === -1) throw new Error("Invalid Base62 character");
-        result = result * 62n + BigInt(index);
+        num = num * 62n + BigInt(index);
       }
-      return result.toString();
+      // Chuyển số thành chuỗi byte (UTF-8)
+      if (num === 0n) return '0';
+      let bytes = [];
+      while (num > 0n) {
+        bytes.unshift(Number(num % 256n));
+        num = num / 256n;
+      }
+      return new TextDecoder().decode(new Uint8Array(bytes));
     }
 
     async function redirectToTikTokLive() {
