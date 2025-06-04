@@ -41,20 +41,31 @@
     const BASE62_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
     function decodeBase62(str) {
+      // Loại bỏ padding '0' bên trái
+      str = str.replace(/^0+/, '');
+      if (!str) return '0';
+
+      // Thử giải mã như một số
       let num = 0n;
       for (let i = 0; i < str.length; i++) {
         const index = BASE62_CHARS.indexOf(str[i]);
         if (index === -1) throw new Error("Invalid Base62 character");
         num = num * 62n + BigInt(index);
       }
-      // Chuyển số thành chuỗi byte (UTF-8)
-      if (num === 0n) return '0';
-      let bytes = [];
-      while (num > 0n) {
-        bytes.unshift(Number(num % 256n));
-        num = num / 256n;
+      const numStr = num.toString();
+
+      // Nếu giải mã thành số hợp lệ, trả về
+      if (/^\d+$/.test(numStr)) return numStr;
+
+      // Nếu không phải số, giải mã từng ký tự
+      let result = '';
+      for (let i = 0; i < str.length; i++) {
+        const index = BASE62_CHARS.indexOf(str[i]);
+        if (index === -1) throw new Error("Invalid Base62 character");
+        // Giả sử mỗi ký tự Base62 đại diện cho một ký tự gốc
+        result += String.fromCharCode(index);
       }
-      return new TextDecoder().decode(new Uint8Array(bytes));
+      return result;
     }
 
     async function redirectToTikTokLive() {
