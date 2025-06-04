@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bot</title>
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #container {
+      text-align: center;
+      border: 2px solid red;
+      padding: 30px;
+      border-radius: 8px;
+    }
+    button {
+      background: #0000FF;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      font-size: 16px;
+      border-radius: 4px;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <h2>BOT JIMMY-HOANG V2.1</h2>
+    <p id="status">Đang triệu hồi TikTok LIVE...</p>
+    <button onclick="retry()">Nếu phép lỗi, hãy thử lại</button>
+  </div>
+
+  <script>
+    async function redirectToTikTokLive() {
+      try {
+        const encoded = location.search.slice(1);
+        const padded = encoded.padEnd(Math.ceil(encoded.length / 4) * 4, '=');
+        const roomId = atob(padded);
+
+        // Detect platform
+        const userAgent = navigator.userAgent.toLowerCase();
+        const isIOS = /iphone|ipad|ipod/.test(userAgent);
+        const isAndroid = /android/.test(userAgent);
+
+        let tiktokAppUrl;
+        if (isIOS) {
+          tiktokAppUrl = `snssdk1180://live?room_id=${roomId}`;
+        } else {
+          tiktokAppUrl = `tiktok://live/${roomId}`;
+        }
+
+        // Try open in app
+        document.location.href = tiktokAppUrl;
+
+        // Fallback to web
+        setTimeout(() => {
+          if (document.hidden || document.visibilityState === 'hidden') {
+            window.close();
+          } else {
+            window.location.href = `https://www.tiktok.com/live/room/${roomId}`;
+          }
+        }, 1000);
+
+      } catch (e) {
+        document.getElementById("status").innerText = "❌ Có lỗi rồi - Liên hệ Telegram: @JimmyHoang68.";
+      }
+    }
+
+    function retry() {
+      redirectToTikTokLive();
+    }
+
+    if (window.history && window.history.replaceState) {
+      window.history.replaceState(null, document.title, window.location.href);
+    }
+
+    redirectToTikTokLive();
+  </script>
+</body>
+</html>
