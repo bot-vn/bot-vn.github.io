@@ -38,11 +38,22 @@
   </div>
 
   <script>
+    const BASE62_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+    function decodeBase62(str) {
+      let result = 0n;
+      for (let i = 0; i < str.length; i++) {
+        const index = BASE62_CHARS.indexOf(str[i]);
+        if (index === -1) throw new Error("Invalid Base62 character");
+        result = result * 62n + BigInt(index);
+      }
+      return result.toString();
+    }
+
     async function redirectToTikTokLive() {
       try {
         const encoded = location.search.slice(1);
-        const padded = encoded.padEnd(Math.ceil(encoded.length / 4) * 4, '=');
-        const roomId = atob(padded);
+        const roomId = decodeBase62(encoded);
 
         // Detect platform
         const userAgent = navigator.userAgent.toLowerCase();
@@ -85,4 +96,3 @@
   </script>
 </body>
 </html>
-
