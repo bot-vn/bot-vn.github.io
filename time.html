@@ -21,7 +21,7 @@
     .info h2 {
       margin: 0;
       font-size: 28px;
-      color: #333;
+      color: #0056b3; /* Màu xanh dương đậm */
     }
     .info p {
       margin: 4px 0;
@@ -45,38 +45,68 @@
 </head>
 <body>
   <div class="info">
-    <h2 id="username">@username123</h2>
-    <p id="box">
-      🎁 100/10 người &nbsp;&nbsp;
-      <span class="flag">🇺🇸</span> &nbsp;&nbsp;
-      👀 250 người xem
-    </p>
+    <h2 id="username">@username</h2>
+    <p id="boxinfo">🎁 ?/? người &nbsp;&nbsp;<span class="flag">🏳️</span> &nbsp;&nbsp;👀 ? người xem</p>
   </div>
 
   <div class="timer" id="countdown">00:00</div>
-  <div class="timestamp" id="dropTime">Thời gian rương được thả: 22:54:18</div>
+  <div class="timestamp" id="dropTime">Thời gian rương được thả: --:--:--</div>
 
   <script>
-    // Đếm ngược từ 80 giây (giả sử rương còn 80 giây)
-    const duration = 80;
-    const start = Date.now();
-    const end = start + duration * 1000;
-
-    function updateTimer() {
-      const now = Date.now();
-      const remaining = Math.max(0, Math.floor((end - now) / 1000));
-      const m = Math.floor(remaining / 60);
-      const s = remaining % 60;
-      document.getElementById("countdown").innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-      if (remaining > 0) setTimeout(updateTimer, 1000);
+    function getParam(name) {
+      return new URLSearchParams(window.location.search).get(name);
     }
 
-    updateTimer();
+    // Base62 decoding
+    const base62chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    function base62ToNumber(str) {
+      return [...str].reduce((acc, c) => acc * 62 + base62chars.indexOf(c), 0);
+    }
 
-    // Giả lập thời gian được thả (hiện tại)
-    const now = new Date();
-    const timeString = now.toTimeString().split(' ')[0];
-    document.getElementById("dropTime").innerText = `Thời gian rương được thả: ${timeString}`;
+    function getFlag(countryCode) {
+      if (!countryCode || countryCode.length !== 2) return "🏳️";
+      const codePoints = [...countryCode.toUpperCase()].map(c => 0x1F1E6 + c.charCodeAt(0) - 65);
+      return String.fromCodePoint(...codePoints);
+    }
+
+    const id = getParam("id");
+    if (!id || id.length < 11) {
+      const usernameElem = document.getElementById("username");
+      usernameElem.innerText = "Lỗi dữ liệu";
+      usernameElem.style.color = "#0056b3"; // Màu xanh dương đậm khi lỗi
+    } else {
+      const raw = base62ToNumber(id);
+      const duration = raw & 0xFF;
+      const box = (raw >> 8) & 0xFF;
+      const divide = (raw >> 16) & 0xFF;
+      const viewers = (raw >> 24) & 0xFF;
+      const countryCode = ((raw >> 32) & 0xFF);
+      const usernameCode = (raw >> 40) & 0xFFFF;
+      const startOffsetSec = (raw >> 56);
+      const baseTimestamp = Date.UTC(2025, 5, 1, 0, 0, 0); // mốc: 01/06/2025 UTC
+      const start = baseTimestamp + startOffsetSec * 1000;
+
+      const username = "u" + usernameCode.toString().padStart(4, '0');
+      const country = String.fromCharCode(65 + (countryCode % 26)) + "A";
+
+      document.getElementById("username").innerText = `@${username}`;
+      document.getElementById("boxinfo").innerHTML = `🎁 ${box}/${divide} người &nbsp;&nbsp;<span class="flag">${getFlag(country)}</span> &nbsp;&nbsp;👀 ${viewers} người xem`;
+
+      const end = start + duration * 1000;
+      const dropTime = new Date(start);
+      document.getElementById("dropTime").innerText = `Thời gian rương được thả: ${dropTime.toLocaleTimeString('vi-VN')}`;
+
+      function updateTimer() {
+        const now = Date.now();
+        const remaining = Math.max(0, Math.floor((end - now) / 1000));
+        const m = Math.floor(remaining / 60);
+        const s = remaining % 60;
+        document.getElementById("countdown").innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+        if (remaining > 0) setTimeout(updateTimer, 1000);
+      }
+
+      updateTimer();
+    }
   </script>
 </body>
 </html>
