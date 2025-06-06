@@ -2,6 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Box Countdown</title>
   <style>
     body {
@@ -13,33 +14,69 @@
       justify-content: center;
       height: 100vh;
       margin: 0;
+      font-size: 16px; /* Kích thước phông chữ cơ bản */
     }
     .info {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 1.5rem;
     }
     .info h2 {
       margin: 0;
-      font-size: 28px;
-      color: #0056b3; /* Màu xanh dương đậm */
+      font-size: 2rem; /* ~32px */
+      color: #0056b3;
+      font-weight: bold;
     }
     .info p {
-      margin: 4px 0;
-      font-size: 18px;
+      margin: 0.5rem 0;
+      font-size: 1.5rem; /* ~24px */
       color: #666;
     }
-    .timer {
-      font-size: 80px;
+    .milliseconds {
+      font-size: 4.5rem; /* ~72px */
       font-weight: bold;
       color: #000;
+      font-family: 'Courier New', Courier, monospace;
+      margin: 0.5rem 0;
+    }
+    .timer {
+      font-size: 3.75rem; /* ~60px */
+      font-weight: bold;
+      color: #000;
+      font-family: 'Courier New', Courier, monospace;
+      margin: 0.5rem 0;
     }
     .timestamp {
-      margin-top: 5px;
-      font-size: 18px;
+      font-size: 1.5rem; /* ~24px */
       color: #444;
+      margin-top: 1rem;
     }
     .flag {
-      font-size: 20px;
+      font-size: 1.8rem; /* ~28px */
+    }
+
+    /* Tối ưu cho màn hình nhỏ */
+    @media (max-width: 600px) {
+      body {
+        font-size: 14px;
+      }
+      .info h2 {
+        font-size: 1.8rem; /* ~25px */
+      }
+      .info p {
+        font-size: 1.3rem; /* ~18px */
+      }
+      .milliseconds {
+        font-size: 4rem; /* ~56px */
+      }
+      .timer {
+        font-size: 3.25rem; /* ~46px */
+      }
+      .timestamp {
+        font-size: 1.3rem; /* ~18px */
+      }
+      .flag {
+        font-size: 1.6rem; /* ~22px */
+      }
     }
   </style>
 </head>
@@ -49,10 +86,25 @@
     <p id="boxinfo">🎁 ?/? <span class="flag">🏳️</span> 👀 ?</p>
   </div>
 
-  <div class="timer" id="countdown">00:00</div>
+  <div class="milliseconds" id="milliseconds">00</div>
+  <div class="timer" id="countdown">00:00:00</div>
   <div class="timestamp" id="dropTime">--:--:--</div>
 
   <script>
+    const BASE62_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+
+    function base62Decode(str) {
+      let n = 0n;
+      for (const char of str) {
+        const value = BASE62_CHARS.indexOf(char);
+        if (value === -1) {
+          throw new Error('Invalid base62 character');
+        }
+        n = n * 62n + BigInt(value);
+      }
+      return n.toString();
+    }
+
     function getParam(name) {
       return new URLSearchParams(window.location.search).get(name);
     }
@@ -63,13 +115,27 @@
       return String.fromCodePoint(...codePoints);
     }
 
-    // Lấy tham số từ URL
-    const username = getParam("user");
-    const box = parseInt(getParam("box"), 10);
-    const divide = parseInt(getParam("divide"), 10);
-    const viewers = parseInt(getParam("viewers"), 10);
-    const countryCode = getParam("country");
-    const end = parseInt(getParam("end"), 10); // Thời gian kết thúc (ms)
+    // Lấy và giải mã tham số base62
+    const encodedParams = getParam('');
+    let params = {};
+    try {
+      const decodedString = base62Decode(encodedParams);
+      params = JSON.parse(decodedString);
+    } catch (error) {
+      console.error('Error decoding params:', error);
+      const usernameElem = document.getElementById("username");
+      usernameElem.innerText = "Lỗi dữ liệu";
+      usernameElem.style.color = "#0056b3";
+      return;
+    }
+
+    // Lấy các tham số
+    const username = params.user;
+    const box = parseInt(params.box, 10);
+    const divide = parseInt(params.divide, 10);
+    const viewers = parseInt(params.viewers, 10);
+    const countryCode = params.country;
+    const end = parseInt(params.end, 10);
 
     // Kiểm tra dữ liệu đầu vào
     if (!username || isNaN(box) || isNaN(divide) || isNaN(viewers) || isNaN(end)) {
@@ -82,19 +148,25 @@
       document.getElementById("boxinfo").innerHTML = `🎁 ${box}/${divide} <span class="flag">${getFlag(countryCode)}</span> 👀 ${viewers}`;
 
       // Tính thời gian bắt đầu (end - duration)
-      const duration = Math.floor((end - Date.now()) / 1000); // Thời gian còn lại tại thời điểm tải trang
+      const duration = Math.floor((end - Date.now()) / 1000);
       const start = end - duration * 1000;
       const dropTime = new Date(start);
       document.getElementById("dropTime").innerText = `${dropTime.toLocaleTimeString('vi-VN')}`;
 
-      // Cập nhật đồng hồ đếm ngược
+      // Cập nhật đồng hồ đếm ngược với mili giây
       function updateTimer() {
         const now = Date.now();
-        const remaining = Math.max(0, Math.floor((end - now) / 1000));
-        const m = Math.floor(remaining / 60);
-        const s = remaining % 60;
-        document.getElementById("countdown").innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-        if (remaining > 0) setTimeout(updateTimer, 1000);
+        const remainingMs = Math.max(0, end - now);
+        const remainingSec = Math.floor(remainingMs / 1000);
+        const m = Math.floor(remainingSec / 60);
+        const s = remainingSec % 60;
+        const ms = Math.floor((remainingMs % 1000) / 10); // Lấy 2 chữ số mili giây
+        document.getElementById("milliseconds").innerText = `${ms.toString().padStart(2, '0')}`;
+        document.getElementById("countdown").innerText = 
+          `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}:${ms.toString().padStart(2, '0')}`;
+        if (remainingMs > 0) {
+          requestAnimationFrame(updateTimer); // Cập nhật mượt mà
+        }
       }
 
       updateTimer();
