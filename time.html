@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Box Countdown</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .info {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .info h2 {
+      margin: 0;
+      font-size: 28px;
+      color: #333;
+    }
+    .info p {
+      margin: 4px 0;
+      font-size: 18px;
+      color: #666;
+    }
+    .timer {
+      font-size: 80px;
+      font-weight: bold;
+      color: #000;
+    }
+    .timestamp {
+      margin-top: 10px;
+      font-size: 20px;
+      color: #444;
+    }
+    .flag {
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="info">
+    <h2 id="username">@username123</h2>
+    <p id="box">
+      🎁 100/10 người &nbsp;&nbsp;
+      <span class="flag">🇺🇸</span> &nbsp;&nbsp;
+      👀 250 người xem
+    </p>
+  </div>
+
+  <div class="timer" id="countdown">00:00</div>
+  <div class="timestamp" id="dropTime">Thời gian rương được thả: 22:54:18</div>
+
+  <script>
+    // Đếm ngược từ 80 giây (giả sử rương còn 80 giây)
+    const duration = 80;
+    const start = Date.now();
+    const end = start + duration * 1000;
+
+    function updateTimer() {
+      const now = Date.now();
+      const remaining = Math.max(0, Math.floor((end - now) / 1000));
+      const m = Math.floor(remaining / 60);
+      const s = remaining % 60;
+      document.getElementById("countdown").innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+      if (remaining > 0) setTimeout(updateTimer, 1000);
+    }
+
+    updateTimer();
+
+    // Giả lập thời gian được thả (hiện tại)
+    const now = new Date();
+    const timeString = now.toTimeString().split(' ')[0];
+    document.getElementById("dropTime").innerText = `Thời gian rương được thả: ${timeString}`;
+  </script>
+</body>
+</html>
