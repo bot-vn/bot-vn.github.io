@@ -57,51 +57,43 @@
       return new URLSearchParams(window.location.search).get(name);
     }
 
-    const username = getParam("user");
-
-    // Base62 decoding
-    const base62chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    function base62ToNumber(str) {
-      return [...str].reduce((acc, c) => acc * 62 + base62chars.indexOf(c), 0);
-    }
-
     function getFlag(countryCode) {
       if (!countryCode || countryCode.length !== 2) return "🏳️";
       const codePoints = [...countryCode.toUpperCase()].map(c => 0x1F1E6 + c.charCodeAt(0) - 65);
       return String.fromCodePoint(...codePoints);
     }
 
-    const id = getParam("id");
-    if (!id || id.length < 11 || !username) {
+    // Lấy tham số từ URL
+    const username = getParam("user");
+    const box = parseInt(getParam("box"), 10);
+    const divide = parseInt(getParam("divide"), 10);
+    const viewers = parseInt(getParam("viewers"), 10);
+    const countryCode = getParam("country");
+    const end = parseInt(getParam("end"), 10); // Thời gian kết thúc (ms)
+
+    // Kiểm tra dữ liệu đầu vào
+    if (!username || isNaN(box) || isNaN(divide) || isNaN(viewers) || isNaN(end)) {
       const usernameElem = document.getElementById("username");
       usernameElem.innerText = "Lỗi dữ liệu";
       usernameElem.style.color = "#0056b3";
     } else {
-      const raw = base62ToNumber(id);
-      const duration = raw & 0xFF;
-      const box = (raw >> 8) & 0xFF;
-      const divide = (raw >> 16) & 0xFF;
-      const viewers = (raw >> 24) & 0xFF;
-      const countryCode = ((raw >> 32) & 0xFF);
-      const startOffsetSec = (raw >> 40);
-      const baseTimestamp = Date.UTC(2025, 5, 1, 0, 0, 0);
-      const start = baseTimestamp + startOffsetSec * 1000;
-
-      const country = String.fromCharCode(65 + (countryCode % 26)) + "A";
-
+      // Hiển thị thông tin
       document.getElementById("username").innerText = `@${username}`;
-      document.getElementById("boxinfo").innerHTML = `🎁 ${box}/${divide} <span class="flag">${getFlag(country)}</span> 👀 ${viewers}`;
+      document.getElementById("boxinfo").innerHTML = `🎁 ${box}/${divide} <span class="flag">${getFlag(countryCode)}</span> 👀 ${viewers}`;
 
-      const end = start + duration * 1000;
+      // Tính thời gian bắt đầu (end - duration)
+      const duration = Math.floor((end - Date.now()) / 1000); // Thời gian còn lại tại thời điểm tải trang
+      const start = end - duration * 1000;
       const dropTime = new Date(start);
       document.getElementById("dropTime").innerText = `${dropTime.toLocaleTimeString('vi-VN')}`;
 
+      // Cập nhật đồng hồ đếm ngược
       function updateTimer() {
         const now = Date.now();
         const remaining = Math.max(0, Math.floor((end - now) / 1000));
         const m = Math.floor(remaining / 60);
         const s = remaining % 60;
-        document.getElementById("countdown").innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+        document.getElementById("countdown").innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
         if (remaining > 0) setTimeout(updateTimer, 1000);
       }
 
