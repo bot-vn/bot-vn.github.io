@@ -16,7 +16,7 @@
     }
     .info {
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
     .info h2 {
       margin: 0;
@@ -34,8 +34,8 @@
       color: #000;
     }
     .timestamp {
-      margin-top: 10px;
-      font-size: 20px;
+      margin-top: 5px;
+      font-size: 18px;
       color: #444;
     }
     .flag {
@@ -46,11 +46,11 @@
 <body>
   <div class="info">
     <h2 id="username">@username</h2>
-    <p id="boxinfo">🎁 ?/? người &nbsp;&nbsp;<span class="flag">🏳️</span> &nbsp;&nbsp;👀 ? người xem</p>
+    <p id="boxinfo">🎁 ?/? <span class="flag">🏳️</span> 👀 ?</p>
   </div>
 
   <div class="timer" id="countdown">00:00</div>
-  <div class="timestamp" id="dropTime">Thời gian rương được thả: --:--:--</div>
+  <div class="timestamp" id="dropTime">--:--:--</div>
 
   <script>
     function getParam(name) {
@@ -90,11 +90,11 @@
       const country = String.fromCharCode(65 + (countryCode % 26)) + "A";
 
       document.getElementById("username").innerText = `@${username}`;
-      document.getElementById("boxinfo").innerHTML = `🎁 ${box}/${divide} người &nbsp;&nbsp;<span class="flag">${getFlag(country)}</span> &nbsp;&nbsp;👀 ${viewers} người xem`;
+      document.getElementById("boxinfo").innerHTML = `🎁 ${box}/${divide} <span class="flag">${getFlag(country)}</span> 👀 ${viewers}`;
 
       const end = start + duration * 1000;
       const dropTime = new Date(start);
-      document.getElementById("dropTime").innerText = `Thời gian rương được thả: ${dropTime.toLocaleTimeString('vi-VN')}`;
+      document.getElementById("dropTime").innerText = `${dropTime.toLocaleTimeString('vi-VN')}`;
 
       function updateTimer() {
         const now = Date.now();
