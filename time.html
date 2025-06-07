@@ -68,6 +68,13 @@
         button:hover {
             background-color: #0056b3; /* Hover color of button (darker blue), can be changed */
         }
+        button.disabled {
+            background-color: #cccccc; /* Color when disabled (gray), can be changed */
+            cursor: not-allowed;
+        }
+        button.red-text {
+            color: #ff0000; /* Color when text is red (e.g., "Rương này đã được mở"), can be changed */
+        }
         @keyframes flash {
             0% { opacity: 1; }
             50% { opacity: 0.5; }
@@ -185,26 +192,31 @@
 
                 // Cập nhật hàng trên (giây:mili giây)
                 const countdownMsElement = document.getElementById('countdownMs');
-                countdownMsElement.innerText = `${seconds.toString().padStart(2, '0')}:${ms.toString().padStart(2, '0')}`;
-                // Chuyển sang màu đỏ đậm (#800020) khi còn dưới 3 giây
-                if (remainingMs / 1000 <= 3) {
-                    countdownMsElement.style.color = '#800020'; // Màu mận chín
-                } else {
-                    countdownMsElement.style.color = '#000'; // Màu đen mặc định
+                if (remainingMs > 0) {
+                    countdownMsElement.innerText = `${seconds.toString().padStart(2, '0')}:${ms.toString().padStart(2, '0')}`;
+                    // Chuyển sang màu đỏ đậm (#800020) khi còn dưới 3 giây
+                    if (remainingMs / 1000 <= 3) {
+                        countdownMsElement.style.color = '#800020'; // Màu mận chín
+                    } else {
+                        countdownMsElement.style.color = '#000'; // Màu đen mặc định
+                    }
                 }
 
                 // Cập nhật hàng dưới (giờ:phút:giây)
-                document.getElementById('countdownFull').innerText = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`; // Can be removed if not needed
+                const countdownFullElement = document.getElementById('countdownFull');
+                if (remainingMs > 0) {
+                    countdownFullElement.innerText = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }
 
                 // Kiểm tra rương đã mở
                 if (remainingMs <= 0 || now > endTime) {
                     countdownMsElement.innerText = '00:00';
-                    document.getElementById('countdownFull').innerText = '00:00:00';
+                    countdownFullElement.innerText = '00:00:00';
                     actionButton.innerText = 'Rương này đã được mở';
+                    actionButton.classList.add('disabled');
+                    actionButton.classList.add('red-text'); // Thêm class red-text để đổi màu chữ thành đỏ
                     actionButton.disabled = true; // Vô hiệu hóa nút
-                    actionButton.style.backgroundColor = '#cccccc'; // Màu xám để chỉ trạng thái không hoạt động
-                    actionButton.style.cursor = 'not-allowed';
-                    return;
+                    return; // Dừng cập nhật sau khi hết thời gian
                 }
                 lastUpdate = timestamp;
             }
