@@ -1,31 +1,91 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Redirecting...</title>
+  <title>Bot</title>
+  <meta name="robots" content="noindex,nofollow">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    #container {
+      display: none;
+      text-align: center;
+      border: 2px solid red;
+      padding: 30px;
+      border-radius: 8px;
+    }
+    button {
+      background: #0000FF;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      font-size: 16px;
+      border-radius: 4px;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <h2>BOT JIMMY-HOANG V2.1</h2>
+    <p id="status">Đang triệu hồi TikTok LIVE...</p>
+    <button onclick="retry()">Nếu có lỗi, hãy thử lại</button>
+  </div>
+
   <script>
     const BASE62_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     function base62Decode(str) {
       let result = 0n;
       for (let i = 0; i < str.length; i++) {
         const index = BASE62_CHARS.indexOf(str[i]);
-        if (index === -1) throw new Error('Invalid base62');
+        if (index === -1) throw new Error('Invalid base62 character');
         result = result * 62n + BigInt(index);
       }
       return result.toString();
     }
 
-    const encoded = location.search.slice(1);
-    const roomId = base62Decode(encoded);
+    function redirectToTikTokLive() {
+      try {
+        const encoded = location.search.slice(1);
+        const roomId = base62Decode(encoded);
 
-    const isIOS = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
-    const tiktokUrl = isIOS
-      ? `snssdk1180://live?room_id=${roomId}`
-      : `tiktok://live/${roomId}`;
+        const isIOS = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
+        const tiktokAppUrl = isIOS
+          ? `snssdk1180://live?room_id=${roomId}`
+          : `tiktok://live/${roomId}`;
 
-    location.href = tiktokUrl;
+        location.href = tiktokAppUrl;
+
+        setTimeout(() => {
+          if (document.hidden || document.visibilityState === 'hidden') {
+            window.close();
+          } else {
+            // App không mở được → hiện lại giao diện HTML
+            document.getElementById("container").style.display = "block";
+          }
+        }, 1000);
+      } catch (e) {
+        document.getElementById("container").style.display = "block";
+        document.getElementById("status").innerText = "❌ Có lỗi rồi - Liên hệ Telegram: @JimmyHoang68.";
+      }
+    }
+
+    function retry() {
+      redirectToTikTokLive();
+    }
+
+    if (window.history && window.history.replaceState) {
+      window.history.replaceState(null, document.title, window.location.href);
+    }
+
+    redirectToTikTokLive();
   </script>
-</head>
-<body></body>
+</body>
 </html>
