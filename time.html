@@ -48,7 +48,7 @@
       align-items: center;
     }
     .milliseconds {
-      font-size: 10rem; /* Tăng gấp 4 lần từ 5rem */
+      font-size: 10rem; /* Giữ nguyên kích thước */
       font-weight: bold;
       color: #000;
       font-family: 'Courier New', monospace;
@@ -104,7 +104,7 @@
     <div class="box-info" id="boxinfo">🎁 ?/? <span class="flag">🏳️</span> 👀 ?</div>
     <div class="timer-grid">
       <div class="milliseconds" id="milliseconds">00</div>
-      <div class="timer" id="countdown">00:00:00</div>
+      <div class="timer" id="countdown">Remaining Time: 00:00:00</div>
     </div>
     <div class="timestamp" id="dropTime">--:--:--</div>
     <button onclick="openTikTokLive()">Canh giờ hoàng đạo</button>
@@ -207,7 +207,7 @@
             document.getElementById("milliseconds").innerText = `${ms.toString().padStart(2, '0')}`;
           }
           document.getElementById("countdown").innerText =
-            `${Math.floor(remainingSec / 60).toString().padStart(2, '0')}:${(remainingSec % 60).toString().padStart(2, '0')}:${ms.toString().padStart(2, '0')}`;
+            `Remaining Time: ${Math.floor(remainingSec / 60).toString().padStart(2, '0')}:${(remainingSec % 60).toString().padStart(2, '0')}:${ms.toString().padStart(2, '0')}`;
 
           const timerElem = document.getElementById("countdown");
           if (remainingSec <= 10) {
@@ -218,7 +218,7 @@
 
           if (remainingMs <= 0) {
             document.getElementById("milliseconds").innerText = "0.0";
-            document.getElementById("countdown").innerText = "00:00:00";
+            document.getElementById("countdown").innerText = "Remaining Time: 00:00:00";
             alert("Rương đã mở!");
             return;
           }
