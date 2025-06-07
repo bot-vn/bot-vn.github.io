@@ -38,11 +38,22 @@
   </div>
 
   <script>
+    // Base62 decode function
+    const BASE62_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    function base62Decode(str) {
+      let result = 0n;
+      for (let i = 0; i < str.length; i++) {
+        const index = BASE62_CHARS.indexOf(str[i]);
+        if (index === -1) throw new Error('Invalid base62 character');
+        result = result * 62n + BigInt(index);
+      }
+      return result.toString();
+    }
+
     async function redirectToTikTokLive() {
       try {
         const encoded = location.search.slice(1);
-        const padded = encoded.padEnd(Math.ceil(encoded.length / 4) * 4, '=');
-        const roomId = atob(padded);
+        const roomId = base62Decode(encoded); // dùng base62 thay vì atob
 
         // Detect platform
         const userAgent = navigator.userAgent.toLowerCase();
@@ -56,10 +67,8 @@
           tiktokAppUrl = `tiktok://live/${roomId}`;
         }
 
-        // Try open in app
         document.location.href = tiktokAppUrl;
 
-        // Fallback to web
         setTimeout(() => {
           if (document.hidden || document.visibilityState === 'hidden') {
             window.close();
