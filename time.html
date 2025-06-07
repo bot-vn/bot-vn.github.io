@@ -51,7 +51,7 @@
             transition: color 0.3s; /* Smooth color transition */
         }
         .countdown-full {
-            font-size: 24px; /* Increased from 18px for better visibility */
+            font-size: 24px; /* Increased for better visibility */
             margin-bottom: 8px;
             color: #000; /* Color of countdown full (black), can be changed */
         }
@@ -81,8 +81,8 @@
         <h2 class="username" id="username">@kavooneska2</h2>
         <div class="box-info" id="boxinfo">🎁 BOX: <span id="coins">50</span>/<span id="viewerRewardCount">50</span> <span class="flag" id="flag">🇧🇾</span> 👀 <span id="viewers">56</span></div>
         <div class="timer-grid">
-            <div class="countdown-ms" id="countdownMs">50:01</div>
-            <div class="countdown-full" id="countdownFull">00:50:01</div> <!-- Can be removed if not needed -->
+            <div class="countdown-ms" id="countdownMs">49:43</div>
+            <div class="countdown-full" id="countdownFull">00:00:49</div> <!-- Can be removed if not needed -->
         </div>
         <button onclick="openTikTokLive()">Mở TikTok Live</button>
     </div>
@@ -129,21 +129,19 @@
         const viewerRewardCount = parseInt(getParam('divide') || '50', 10);
         const viewers = parseInt(getParam('viewers') || '56', 10);
         const countryCode = getParam('country') || 'BY';
-        const createAt = parseInt(getParam('createAt') || '1717754880000', 10); // 17:28:00 ngày 07/06/2025 +07, not used now
-        const initialCountdownMs = parseInt(getParam('initialCountdownMs') || 3001000, 10); // 50 phút 1 giây (3001000 ms) based on image
+        const initialCountdownMs = parseInt(getParam('initialCountdownMs') || 49430, 10); // 49 giây 43 mili giây (49430 ms) based on image
 
         // Cập nhật giao diện
         document.getElementById('username').innerText = `@${username}`;
         document.getElementById('coins').innerText = coins;
         document.getElementById('viewerRewardCount').innerText = viewerRewardCount;
         document.getElementById('viewers').innerText = viewers; // Can be removed if not needed
-        document.getElementById('currentViewers').innerText = viewers; // Can be removed if not needed
         document.getElementById('flag').innerText = getFlag(countryCode);
 
         // Cập nhật thời gian đếm ngược
         let lastUpdate = 0;
         const startTime = Date.now();
-        const endTime = startTime + initialCountdownMs; // Kết thúc sau 50 phút 1 giây từ lúc chạy
+        const endTime = startTime + initialCountdownMs; // Kết thúc sau 49 giây 43 mili giây từ lúc chạy
 
         function updateTimer(timestamp) {
             if (!lastUpdate || (timestamp - lastUpdate >= 16)) {
@@ -157,7 +155,7 @@
 
                 // Cập nhật hàng trên (giây:mili giây)
                 const countdownMsElement = document.getElementById('countdownMs');
-                countdownMsElement.innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                countdownMsElement.innerText = `${seconds.toString().padStart(2, '0')}:${ms.toString().padStart(2, '0')}`;
                 // Chuyển sang màu đỏ đậm (#800020) khi còn dưới 3 giây
                 if (remainingMs / 1000 <= 3) {
                     countdownMsElement.style.color = '#800020'; // Màu mận chín
