@@ -93,6 +93,22 @@
             return urlParams.get(name);
         }
 
+        // Hàm giải mã base62
+        const BASE62_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+        function base62Decode(encoded) {
+            let num = BigInt(0);
+            for (const char of encoded) {
+                num = num * BigInt(62) + BigInt(BASE62_CHARS.indexOf(char));
+            }
+            let result = '';
+            while (num > 0) {
+                const byte = Number(num % BigInt(256));
+                result = String.fromCharCode(byte) + result;
+                num = num / BigInt(256);
+            }
+            return result;
+        }
+
         // Hàm lấy cờ quốc gia
         function getFlag(code) {
             if (!code || code.length !== 2) return '🏳️';
@@ -123,15 +139,32 @@
             }
         }
 
-        // Khởi tạo dữ liệu
-        const username = getParam('user') || 'kavooneska2';
-        const coins = parseInt(getParam('box') || '50', 10);
-        const viewerRewardCount = parseInt(getParam('divide') || '50', 10);
-        const viewers = parseInt(getParam('viewers') || '56', 10);
-        const countryCode = getParam('country') || 'BY';
-        const initialCountdownMs = parseInt(getParam('initialCountdownMs') || 49430, 10); // 49 giây 43 mili giây (49430 ms) based on image
+        // Giải mã và cập nhật giao diện
+        const encodedData = getParam('data');
+        let params = {};
+        if (encodedData) {
+            const decodedData = base62Decode(encodedData);
+            params = JSON.parse(decodedData);
+        } else {
+            params = {
+                user: 'kavooneska2',
+                box: 50,
+                divide: 50,
+                viewers: 56,
+                country: 'BY',
+                end: Date.now() + 49430, // 49 giây 43 mili giây từ bây giờ
+                createAt: Date.now().toString()
+            };
+        }
 
-        // Cập nhật giao diện
+        const username = params.user;
+        const coins = parseInt(params.box, 10);
+        const viewerRewardCount = parseInt(params.divide, 10);
+        const viewers = parseInt(params.viewers, 10);
+        const countryCode = params.country;
+        const endTime = parseInt(params.end, 10);
+        const createAt = params.createAt;
+
         document.getElementById('username').innerText = `@${username}`;
         document.getElementById('coins').innerText = coins;
         document.getElementById('viewerRewardCount').innerText = viewerRewardCount;
@@ -140,9 +173,6 @@
 
         // Cập nhật thời gian đếm ngược
         let lastUpdate = 0;
-        const startTime = Date.now();
-        const endTime = startTime + initialCountdownMs; // Kết thúc sau 49 giây 43 mili giây từ lúc chạy
-
         function updateTimer(timestamp) {
             if (!lastUpdate || (timestamp - lastUpdate >= 16)) {
                 const now = Date.now();
@@ -180,3 +210,39 @@
     </script>
 </body>
 </html>
+</xaiArtifact>
+
+### Giải thích
+1. **Mã hóa base62 trong `9Websocket.js`**:
+   - Hàm `base62Encode` chuyển đổi dữ liệu (chuỗi JSON của các tham số) thành chuỗi base62.
+   - `countdownLink` giờ sử dụng `?data=${encodedParams}` thay vì các tham số riêng lẻ, ẩn link thật.
+
+2. **Giải mã base62 trong `time.html`**:
+   - Thêm hàm `base62Decode` để chuyển chuỗi base62 về dữ liệu gốc.
+   - Lấy `encodedData` từ URL, giải mã và parse JSON để lấy các tham số (`user`, `box`, `divide`, `viewers`, `country`, `end`, `createAt`).
+   - Nếu không có `data` trong URL, sử dụng giá trị mặc định (49 giây 43 mili giây từ bây giờ).
+
+3. **Hàng trên (giây:mili giây)**:
+   - Hiển thị `seconds:miliseconds` (ví dụ: `49:43` ban đầu).
+   - Chuyển sang màu đỏ đậm (`#800020`) khi còn dưới 3 giây.
+
+4. **Hàng dưới (giờ:phút:giây)**:
+   - Hiển thị `hh:mm:ss` (ví dụ: `00:00:49` ban đầu).
+
+5. **Comment về phần có thể xóa**:
+   - Thêm comment `<!-- Can be removed if not needed -->` cho `countdownFull`.
+   - Thêm comment `// Can be removed if not needed` cho phần cập nhật `countdownFull` và `viewers`.
+
+6. **Chức năng màu sắc**:
+   - Mỗi phần tử CSS có comment về màu sắc (ví dụ: `/* Color of countdown milliseconds (black), changes to #800020 when < 3s, can be changed */`).
+
+### Cách sử dụng
+- Trong `9Websocket.js`, khi gửi `countdownLink`, nó sẽ tạo một URL với tham số base62 (ví dụ: `https://bot-vn.github.io/time.html?data=abc123...`).
+- Mở `time.html` với URL từ `countdownLink`: Đếm ngược sẽ bắt đầu từ `49:43` và `00:00:49`, giảm dần, chuyển đỏ khi còn dưới 3 giây.
+
+### Lưu ý
+- Đảm bảo `time.html` được host tại `https://bot-vn.github.io/` hoặc địa chỉ tương ứng.
+- Nếu cần kiểm tra, bạn có thể tạo một URL thủ công với `data` đã mã hóa từ `9Websocket.js`.
+- Để thay đổi màu, chỉnh trực tiếp giá trị hex trong CSS.
+
+Bạn thấy ổn chưa? Có cần hỗ trợ thêm không?
