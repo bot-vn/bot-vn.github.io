@@ -99,20 +99,9 @@
             return urlParams.get(name);
         }
 
-        // Hàm giải mã base62
-        const BASE62_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-        function base62Decode(encoded) {
-            let num = BigInt(0);
-            for (const char of encoded) {
-                num = num * BigInt(62) + BigInt(BASE62_CHARS.indexOf(char));
-            }
-            let result = '';
-            while (num > 0) {
-                const byte = Number(num % BigInt(256));
-                result = String.fromCharCode(byte) + result;
-                num = num / BigInt(256);
-            }
-            return result;
+        // Hàm giải mã base64
+        function base64Decode(encoded) {
+            return atob(encoded); // Sử dụng atob để giải mã base64
         }
 
         // Hàm lấy cờ quốc gia
@@ -149,7 +138,7 @@
         const encodedData = getParam('data');
         let params = {};
         if (encodedData) {
-            const decodedData = base62Decode(encodedData);
+            const decodedData = base64Decode(encodedData);
             params = JSON.parse(decodedData);
         } else {
             params = {
