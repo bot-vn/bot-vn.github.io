@@ -21,7 +21,7 @@
       grid-template-rows: auto auto auto;
       gap: 1rem;
       text-align: center;
-      border: 2px solid #ff0000; /* Viền màu đỏ */
+      border: 2px solid #ff0000;
       padding: 25px;
       border-radius: 12px;
       background: linear-gradient(135deg, #fff, #f9f9f9);
@@ -31,16 +31,16 @@
     .title {
       font-size: 2rem;
       font-weight: bold;
-      color: #212121; /* Xám đậm gần đen */
+      color: #212121;
       margin: 0;
     }
     .message {
       font-size: 1.5rem;
-      color: #424242; /* Xám đậm nhẹ */
+      color: #424242;
       margin: 0.5rem 0;
     }
     .fake-button {
-      background: #1565c0; /* Xanh dương đậm */
+      background: #1565c0;
       color: white;
       padding: 10px 20px;
       border: none;
@@ -49,9 +49,11 @@
       display: inline-block;
       margin-top: 1rem;
       transition: background 0.3s;
+      cursor: pointer;
+      text-decoration: none;
     }
     .fake-button:hover {
-      background: #0d47a1; /* Xanh dương đậm hơn khi hover */
+      background: #0d47a1;
     }
     @media (max-width: 600px) {
       body {
@@ -76,8 +78,8 @@
 <body>
   <div id="container">
     <h1 class="title">BOT JIMMY-HOANG V2.1</h1>
-    <p class="message">Đang triệu hồi TikTok LIVE... (Nếu không mở app, tắt trình duyệt tích hợp trong Telegram)</p>
-    <div class="fake-button">Nếu phép lỗi, hãy thử lại</div>
+    <p class="message">Đang mở TikTok LIVE...</p>
+    <a id="retry-button" class="fake-button" href="https://www.tiktok.com/live">Thử lại</a>
   </div>
 
   <script>
@@ -99,58 +101,43 @@
       return new URLSearchParams(window.location.search).get(name);
     }
 
-    // Giải mã tham số base62 từ URL và chuyển hướng ngay
-    const encodedParams = getParam('');
-    try {
-      const decodedString = base62Decode(encodedParams);
-      const roomId = decodedString;
-
-      const userAgent = navigator.userAgent.toLowerCase();
-      const isIOS = /iphone|ipad|ipod/.test(userAgent);
-      const isAndroid = /android/.test(userAgent);
-      const webUrl = `https://www.tiktok.com/live?room_id=${roomId}`;
-
-      // Phát hiện Telegram và thử deep link
-      if (navigator.userAgent.includes("Telegram")) {
-        if (isIOS) {
-          window.location.href = `snssdk1180://open?live_id=${roomId}`;
-        } else if (isAndroid) {
-          window.location.href = `intent://live?live_id=${roomId}#Intent;scheme=tiktok;package=com.zhiliaoapp.musically;end`;
-        } else {
-          window.location.href = webUrl;
-        }
-      } else {
-        if (isIOS) {
-          window.location.href = `snssdk1180://open?live_id=${roomId}`;
-        } else if (isAndroid) {
-          window.location.href = `intent://live?live_id=${roomId}#Intent;scheme=tiktok;package=com.zhiliaoapp.musically;end`;
-        } else {
-          window.location.href = webUrl;
-        }
+    function redirectToTikTok() {
+      const encodedParams = getParam('');
+      if (!encodedParams) {
+        document.querySelector('.message').innerText = 'Không tìm thấy Room ID';
+        document.querySelector('.message').style.color = '#ab47bc';
+        document.querySelector('#retry-button').href = 'https://www.tiktok.com/live';
+        return;
       }
 
-      // Fallback sau 500ms nếu deep link không hoạt động
-      setTimeout(() => {
-        if (document.hidden || document.visibilityState === 'hidden') {
-          window.close();
-        } else {
-          window.location.href = webUrl;
-          setTimeout(() => {
-            window.close();
-          }, 500);
-        }
-      }, 500);
-    } catch (error) {
-      console.error('Error decoding params:', error);
-      document.querySelector('.message').innerText = 'Lỗi dữ liệu';
-      document.querySelector('.message').style.color = '#ab47bc';
-      setTimeout(() => {
-        window.location.href = 'https://www.tiktok.com/live';
+      try {
+        const roomId = base62Decode(encodedParams);
+        const deepLink = `snssdk1180://live?live_id=${roomId}`;
+        const webUrl = `https://www.tiktok.com/live?room_id=${roomId}`;
+
+        // Thử deep link ngay lập tức
+        window.location.replace(deepLink);
+
+        // Fallback đến trang web TikTok sau 2 giây
         setTimeout(() => {
-          window.close();
-        }, 500);
-      }, 2000);
+          document.querySelector('.message').innerText = 'Không mở được ứng dụng TikTok, chuyển đến trang web...';
+          document.querySelector('.message').style.color = '#ab47bc';
+          document.querySelector('#retry-button').href = webUrl;
+          window.location.replace(webUrl);
+        }, 2000);
+      } catch (error) {
+        console.error('Lỗi giải mã Room ID:', error);
+        document.querySelector('.message').innerText = 'Lỗi dữ liệu Room ID';
+        document.querySelector('.message').style.color = '#ab47bc';
+        document.querySelector('#retry-button').href = 'https://www.tiktok.com/live';
+        setTimeout(() => {
+          window.location.replace('https://www.tiktok.com/live');
+        }, 2000);
+      }
     }
+
+    // Chạy chuyển hướng ngay khi trang tải
+    redirectToTikTok();
   </script>
 </body>
 </html>
