@@ -1,129 +1,57 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
+  <title>Redirecting to TikTok</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BOT JIMMY-HOANG V2.1</title>
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background: #f0f2f5;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-      font-size: 16px;
-    }
-    #container {
-      display: grid;
-      grid-template-rows: auto auto auto;
-      gap: 1rem;
-      text-align: center;
-      border: 2px solid #ff0000;
-      padding: 25px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #fff, #f9f9f9);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      max-width: 90%;
-    }
-    .title {
-      font-size: 2rem;
-      font-weight: bold;
-      color: #212121;
-      margin: 0;
-    }
-    .message {
-      font-size: 1.5rem;
-      color: #424242;
-      margin: 0.5rem 0;
-    }
-    .fake-button {
-      background: #1565c0;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      font-size: 1.2rem;
-      border-radius: 4px;
-      display: inline-block;
-      margin-top: 1rem;
-      transition: background 0.3s;
-      cursor: pointer;
-      text-decoration: none;
-    }
-    .fake-button:hover {
-      background: #0d47a1;
-    }
-    @media (max-width: 600px) {
-      body { font-size: 14px; }
-      #container { padding: 20px; }
-      .title { font-size: 1.8rem; }
-      .message { font-size: 1.3rem; }
-      .fake-button { font-size: 1rem; padding: 8px 16px; }
-    }
-  </style>
-</head>
-<body>
-  <div id="container">
-    <h1 class="title">BOT JIMMY-HOANG V2.1</h1>
-    <p class="message">Đang mở TikTok LIVE...</p>
-    <a id="retry-button" class="fake-button" href="https://www.tiktok.com/live">Thử lại</a>
-  </div>
-
+  <meta name="robots" content="noindex,nofollow">
   <script>
-    const BASE62_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    // Bảng mã base62
+    const BASE62 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-    function base62Decode(str) {
-      let n = 0n;
-      for (const char of str) {
-        const value = BASE62_CHARS.indexOf(char);
-        if (value === -1) throw new Error('Invalid base62 character');
-        n = n * 62n + BigInt(value);
+    function decodeBase62(str) {
+      let num = 0n;
+      for (let char of str) {
+        const value = BASE62.indexOf(char);
+        if (value === -1) return null;
+        num = num * 62n + BigInt(value);
       }
-      return n.toString();
+      return num.toString();
     }
 
-    function getParam(name) {
-      return new URLSearchParams(window.location.search).get(name);
+    function getParam() {
+      const query = window.location.search.slice(1); // bỏ dấu '?'
+      return query || null;
     }
 
-    function redirectToTikTok() {
-      const encodedRoomId = getParam('id');
-      if (!encodedRoomId) {
-        document.querySelector('.message').innerText = 'Không tìm thấy Room ID';
-        document.querySelector('.message').style.color = '#ab47bc';
-        document.querySelector('#retry-button').href = 'https://www.tiktok.com/live';
+    window.onload = function () {
+      const encoded = getParam();
+      if (!encoded) {
+        document.body.innerText = "❌ Thiếu mã roomId!";
         return;
       }
 
-      try {
-        const roomId = base62Decode(encodedRoomId);
-        const deepLink = `snssdk1180://live?live_id=${roomId}`;
-        const webUrl = `https://www.tiktok.com/live/room/${roomId}`;
-
-        // Chuyển hướng ngay
-        window.location.replace(deepLink);
-
-        // Fallback sau 2s
-        setTimeout(() => {
-          document.querySelector('.message').innerText = 'Không mở được ứng dụng TikTok, chuyển đến trang web...';
-          document.querySelector('.message').style.color = '#ab47bc';
-          document.querySelector('#retry-button').href = webUrl;
-          window.location.replace(webUrl);
-        }, 2000);
-      } catch (error) {
-        console.error('Lỗi giải mã Room ID:', error);
-        document.querySelector('.message').innerText = 'Lỗi dữ liệu Room ID';
-        document.querySelector('.message').style.color = '#ab47bc';
-        document.querySelector('#retry-button').href = 'https://www.tiktok.com/live';
-        setTimeout(() => {
-          window.location.replace('https://www.tiktok.com/live');
-        }, 2000);
+      const decodedRoomId = decodeBase62(encoded);
+      if (!decodedRoomId) {
+        document.body.innerText = "❌ Mã không hợp lệ!";
+        return;
       }
-    }
 
-    redirectToTikTok();
+      const deepLink = `snssdk1180://live/room/${decodedRoomId}`;
+      window.location.href = deepLink;
+
+      // Dự phòng nếu redirect không hoạt động
+      setTimeout(() => {
+        document.body.innerHTML = `
+          <h2>Đang mở TikTok Live...</h2>
+          <p>Nếu không được tự động chuyển, hãy bấm vào đây:</p>
+          <a href="${deepLink}">${deepLink}</a>
+        `;
+      }, 1000);
+    };
   </script>
+</head>
+<body>
+  <h2>Đang chuyển hướng...</h2>
 </body>
 </html>
