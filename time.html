@@ -1,100 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Countdown Timer</title>
+  <title>Thời gian đếm ngược</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
-    #countdown { font-size: 48px; font-weight: bold; color: #333; }
-    #info { margin-top: 20px; font-size: 18px; }
-    .error { color: red; }
+    body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+    .container { max-width: 600px; margin: auto; }
+    .username { font-size: 24px; font-weight: bold; }
+    .box-info { font-size: 18px; margin: 10px 0; }
+    .timer { font-size: 32px; color: #e74c3c; }
   </style>
 </head>
 <body>
-  <h1>Countdown Timer</h1>
-  <div id="countdown">00:00s</div>
-  <div id="info"></div>
+  <div class="container">
+    <div class="username" id="username">@username</div>
+    <div class="box-info" id="boxInfo">🎁 ?/? 🏳️ 👀 ?</div>
+    <div class="timer" id="timer">00:00:00</div>
+    <div id="boxTime">--:--:--</div>
+    <div>Canh giờ hoàng đạo</div>
+  </div>
 
   <script>
-    // Hàm base62 tương thích với 12Help.js
-    const BASE62_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-    const base62 = {
-      decode: function(encoded) {
-        let result = '';
-        for (let i = 0; i < encoded.length; i++) {
-          const value = BASE62_CHARS.indexOf(encoded[i]);
-          if (value === -1) {
-            throw new Error('Invalid base62 character');
-          }
-          // Ánh xạ ngược charCode % 62 = value
-          let charCode = value;
-          // Tìm charCode nhỏ nhất trong phạm vi ASCII (0-127) phù hợp
-          while (charCode < 128 && charCode % 62 !== value) {
-            charCode += 62;
-          }
-          if (charCode >= 128) {
-            // Nếu không tìm thấy, thử phạm vi Unicode cơ bản
-            charCode = value + 62; // Giả sử ký tự đơn giản
-          }
-          result += String.fromCharCode(charCode);
-        }
-        return result;
-      }
-    };
-
-    // Lấy tham số từ URL
-    const queryString = window.location.search.slice(1); // Bỏ dấu ?
-    let params = {};
-    try {
-      const decoded = base62.decode(queryString);
-      console.log('Decoded string:', decoded); // Log để debug
-      params = JSON.parse(decoded);
-      console.log('Parsed params:', params); // Log để debug
-    } catch (e) {
-      console.error('Lỗi giải mã params:', e);
-      document.getElementById('countdown').innerHTML = '<span class="error">Lỗi: Dữ liệu không hợp lệ</span>';
-      return;
+    function getQueryParams() {
+      const params = new URLSearchParams(window.location.search);
+      return {
+        user: params.get('user') || 'username',
+        box: params.get('box') || '0',
+        divide: params.get('divide') || '0',
+        viewers: params.get('viewers') || '0',
+        country: params.get('country') || '🏳️',
+        end: parseInt(params.get('end')) || 0,
+        createAt: params.get('createAt') || ''
+      };
     }
 
-    // Hiển thị thông tin rương
-    document.getElementById('info').innerHTML = `
-      User: ${params.user || 'N/A'}<br>
-      Box: ${params.box || 0}/${params.divide || 0}<br>
-      Viewers: ${params.viewers || 0}<br>
-      Country: ${params.country || 'N/A'}<br>
-      Created: ${params.createAt ? new Date(parseInt(params.createAt)).toLocaleString() : 'N/A'}
-    `;
-
-    // Countdown logic
-    const endTime = parseInt(params.end);
-    if (!endTime || isNaN(endTime) || endTime <= 0) {
-      console.error('Lỗi: endTime không hợp lệ:', params.end);
-      document.getElementById('countdown').innerHTML = '<span class="error">Lỗi: Thời gian không hợp lệ</span>';
-      return;
+    function formatRemainingTime(ms) {
+      if (ms <= 0) return '00:00:00';
+      const seconds = Math.floor(ms / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      const hours = Math.floor(minutes / 60);
+      const mins = minutes % 60;
+      return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     }
 
-    // Kiểm tra nếu thời gian đã hết hạn ngay từ đầu
-    const now = Date.now();
-    if (endTime <= now) {
-      console.warn('Thời gian đã hết hạn:', endTime, now);
-      document.getElementById('countdown').innerHTML = 'EXPIRED';
-      return;
+    function formatBoxTime(createAt) {
+      if (!createAt) return '--:--:--';
+      const date = new Date(parseInt(createAt));
+      return date.toLocaleTimeString('vi-VN', { hour12: false });
     }
 
-    const x = setInterval(() => {
-      const now = Date.now();
-      const distance = endTime - now;
+    function updateDisplay() {
+      const params = getQueryParams();
+      document.getElementById('username').textContent = `@${params.user}`;
+      document.getElementById('boxInfo').textContent = `🎁 ${params.box}/${params.divide} ${params.country} 👀 ${params.viewers}`;
+      document.getElementById('boxTime').textContent = formatBoxTime(params.createAt);
 
-      if (distance < 0) {
-        clearInterval(x);
-        document.getElementById('countdown').innerHTML = 'EXPIRED';
-      } else {
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        document.getElementById('countdown').innerHTML = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}s`;
-      }
-    }, 1000);
+      const updateTimer = () => {
+        const now = Date.now();
+        const remaining = params.end - now;
+        document.getElementById('timer').textContent = formatRemainingTime(remaining);
+        if (remaining <= 0) clearInterval(timerInterval);
+      };
+
+      updateTimer();
+      const timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    window.onload = updateDisplay;
   </script>
 </body>
 </html>
