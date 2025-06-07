@@ -1,0 +1,134 @@
+!DOCTYPE html
+html lang=vi
+head
+    meta charset=UTF-8
+    meta name=viewport content=width=device-width, initial-scale=1.0
+    titleChỉnh sửa cấu hình Bottitle
+    style
+        body {
+            font-family Arial, sans-serif;
+            text-align center;
+            padding 20px;
+            background-color #f0f0f0;
+            display flex;
+            justify-content center;
+            align-items center;
+            height 100vh;
+            margin 0;
+        }
+        .container {
+            background-color white;
+            padding 20px;
+            border 2px solid #000000;
+            border-radius 8px;
+            width 300px;
+        }
+        .input-group {
+            margin 10px 0;
+        }
+        label {
+            font-weight bold;
+            margin-right 10px;
+        }
+        input {
+            padding 5px;
+            width 100px;
+        }
+        button {
+            background-color #007BFF;
+            color white;
+            padding 10px 20px;
+            border none;
+            border-radius 4px;
+            cursor pointer;
+            margin-top 10px;
+        }
+        buttonhover {
+            background-color #0056b3;
+        }
+        #message {
+            margin-top 10px;
+            color #d9534f;
+        }
+    style
+head
+body
+    div class=container
+        h2Chỉnh sửa cấu hình Both2
+        div class=input-group
+            label for=minRateminRatelabel
+            input type=number id=minRate step=0.1 value=0.0
+        div
+        div class=input-group
+            label for=minBoxminBoxlabel
+            input type=number id=minBox value=10
+        div
+        div class=input-group
+            label for=remainingTimeThresholdremainingTimeThresholdlabel
+            input type=number id=remainingTimeThreshold value=0
+        div
+        button onclick=saveConfig()Lưu cấu hìnhbutton
+        div id=messagediv
+    div
+    script
+         Thay bằng thông tin repository và token của bạn
+        const repoOwner = 'your-username';  Thay bằng username GitHub của bạn
+        const repoName = 'your-repo';  Thay bằng tên repository
+        const token = 'your-personal-access-token';  Thay bằng token GitHub của bạn
+        const filePath = 'Config1Config.json';
+
+        async function saveConfig() {
+            const minRate = document.getElementById('minRate').value;
+            const minBox = document.getElementById('minBox').value;
+            const remainingTimeThreshold = document.getElementById('remainingTimeThreshold').value;
+
+            const configData = {
+                telegram {
+                    minRate parseFloat(minRate),
+                    minBox parseInt(minBox),
+                    remainingTimeThreshold parseInt(remainingTimeThreshold)
+                }
+            };
+
+            const messageElement = document.getElementById('message');
+            messageElement.textContent = 'Đang lưu...';
+
+            try {
+                const response = await fetch(`httpsapi.github.comrepos${repoOwner}${repoName}contents${filePath}`, {
+                    method 'GET',
+                    headers {
+                        Authorization `token ${token}`
+                    }
+                });
+
+                const data = await response.json();
+                const sha = data.sha;
+                const content = Buffer.from(JSON.stringify(configData, null, 2)).toString('base64');
+
+                const updateResponse = await fetch(`httpsapi.github.comrepos${repoOwner}${repoName}contents${filePath}`, {
+                    method 'PUT',
+                    headers {
+                        Authorization `token ${token}`,
+                        'Content-Type' 'applicationjson'
+                    },
+                    body JSON.stringify({
+                        message 'Cập nhật cấu hình bot',
+                        content content,
+                        sha sha
+                    })
+                });
+
+                if (updateResponse.ok) {
+                    messageElement.textContent = 'Lưu thành công!';
+                    messageElement.style.color = '#5cb85c';
+                } else {
+                    throw new Error('Lỗi khi lưu cấu hình');
+                }
+            } catch (error) {
+                messageElement.textContent = `Lỗi ${error.message}`;
+                messageElement.style.color = '#d9534f';
+            }
+        }
+    script
+body
+html
