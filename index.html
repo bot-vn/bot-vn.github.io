@@ -85,7 +85,7 @@
     }
 
     function getParam() {
-      return window.location.search.slice(1); // lấy toàn bộ phần sau ?
+      return window.location.search.slice(1);
     }
 
     function redirectToTikTok() {
@@ -98,18 +98,16 @@
 
       try {
         const roomId = base62Decode(encodedRoomId);
-        const deepLink = `snssdk1128://live/room/${roomId}`;
-        const webUrl = `https://www.tiktok.com/live/room/${roomId}`;
+        const deepLink = `snssdk1180://live/room/${roomId}`;
+        const fallbackUrl = `https://www.tiktok.com/live/room/${roomId}`;
 
-        // Redirect vào app
         window.location.href = deepLink;
 
-        // Fallback nếu không mở app được
         setTimeout(() => {
           document.querySelector('.message').innerText = 'Không mở được ứng dụng TikTok, chuyển đến trang web...';
           document.querySelector('.message').style.color = '#ab47bc';
-          document.querySelector('#retry-button').href = webUrl;
-          window.location.href = webUrl;
+          document.querySelector('#retry-button').href = fallbackUrl;
+          window.location.href = fallbackUrl;
         }, 2000);
       } catch (err) {
         document.querySelector('.message').innerText = 'Mã không hợp lệ!';
