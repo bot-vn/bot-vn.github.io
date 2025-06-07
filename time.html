@@ -21,10 +21,9 @@
             text-align: center;
             background-color: white; /* Background color of the container, can be changed */
             padding: 20px;
-            border: 4px solid #ff0000; /* Border color (red), can be changed */
+            border: 4px solid #000000; /* Border color changed to black, can be changed */
             border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow effect, can be removed */
-            width: 300px;
+            width: 300px; /* Fixed width to ensure centering */
         }
         .username {
             color: #0056b3; /* Color of username (blue), can be changed */
@@ -84,7 +83,7 @@
             <div class="countdown-ms" id="countdownMs">49:43</div>
             <div class="countdown-full" id="countdownFull">00:00:49</div> <!-- Can be removed if not needed -->
         </div>
-        <button onclick="openTikTokLive()">Mở TikTok Live</button>
+        <button id="actionButton" onclick="openTikTokLive()">Canh giờ hoàng đạo</button>
     </div>
     <script>
         // Hàm lấy tham số từ URL
@@ -173,6 +172,7 @@
 
         // Cập nhật thời gian đếm ngược
         let lastUpdate = 0;
+        const actionButton = document.getElementById('actionButton');
         function updateTimer(timestamp) {
             if (!lastUpdate || (timestamp - lastUpdate >= 16)) {
                 const now = Date.now();
@@ -196,10 +196,14 @@
                 // Cập nhật hàng dưới (giờ:phút:giây)
                 document.getElementById('countdownFull').innerText = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`; // Can be removed if not needed
 
-                if (remainingMs <= 0) {
+                // Kiểm tra rương đã mở
+                if (remainingMs <= 0 || now > endTime) {
                     countdownMsElement.innerText = '00:00';
                     document.getElementById('countdownFull').innerText = '00:00:00';
-                    alert('Rương đã mở!');
+                    actionButton.innerText = 'Rương này đã được mở';
+                    actionButton.disabled = true; // Vô hiệu hóa nút
+                    actionButton.style.backgroundColor = '#cccccc'; // Màu xám để chỉ trạng thái không hoạt động
+                    actionButton.style.cursor = 'not-allowed';
                     return;
                 }
                 lastUpdate = timestamp;
@@ -210,39 +214,3 @@
     </script>
 </body>
 </html>
-</xaiArtifact>
-
-### Giải thích
-1. **Mã hóa base62 trong `9Websocket.js`**:
-   - Hàm `base62Encode` chuyển đổi dữ liệu (chuỗi JSON của các tham số) thành chuỗi base62.
-   - `countdownLink` giờ sử dụng `?data=${encodedParams}` thay vì các tham số riêng lẻ, ẩn link thật.
-
-2. **Giải mã base62 trong `time.html`**:
-   - Thêm hàm `base62Decode` để chuyển chuỗi base62 về dữ liệu gốc.
-   - Lấy `encodedData` từ URL, giải mã và parse JSON để lấy các tham số (`user`, `box`, `divide`, `viewers`, `country`, `end`, `createAt`).
-   - Nếu không có `data` trong URL, sử dụng giá trị mặc định (49 giây 43 mili giây từ bây giờ).
-
-3. **Hàng trên (giây:mili giây)**:
-   - Hiển thị `seconds:miliseconds` (ví dụ: `49:43` ban đầu).
-   - Chuyển sang màu đỏ đậm (`#800020`) khi còn dưới 3 giây.
-
-4. **Hàng dưới (giờ:phút:giây)**:
-   - Hiển thị `hh:mm:ss` (ví dụ: `00:00:49` ban đầu).
-
-5. **Comment về phần có thể xóa**:
-   - Thêm comment `<!-- Can be removed if not needed -->` cho `countdownFull`.
-   - Thêm comment `// Can be removed if not needed` cho phần cập nhật `countdownFull` và `viewers`.
-
-6. **Chức năng màu sắc**:
-   - Mỗi phần tử CSS có comment về màu sắc (ví dụ: `/* Color of countdown milliseconds (black), changes to #800020 when < 3s, can be changed */`).
-
-### Cách sử dụng
-- Trong `9Websocket.js`, khi gửi `countdownLink`, nó sẽ tạo một URL với tham số base62 (ví dụ: `https://bot-vn.github.io/time.html?data=abc123...`).
-- Mở `time.html` với URL từ `countdownLink`: Đếm ngược sẽ bắt đầu từ `49:43` và `00:00:49`, giảm dần, chuyển đỏ khi còn dưới 3 giây.
-
-### Lưu ý
-- Đảm bảo `time.html` được host tại `https://bot-vn.github.io/` hoặc địa chỉ tương ứng.
-- Nếu cần kiểm tra, bạn có thể tạo một URL thủ công với `data` đã mã hóa từ `9Websocket.js`.
-- Để thay đổi màu, chỉnh trực tiếp giá trị hex trong CSS.
-
-Bạn thấy ổn chưa? Có cần hỗ trợ thêm không?
