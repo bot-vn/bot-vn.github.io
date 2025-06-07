@@ -48,14 +48,14 @@
       align-items: center;
     }
     .milliseconds {
-      font-size: 4.5rem;
+      font-size: 5rem;
       font-weight: bold;
       color: #000;
       font-family: 'Courier New', monospace;
       animation: pulse 1s infinite;
     }
     .timer {
-      font-size: 3.75rem;
+      font-size: 2.5rem;
       font-weight: bold;
       color: #000;
       font-family: 'Courier New', monospace;
@@ -86,7 +86,6 @@
     button:hover {
       background: #0000cc;
     }
-
     @keyframes pulse {
       0% { opacity: 1; }
       50% { opacity: 0.7; }
@@ -96,37 +95,6 @@
       0% { opacity: 1; }
       50% { opacity: 0.5; }
       100% { opacity: 1; }
-    }
-
-    @media (max-width: 600px) {
-      body {
-        font-size: 14px;
-      }
-      #container {
-        padding: 20px;
-      }
-      .username {
-        font-size: 1.8rem; /* ~25px */
-      }
-      .box-info {
-        font-size: 1.3rem; /* ~18px */
-      }
-      .milliseconds {
-        font-size: 4rem; /* ~56px */
-      }
-      .timer {
-        font-size: 3.25rem; /* ~46px */
-      }
-      .timestamp {
-        font-size: 1.3rem; /* ~18px */
-      }
-      .flag {
-        font-size: 1.6rem; /* ~22px */
-      }
-      button {
-        font-size: 1rem; /* ~14px */
-        padding: 8px 16px;
-      }
     }
   </style>
 </head>
@@ -157,10 +125,6 @@
       return n.toString();
     }
 
-    function getParam(name) {
-      return new URLSearchParams(window.location.search).get(name);
-    }
-
     function getFlag(countryCode) {
       if (!countryCode || countryCode.length !== 2) return "🏳️";
       const codePoints = [...countryCode.toUpperCase()].map(c => 0x1F1E6 + c.charCodeAt(0) - 65);
@@ -168,13 +132,11 @@
     }
 
     async function openTikTokLive() {
-      // Giả định roomId được gửi từ 9Websocket.js, cần thêm vào params
-      // Hiện tại không có roomId trong params, nên tạm dùng fallback
       try {
         const userAgent = navigator.userAgent.toLowerCase();
         const isIOS = /iphone|ipad|ipod/.test(userAgent);
         const isAndroid = /android/.test(userAgent);
-        const username = document.getElementById('username').innerText.slice(1); // Lấy username từ giao diện
+        const username = document.getElementById('username').innerText.slice(1);
         const webUrl = `https://www.tiktok.com/@${username}/live`;
 
         if (isIOS) {
@@ -197,8 +159,7 @@
       }
     }
 
-    // Lấy và giải mã tham số base62
-    const encodedParams = getParam('');
+    const encodedParams = window.location.search.slice(1);
     let params = {};
     try {
       const decodedString = base62Decode(encodedParams);
@@ -211,7 +172,6 @@
       return;
     }
 
-    // Lấy các tham số
     const username = params.user;
     const box = parseInt(params.box, 10);
     const divide = parseInt(params.divide, 10);
@@ -219,26 +179,22 @@
     const countryCode = params.country;
     const end = parseInt(params.end, 10);
 
-    // Kiểm tra dữ liệu đầu vào
     if (!username || isNaN(box) || isNaN(divide) || isNaN(viewers) || isNaN(end)) {
       const usernameElem = document.getElementById("username");
       usernameElem.innerText = "Lỗi dữ liệu";
       usernameElem.style.color = "#0056b3";
     } else {
-      // Hiển thị thông tin
       document.getElementById("username").innerText = `@${username}`;
       document.getElementById("boxinfo").innerHTML = `🎁 ${box}/${divide} <span class="flag">${getFlag(countryCode)}</span> 👀 ${viewers}`;
 
-      // Tính thời gian bắt đầu
       const duration = Math.floor((end - Date.now()) / 1000);
       const start = end - duration * 1000;
       const dropTime = new Date(start);
       document.getElementById("dropTime").innerText = `${dropTime.toLocaleTimeString('vi-VN')}`;
 
-      // Cập nhật đồng hồ đếm ngược
       let lastUpdate = 0;
       function updateTimer(timestamp) {
-        if (!lastUpdate || (timestamp - lastUpdate >= 16)) { // ~60fps
+        if (!lastUpdate || (timestamp - lastUpdate >= 16)) {
           const now = Date.now();
           const remainingMs = Math.max(0, end - now);
           const remainingSec = Math.floor(remainingMs / 1000);
@@ -246,10 +202,9 @@
           const s = remainingSec % 60;
           const ms = Math.floor((remainingMs % 1000) / 10);
           document.getElementById("milliseconds").innerText = `${ms.toString().padStart(2, '0')}`;
-          document.getElementById("countdown").innerText = 
+          document.getElementById("countdown").innerText =
             `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}:${ms.toString().padStart(2, '0')}`;
-          
-          // Cảnh báo khi còn dưới 10 giây
+
           const timerElem = document.getElementById("countdown");
           if (remainingSec <= 10) {
             timerElem.classList.add('warning');
@@ -257,7 +212,6 @@
             timerElem.classList.remove('warning');
           }
 
-          // Thông báo khi hết thời gian
           if (remainingMs <= 0) {
             document.getElementById("milliseconds").innerText = "00";
             document.getElementById("countdown").innerText = "00:00:00";
@@ -272,7 +226,6 @@
         }
       }
 
-      // Dừng cập nhật khi trang ẩn
       document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'visible') {
           requestAnimationFrame(updateTimer);
