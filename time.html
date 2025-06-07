@@ -35,6 +35,7 @@
             font-size: 16px;
             margin: 12px 0;
             color: #000; /* Color of box info (black), can be changed */
+            font-weight: bold; /* Make BOX text bold */
         }
         .flag {
             margin: 0 5px;
@@ -43,14 +44,14 @@
             margin: 16px 0;
         }
         .countdown-ms {
-            font-size: 60px;
+            font-size: 90px; /* Increased from 60px to 90px for larger text */
             font-weight: bold;
             color: #000; /* Color of countdown milliseconds (black), changes to #800020 when < 3s, can be changed */
             margin: 0;
             transition: color 0.3s; /* Smooth color transition */
         }
         .countdown-full {
-            font-size: 24px; /* Increased for better visibility */
+            font-size: 30px; /* Increased from 24px to 30px for better visibility */
             margin-bottom: 8px;
             color: #000; /* Color of countdown full (black), can be changed */
         }
@@ -87,8 +88,8 @@
         <h2 class="username" id="username">@kavooneska2</h2>
         <div class="box-info" id="boxinfo">🎁 BOX: <span id="coins">50</span>/<span id="viewerRewardCount">50</span> <span class="flag" id="flag">🇧🇾</span> 👀 <span id="viewers">56</span></div>
         <div class="timer-grid">
-            <div class="countdown-ms" id="countdownMs">49:43</div>
-            <div class="countdown-full" id="countdownFull">00:00:49</div> <!-- Can be removed if not needed -->
+            <div class="countdown-ms" id="countdownMs">32:57</div>
+            <div class="countdown-full" id="countdownFull">00:00:32</div> <!-- Can be removed if not needed -->
         </div>
         <button id="actionButton" onclick="openTikTokLive()">Canh giờ hoàng đạo</button>
     </div>
@@ -147,7 +148,7 @@
                 divide: 50,
                 viewers: 56,
                 country: 'BY',
-                end: Date.now() + 49430, // 49 giây 43 mili giây từ bây giờ
+                end: Date.now() + 32570, // 32 giây 57 mili giây từ bây giờ
                 createAt: Date.now().toString()
             };
         }
