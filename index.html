@@ -18,7 +18,7 @@
     }
     #container {
       display: grid;
-      grid-template-rows: auto auto auto auto;
+      grid-template-rows: auto auto auto;
       gap: 1rem;
       text-align: center;
       border: 2px solid red;
@@ -39,25 +39,16 @@
       color: #333;
       margin: 0.5rem 0;
     }
-    .error {
-      font-size: 1.2rem;
-      font-style: italic;
-      color: #666;
-      margin: 0.5rem 0;
-    }
-    button {
+    .fake-button {
       background: #0000FF;
       color: white;
       padding: 10px 20px;
       border: none;
       font-size: 1.2rem;
       border-radius: 4px;
-      cursor: pointer;
+      display: inline-block;
       margin-top: 1rem;
       transition: background 0.3s;
-    }
-    button:hover {
-      background: #0000cc;
     }
     @media (max-width: 600px) {
       body {
@@ -72,10 +63,7 @@
       .message {
         font-size: 1.3rem;
       }
-      .error {
-        font-size: 1rem;
-      }
-      button {
+      .fake-button {
         font-size: 1rem;
         padding: 8px 16px;
       }
@@ -86,8 +74,7 @@
   <div id="container">
     <h1 class="title">BOT JIMMY-HOANG V2.1</h1>
     <p class="message">Đang triệu hồi TikTok LIVE...</p>
-    <p class="error">Nếu phép lỗi, hãy thử lại</p>
-    <button onclick="openTikTokLive()">Mở TikTok Live</button>
+    <div class="fake-button">Nếu phép lỗi, hãy thử lại</div>
   </div>
 
   <script>
@@ -109,46 +96,41 @@
       return new URLSearchParams(window.location.search).get(name);
     }
 
-    async function openTikTokLive() {
-      try {
-        const userAgent = navigator.userAgent.toLowerCase();
-        const isIOS = /iphone|ipad|ipod/.test(userAgent);
-        const isAndroid = /android/.test(userAgent);
-        const username = localStorage.getItem('decodedUsername') || 'unknown';
-        const webUrl = `https://www.tiktok.com/@${username}/live`;
+    // Giải mã tham số base62 từ URL và chuyển hướng ngay
+    const encodedParams = getParam('');
+    try {
+      const decodedString = base62Decode(encodedParams);
+      const roomId = decodedString; // roomId là chuỗi số trực tiếp từ base62
 
-        if (isIOS) {
-          document.location.href = `snssdk1180://live?username=${username}`;
-        } else if (isAndroid) {
-          document.location.href = `tiktok://live?username=${username}`;
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isIOS = /iphone|ipad|ipod/.test(userAgent);
+      const isAndroid = /android/.test(userAgent);
+      const webUrl = `https://www.tiktok.com/live?room_id=${roomId}`;
+
+      if (isIOS) {
+        window.location.href = `snssdk1180://live?room_id=${roomId}`;
+      } else if (isAndroid) {
+        window.location.href = `tiktok://live?room_id=${roomId}`;
+      } else {
+        window.location.href = webUrl;
+      }
+
+      // Fallback sau 1 giây nếu deep link không hoạt động
+      setTimeout(() => {
+        if (document.hidden || document.visibilityState === 'hidden') {
+          window.close();
         } else {
           window.location.href = webUrl;
         }
-
-        setTimeout(() => {
-          if (document.hidden || document.visibilityState === 'hidden') {
-            window.close();
-          } else {
-            window.location.href = webUrl;
-          }
-        }, 1000);
-      } catch (e) {
-        alert('Không thể mở TikTok Live. Vui lòng thử lại!');
-      }
-    }
-
-    // Lấy và giải mã tham số base62 từ URL
-    const encodedParams = getParam('');
-    let username = 'unknown';
-    try {
-      const decodedString = base62Decode(encodedParams);
-      const params = JSON.parse(decodedString);
-      username = params.user || 'unknown';
-      localStorage.setItem('decodedUsername', username); // Lưu username để dùng trong openTikTokLive
+      }, 1000);
     } catch (error) {
       console.error('Error decoding params:', error);
       document.querySelector('.message').innerText = 'Lỗi dữ liệu';
       document.querySelector('.message').style.color = '#e00';
+      // Chuyển hướng đến TikTok mặc định nếu lỗi
+      setTimeout(() => {
+        window.location.href = 'https://www.tiktok.com/live';
+      }, 2000); // Chờ 2 giây để hiển thị lỗi
     }
   </script>
 </body>
