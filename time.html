@@ -48,7 +48,7 @@
       align-items: center;
     }
     .milliseconds {
-      font-size: 6rem; /* Giữ nguyên kích thước */
+      font-size: 10rem;
       font-weight: bold;
       color: #000;
       font-family: 'Courier New', monospace;
@@ -104,7 +104,7 @@
     <div class="box-info" id="boxinfo">🎁 ?/? <span class="flag">🏳️</span> 👀 ?</div>
     <div class="timer-grid">
       <div class="milliseconds" id="milliseconds">00</div>
-      <div class="timer" id="countdown">Time: 00:00:00</div>
+      <div class="timer" id="countdown">00:00:00</div>
     </div>
     <div class="timestamp" id="dropTime">--:--:--</div>
     <button onclick="openTikTokLive()">Canh giờ hoàng đạo</button>
@@ -187,10 +187,12 @@
       document.getElementById("username").innerText = `@${username}`;
       document.getElementById("boxinfo").innerHTML = `🎁 ${box}/${divide} <span class="flag">${getFlag(countryCode)}</span> 👀 ${viewers}`;
 
+      // Sử dụng end làm cơ sở thời gian liên quan (giả định end gần với thời gian tạo box)
+      const createTime = new Date(end);
+      document.getElementById("dropTime").innerText = `${createTime.toLocaleTimeString('vi-VN', { hour12: false })}`;
+
       const duration = Math.floor((end - Date.now()) / 1000);
       const start = end - duration * 1000;
-      const dropTime = new Date(start);
-      document.getElementById("dropTime").innerText = `${dropTime.toLocaleTimeString('vi-VN')}`;
 
       let lastUpdate = 0;
       function updateTimer(timestamp) {
@@ -206,8 +208,12 @@
             ms = Math.floor((remainingMs % 1000) / 10); // Hiển thị 00-99
             document.getElementById("milliseconds").innerText = `${ms.toString().padStart(2, '0')}`;
           }
-          document.getElementById("countdown").innerText =
-            `Remaining Time: ${Math.floor(remainingSec / 60).toString().padStart(2, '0')}:${(remainingSec % 60).toString().padStart(2, '0')}:${ms.toString().padStart(2, '0')}`;
+          if (remainingMs > 0) {
+            document.getElementById("countdown").innerText =
+              `${Math.floor(remainingSec / 60).toString().padStart(2, '0')}:${(remainingSec % 60).toString().padStart(2, '0')}:${ms.toString().padStart(2, '0')}`;
+          } else {
+            document.getElementById("countdown").innerText = "Rương mở";
+          }
 
           const timerElem = document.getElementById("countdown");
           if (remainingSec <= 10) {
@@ -218,7 +224,7 @@
 
           if (remainingMs <= 0) {
             document.getElementById("milliseconds").innerText = "0.0";
-            document.getElementById("countdown").innerText = "Remaining Time: 00:00:00";
+            document.getElementById("countdown").innerText = "Rương mở";
             alert("Rương đã mở!");
             return;
           }
