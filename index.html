@@ -1,124 +1,87 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
+  <title>Bot</title>
+  <meta name="robots" content="noindex,nofollow">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BOT JIMMY-HOANG V2.1</title>
   <style>
     body {
-      font-family: 'Arial', sans-serif;
-      background: #f0f2f5;
+      font-family: sans-serif;
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       height: 100vh;
-      margin: 0;
-      font-size: 16px;
     }
     #container {
-      display: grid;
-      grid-template-rows: auto auto auto;
-      gap: 1rem;
       text-align: center;
-      border: 2px solid #ff0000;
-      padding: 25px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #fff, #f9f9f9);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      max-width: 90%;
+      border: 2px solid red;
+      padding: 30px;
+      border-radius: 8px;
     }
-    .title {
-      font-size: 2rem;
-      font-weight: bold;
-      color: #212121;
-      margin: 0;
-    }
-    .message {
-      font-size: 1.5rem;
-      color: #424242;
-      margin: 0.5rem 0;
-    }
-    .fake-button {
-      background: #1565c0;
+    button {
+      background: #0000FF;
       color: white;
       padding: 10px 20px;
       border: none;
-      font-size: 1.2rem;
+      font-size: 16px;
       border-radius: 4px;
-      display: inline-block;
-      margin-top: 1rem;
-      transition: background 0.3s;
-      cursor: pointer;
-      text-decoration: none;
-    }
-    .fake-button:hover {
-      background: #0d47a1;
-    }
-    @media (max-width: 600px) {
-      body { font-size: 14px; }
-      #container { padding: 20px; }
-      .title { font-size: 1.8rem; }
-      .message { font-size: 1.3rem; }
-      .fake-button { font-size: 1rem; padding: 8px 16px; }
+      margin-top: 15px;
     }
   </style>
 </head>
 <body>
   <div id="container">
-    <h1 class="title">BOT JIMMY-HOANG V2.1</h1>
-    <p class="message">Đang mở TikTok LIVE...</p>
-    <a id="retry-button" class="fake-button" href="https://www.tiktok.com/live">Thử lại</a>
+    <h2>BOT JIMMY-HOANG V2.1</h2>
+    <p id="status">Đang triệu hồi TikTok LIVE...</p>
+    <button onclick="retry()">Nếu phép lỗi, hãy thử lại</button>
   </div>
 
   <script>
-    const BASE62_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-
-    function base62Decode(str) {
-      let n = 0n;
-      for (const char of str) {
-        const value = BASE62_CHARS.indexOf(char);
-        if (value === -1) throw new Error('Invalid base62 character');
-        n = n * 62n + BigInt(value);
-      }
-      return n.toString();
-    }
-
-    function getParam() {
-      return window.location.search.slice(1);
-    }
-
-    function redirectToTikTok() {
-      const encodedRoomId = getParam();
-      if (!encodedRoomId) {
-        document.querySelector('.message').innerText = 'Không tìm thấy mã phòng';
-        document.querySelector('.message').style.color = '#ab47bc';
-        return;
-      }
-
+    async function redirectToTikTokLive() {
       try {
-        const roomId = base62Decode(encodedRoomId);
-        const deepLink = `snssdk1180://live/room/${roomId}`;
-        const fallbackUrl = `https://www.tiktok.com/live/room/${roomId}`;
+        const encoded = location.search.slice(1);
+        const padded = encoded.padEnd(Math.ceil(encoded.length / 4) * 4, '=');
+        const roomId = atob(padded);
 
-        window.location.href = deepLink;
+        // Detect platform
+        const userAgent = navigator.userAgent.toLowerCase();
+        const isIOS = /iphone|ipad|ipod/.test(userAgent);
+        const isAndroid = /android/.test(userAgent);
 
+        let tiktokAppUrl;
+        if (isIOS) {
+          tiktokAppUrl = `snssdk1180://live?room_id=${roomId}`;
+        } else {
+          tiktokAppUrl = `tiktok://live/${roomId}`;
+        }
+
+        // Try open in app
+        document.location.href = tiktokAppUrl;
+
+        // Fallback to web
         setTimeout(() => {
-          document.querySelector('.message').innerText = 'Không mở được ứng dụng TikTok, chuyển đến trang web...';
-          document.querySelector('.message').style.color = '#ab47bc';
-          document.querySelector('#retry-button').href = fallbackUrl;
-          window.location.href = fallbackUrl;
-        }, 2000);
-      } catch (err) {
-        document.querySelector('.message').innerText = 'Mã không hợp lệ!';
-        document.querySelector('.message').style.color = '#ab47bc';
-        setTimeout(() => {
-          window.location.href = 'https://www.tiktok.com/live';
-        }, 2000);
+          if (document.hidden || document.visibilityState === 'hidden') {
+            window.close();
+          } else {
+            window.location.href = `https://www.tiktok.com/live/room/${roomId}`;
+          }
+        }, 1000);
+
+      } catch (e) {
+        document.getElementById("status").innerText = "❌ Có lỗi rồi - Liên hệ Telegram: @JimmyHoang68.";
       }
     }
 
-    redirectToTikTok();
+    function retry() {
+      redirectToTikTokLive();
+    }
+
+    if (window.history && window.history.replaceState) {
+      window.history.replaceState(null, document.title, window.location.href);
+    }
+
+    redirectToTikTokLive();
   </script>
 </body>
 </html>
