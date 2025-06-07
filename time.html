@@ -1,249 +1,100 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Box Countdown</title>
+  <title>Countdown Timer</title>
   <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background: #f0f2f5;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-      font-size: 16px;
-    }
-    #container {
-      display: grid;
-      grid-template-rows: auto auto auto auto;
-      gap: 1rem;
-      text-align: center;
-      border: 2px solid red;
-      padding: 25px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #fff, #f9f9f9);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      max-width: 90%;
-    }
-    .username {
-      font-size: 2rem;
-      color: #0056b3;
-      font-weight: bold;
-      margin: 0;
-    }
-    .box-info {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 1.5rem;
-      color: #333;
-    }
-    .timer-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 0.5rem;
-      align-items: center;
-    }
-    .milliseconds {
-      font-size: 10rem;
-      font-weight: bold;
-      color: #000;
-      font-family: 'Courier New', monospace;
-      animation: pulse 1s infinite;
-    }
-    .timer {
-      font-size: 2.5rem;
-      font-weight: bold;
-      color: #000;
-      font-family: 'Courier New', monospace;
-    }
-    .timer.warning {
-      color: #e00;
-      animation: flash 0.5s infinite;
-    }
-    .timestamp {
-      font-size: 1.5rem;
-      color: #444;
-    }
-    .flag {
-      font-size: 1.8rem;
-      margin: 0 0.5rem;
-    }
-    button {
-      background: #0000FF;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      font-size: 1.2rem;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-top: 1rem;
-      transition: background 0.3s;
-    }
-    button:hover {
-      background: #0000cc;
-    }
-    @keyframes pulse {
-      0% { opacity: 1; }
-      50% { opacity: 0.7; }
-      100% { opacity: 1; }
-    }
-    @keyframes flash {
-      0% { opacity: 1; }
-      50% { opacity: 0.5; }
-      100% { opacity: 1; }
-    }
+    body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+    #countdown { font-size: 48px; font-weight: bold; color: #333; }
+    #info { margin-top: 20px; font-size: 18px; }
+    .error { color: red; }
   </style>
 </head>
 <body>
-  <div id="container">
-    <h2 class="username" id="username">@username</h2>
-    <div class="box-info" id="boxinfo">🎁 ?/? <span class="flag">🏳️</span> 👀 ?</div>
-    <div class="timer-grid">
-      <div class="milliseconds" id="milliseconds">00</div>
-      <div class="timer" id="countdown">00:00:00</div>
-    </div>
-    <div class="timestamp" id="dropTime">--:--:--</div>
-    <button onclick="openTikTokLive()">Canh giờ hoàng đạo</button>
-  </div>
+  <h1>Countdown Timer</h1>
+  <div id="countdown">00:00s</div>
+  <div id="info"></div>
 
   <script>
+    // Hàm base62 tương thích với 12Help.js
     const BASE62_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-
-    function base62Decode(str) {
-      let n = 0n;
-      for (const char of str) {
-        const value = BASE62_CHARS.indexOf(char);
-        if (value === -1) {
-          throw new Error('Invalid base62 character');
-        }
-        n = n * 62n + BigInt(value);
-      }
-      return n.toString();
-    }
-
-    function getFlag(countryCode) {
-      if (!countryCode || countryCode.length !== 2) return "🏳️";
-      const codePoints = [...countryCode.toUpperCase()].map(c => 0x1F1E6 + c.charCodeAt(0) - 65);
-      return String.fromCodePoint(...codePoints);
-    }
-
-    async function openTikTokLive() {
-      try {
-        const userAgent = navigator.userAgent.toLowerCase();
-        const isIOS = /iphone|ipad|ipod/.test(userAgent);
-        const isAndroid = /android/.test(userAgent);
-        const username = document.getElementById('username').innerText.slice(1);
-        const webUrl = `https://www.tiktok.com/@${username}/live`;
-
-        if (isIOS) {
-          document.location.href = `snssdk1180://live?username=${username}`;
-        } else if (isAndroid) {
-          document.location.href = `tiktok://live?username=${username}`;
-        } else {
-          window.location.href = webUrl;
-        }
-
-        setTimeout(() => {
-          if (document.hidden || document.visibilityState === 'hidden') {
-            window.close();
-          } else {
-            window.location.href = webUrl;
+    const base62 = {
+      decode: function(encoded) {
+        let result = '';
+        for (let i = 0; i < encoded.length; i++) {
+          const value = BASE62_CHARS.indexOf(encoded[i]);
+          if (value === -1) {
+            throw new Error('Invalid base62 character');
           }
-        }, 1000);
-      } catch (e) {
-        alert('Không thể mở TikTok Live. Vui lòng thử lại!');
+          // Ánh xạ ngược charCode % 62 = value
+          let charCode = value;
+          // Tìm charCode nhỏ nhất trong phạm vi ASCII (0-127) phù hợp
+          while (charCode < 128 && charCode % 62 !== value) {
+            charCode += 62;
+          }
+          if (charCode >= 128) {
+            // Nếu không tìm thấy, thử phạm vi Unicode cơ bản
+            charCode = value + 62; // Giả sử ký tự đơn giản
+          }
+          result += String.fromCharCode(charCode);
+        }
+        return result;
       }
-    }
+    };
 
-    const encodedParams = window.location.search.slice(1);
+    // Lấy tham số từ URL
+    const queryString = window.location.search.slice(1); // Bỏ dấu ?
     let params = {};
     try {
-      const decodedString = base62Decode(encodedParams);
-      params = JSON.parse(decodedString);
-    } catch (error) {
-      console.error('Error decoding params:', error);
-      const usernameElem = document.getElementById("username");
-      usernameElem.innerText = "Lỗi dữ liệu";
-      usernameElem.style.color = "#0056b3";
+      const decoded = base62.decode(queryString);
+      console.log('Decoded string:', decoded); // Log để debug
+      params = JSON.parse(decoded);
+      console.log('Parsed params:', params); // Log để debug
+    } catch (e) {
+      console.error('Lỗi giải mã params:', e);
+      document.getElementById('countdown').innerHTML = '<span class="error">Lỗi: Dữ liệu không hợp lệ</span>';
       return;
     }
 
-    const username = params.user;
-    const box = parseInt(params.box, 10);
-    const divide = parseInt(params.divide, 10);
-    const viewers = parseInt(params.viewers, 10);
-    const countryCode = params.country;
-    const end = parseInt(params.end, 10);
+    // Hiển thị thông tin rương
+    document.getElementById('info').innerHTML = `
+      User: ${params.user || 'N/A'}<br>
+      Box: ${params.box || 0}/${params.divide || 0}<br>
+      Viewers: ${params.viewers || 0}<br>
+      Country: ${params.country || 'N/A'}<br>
+      Created: ${params.createAt ? new Date(parseInt(params.createAt)).toLocaleString() : 'N/A'}
+    `;
 
-    if (!username || isNaN(box) || isNaN(divide) || isNaN(viewers) || isNaN(end)) {
-      const usernameElem = document.getElementById("username");
-      usernameElem.innerText = "Lỗi dữ liệu";
-      usernameElem.style.color = "#0056b3";
-    } else {
-      document.getElementById("username").innerText = `@${username}`;
-      document.getElementById("boxinfo").innerHTML = `🎁 ${box}/${divide} <span class="flag">${getFlag(countryCode)}</span> 👀 ${viewers}`;
-
-      // Sử dụng end làm cơ sở thời gian liên quan (giả định end gần với thời gian tạo box)
-      const createTime = new Date(end);
-      document.getElementById("dropTime").innerText = `${createTime.toLocaleTimeString('vi-VN', { hour12: false })}`;
-
-      const duration = Math.floor((end - Date.now()) / 1000);
-      const start = end - duration * 1000;
-
-      let lastUpdate = 0;
-      function updateTimer(timestamp) {
-        if (!lastUpdate || (timestamp - lastUpdate >= 16)) {
-          const now = Date.now();
-          const remainingMs = Math.max(0, end - now);
-          const remainingSec = Math.floor(remainingMs / 1000);
-          let ms;
-          if (remainingMs < 10000) { // Dưới 10ms (10,000 micro giây)
-            ms = (remainingMs % 1000) / 1000; // Hiển thị thập phân 0.0 - 0.9
-            document.getElementById("milliseconds").innerText = ms.toFixed(1); // Hiển thị 0.1, 0.2, ...
-          } else {
-            ms = Math.floor((remainingMs % 1000) / 10); // Hiển thị 00-99
-            document.getElementById("milliseconds").innerText = `${ms.toString().padStart(2, '0')}`;
-          }
-          if (remainingMs > 0) {
-            document.getElementById("countdown").innerText =
-              `${Math.floor(remainingSec / 60).toString().padStart(2, '0')}:${(remainingSec % 60).toString().padStart(2, '0')}:${ms.toString().padStart(2, '0')}`;
-          } else {
-            document.getElementById("countdown").innerText = "Rương mở";
-          }
-
-          const timerElem = document.getElementById("countdown");
-          if (remainingSec <= 10) {
-            timerElem.classList.add('warning');
-          } else {
-            timerElem.classList.remove('warning');
-          }
-
-          if (remainingMs <= 0) {
-            document.getElementById("milliseconds").innerText = "0.0";
-            document.getElementById("countdown").innerText = "Rương mở";
-            alert("Rương đã mở!");
-            return;
-          }
-
-          lastUpdate = timestamp;
-        }
-        if (document.visibilityState === 'visible') {
-          requestAnimationFrame(updateTimer);
-        }
-      }
-
-      document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') {
-          requestAnimationFrame(updateTimer);
-        }
-      });
-
-      requestAnimationFrame(updateTimer);
+    // Countdown logic
+    const endTime = parseInt(params.end);
+    if (!endTime || isNaN(endTime) || endTime <= 0) {
+      console.error('Lỗi: endTime không hợp lệ:', params.end);
+      document.getElementById('countdown').innerHTML = '<span class="error">Lỗi: Thời gian không hợp lệ</span>';
+      return;
     }
+
+    // Kiểm tra nếu thời gian đã hết hạn ngay từ đầu
+    const now = Date.now();
+    if (endTime <= now) {
+      console.warn('Thời gian đã hết hạn:', endTime, now);
+      document.getElementById('countdown').innerHTML = 'EXPIRED';
+      return;
+    }
+
+    const x = setInterval(() => {
+      const now = Date.now();
+      const distance = endTime - now;
+
+      if (distance < 0) {
+        clearInterval(x);
+        document.getElementById('countdown').innerHTML = 'EXPIRED';
+      } else {
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        document.getElementById('countdown').innerHTML = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}s`;
+      }
+    }, 1000);
   </script>
 </body>
 </html>
