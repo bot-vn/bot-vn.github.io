@@ -115,12 +115,15 @@
         window.location.href = webUrl;
       }
 
-      // Fallback sau 1 giây nếu deep link không hoạt động
+      // Đóng cửa sổ ngay sau khi chuyển hướng
       setTimeout(() => {
         if (document.hidden || document.visibilityState === 'hidden') {
-          window.close();
+          window.close(); // Đóng nếu tab không còn hiển thị (ứng dụng đã mở)
         } else {
-          window.location.href = webUrl;
+          window.location.href = webUrl; // Fallback đến web nếu deep link thất bại
+          setTimeout(() => {
+            window.close(); // Thử đóng lại sau khi chuyển đến web
+          }, 500);
         }
       }, 1000);
     } catch (error) {
@@ -130,6 +133,9 @@
       // Chuyển hướng đến TikTok mặc định nếu lỗi
       setTimeout(() => {
         window.location.href = 'https://www.tiktok.com/live';
+        setTimeout(() => {
+          window.close(); // Thử đóng sau khi chuyển hướng
+        }, 500);
       }, 2000); // Chờ 2 giây để hiển thị lỗi
     }
   </script>
