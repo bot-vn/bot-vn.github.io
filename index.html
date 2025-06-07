@@ -21,7 +21,7 @@
       grid-template-rows: auto auto auto;
       gap: 1rem;
       text-align: center;
-      border: 2px solid red;
+      border: 2px solid #ff0000; /* Viền màu đỏ */
       padding: 25px;
       border-radius: 12px;
       background: linear-gradient(135deg, #fff, #f9f9f9);
@@ -31,16 +31,16 @@
     .title {
       font-size: 2rem;
       font-weight: bold;
-      color: #0056b3;
+      color: #212121; /* Xám đậm gần đen */
       margin: 0;
     }
     .message {
       font-size: 1.5rem;
-      color: #333;
+      color: #424242; /* Xám đậm nhẹ */
       margin: 0.5rem 0;
     }
     .fake-button {
-      background: #0000FF;
+      background: #1565c0; /* Xanh dương đậm */
       color: white;
       padding: 10px 20px;
       border: none;
@@ -49,6 +49,9 @@
       display: inline-block;
       margin-top: 1rem;
       transition: background 0.3s;
+    }
+    .fake-button:hover {
+      background: #0d47a1; /* Xanh dương đậm hơn khi hover */
     }
     @media (max-width: 600px) {
       body {
@@ -73,7 +76,7 @@
 <body>
   <div id="container">
     <h1 class="title">BOT JIMMY-HOANG V2.1</h1>
-    <p class="message">Đang triệu hồi TikTok LIVE...</p>
+    <p class="message">Đang triệu hồi TikTok LIVE... (Nếu không mở app, tắt trình duyệt tích hợp trong Telegram)</p>
     <div class="fake-button">Nếu phép lỗi, hãy thử lại</div>
   </div>
 
@@ -100,43 +103,53 @@
     const encodedParams = getParam('');
     try {
       const decodedString = base62Decode(encodedParams);
-      const roomId = decodedString; // roomId là chuỗi số trực tiếp từ base62
+      const roomId = decodedString;
 
       const userAgent = navigator.userAgent.toLowerCase();
       const isIOS = /iphone|ipad|ipod/.test(userAgent);
       const isAndroid = /android/.test(userAgent);
       const webUrl = `https://www.tiktok.com/live?room_id=${roomId}`;
 
-      if (isIOS) {
-        window.location.href = `snssdk1180://live?room_id=${roomId}`;
-      } else if (isAndroid) {
-        window.location.href = `tiktok://live?room_id=${roomId}`;
+      // Phát hiện Telegram và thử deep link
+      if (navigator.userAgent.includes("Telegram")) {
+        if (isIOS) {
+          window.location.href = `snssdk1180://open?live_id=${roomId}`;
+        } else if (isAndroid) {
+          window.location.href = `intent://live?live_id=${roomId}#Intent;scheme=tiktok;package=com.zhiliaoapp.musically;end`;
+        } else {
+          window.location.href = webUrl;
+        }
       } else {
-        window.location.href = webUrl;
+        if (isIOS) {
+          window.location.href = `snssdk1180://open?live_id=${roomId}`;
+        } else if (isAndroid) {
+          window.location.href = `intent://live?live_id=${roomId}#Intent;scheme=tiktok;package=com.zhiliaoapp.musically;end`;
+        } else {
+          window.location.href = webUrl;
+        }
       }
 
-      // Đóng cửa sổ ngay sau khi chuyển hướng
+      // Fallback sau 500ms nếu deep link không hoạt động
       setTimeout(() => {
         if (document.hidden || document.visibilityState === 'hidden') {
-          window.close(); // Đóng nếu tab không còn hiển thị (ứng dụng đã mở)
+          window.close();
         } else {
-          window.location.href = webUrl; // Fallback đến web nếu deep link thất bại
+          window.location.href = webUrl;
           setTimeout(() => {
-            window.close(); // Thử đóng lại sau khi chuyển đến web
+            window.close();
           }, 500);
         }
-      }, 1000);
+      }, 500);
     } catch (error) {
       console.error('Error decoding params:', error);
       document.querySelector('.message').innerText = 'Lỗi dữ liệu';
-      document.querySelector('.message').style.color = '#e00';
-      // Chuyển hướng đến TikTok mặc định nếu lỗi
+      document.querySelector('.message').style.color = '#ab47bc';
       setTimeout(() => {
         window.location.href = 'https://www.tiktok.com/live';
         setTimeout(() => {
-          window.close(); // Thử đóng sau khi chuyển hướng
+          window.close();
         }, 500);
-      }, 2000); // Chờ 2 giây để hiển thị lỗi
+      }, 2000);
     }
   </script>
 </body>
