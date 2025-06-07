@@ -56,22 +56,11 @@
       background: #0d47a1;
     }
     @media (max-width: 600px) {
-      body {
-        font-size: 14px;
-      }
-      #container {
-        padding: 20px;
-      }
-      .title {
-        font-size: 1.8rem;
-      }
-      .message {
-        font-size: 1.3rem;
-      }
-      .fake-button {
-        font-size: 1rem;
-        padding: 8px 16px;
-      }
+      body { font-size: 14px; }
+      #container { padding: 20px; }
+      .title { font-size: 1.8rem; }
+      .message { font-size: 1.3rem; }
+      .fake-button { font-size: 1rem; padding: 8px 16px; }
     }
   </style>
 </head>
@@ -89,9 +78,7 @@
       let n = 0n;
       for (const char of str) {
         const value = BASE62_CHARS.indexOf(char);
-        if (value === -1) {
-          throw new Error('Invalid base62 character');
-        }
+        if (value === -1) throw new Error('Invalid base62 character');
         n = n * 62n + BigInt(value);
       }
       return n.toString();
@@ -102,8 +89,8 @@
     }
 
     function redirectToTikTok() {
-      const encodedParams = getParam('');
-      if (!encodedParams) {
+      const encodedRoomId = getParam('id');
+      if (!encodedRoomId) {
         document.querySelector('.message').innerText = 'Không tìm thấy Room ID';
         document.querySelector('.message').style.color = '#ab47bc';
         document.querySelector('#retry-button').href = 'https://www.tiktok.com/live';
@@ -111,14 +98,14 @@
       }
 
       try {
-        const roomId = base62Decode(encodedParams);
+        const roomId = base62Decode(encodedRoomId);
         const deepLink = `snssdk1180://live?live_id=${roomId}`;
-        const webUrl = `https://www.tiktok.com/live?room_id=${roomId}`;
+        const webUrl = `https://www.tiktok.com/live/room/${roomId}`;
 
-        // Thử deep link ngay lập tức
+        // Chuyển hướng ngay
         window.location.replace(deepLink);
 
-        // Fallback đến trang web TikTok sau 2 giây
+        // Fallback sau 2s
         setTimeout(() => {
           document.querySelector('.message').innerText = 'Không mở được ứng dụng TikTok, chuyển đến trang web...';
           document.querySelector('.message').style.color = '#ab47bc';
@@ -136,7 +123,6 @@
       }
     }
 
-    // Chạy chuyển hướng ngay khi trang tải
     redirectToTikTok();
   </script>
 </body>
