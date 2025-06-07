@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Box Countdown</title>
+  <title>BOT JIMMY-HOANG V2.1</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -28,49 +28,22 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       max-width: 90%;
     }
-    .username {
+    .title {
       font-size: 2rem;
-      color: #0056b3;
       font-weight: bold;
+      color: #0056b3;
       margin: 0;
     }
-    .box-info {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    .message {
       font-size: 1.5rem;
       color: #333;
+      margin: 0.5rem 0;
     }
-    .timer-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 0.5rem;
-      align-items: center;
-    }
-    .milliseconds {
-      font-size: 4.5rem;
-      font-weight: bold;
-      color: #000;
-      font-family: 'Courier New', monospace;
-      animation: pulse 1s infinite;
-    }
-    .timer {
-      font-size: 3.75rem;
-      font-weight: bold;
-      color: #000;
-      font-family: 'Courier New', monospace;
-    }
-    .timer.warning {
-      color: #e00;
-      animation: flash 0.5s infinite;
-    }
-    .timestamp {
-      font-size: 1.5rem;
-      color: #444;
-    }
-    .flag {
-      font-size: 1.8rem;
-      margin: 0 0.5rem;
+    .error {
+      font-size: 1.2rem;
+      font-style: italic;
+      color: #666;
+      margin: 0.5rem 0;
     }
     button {
       background: #0000FF;
@@ -86,18 +59,6 @@
     button:hover {
       background: #0000cc;
     }
-
-    @keyframes pulse {
-      0% { opacity: 1; }
-      50% { opacity: 0.7; }
-      100% { opacity: 1; }
-    }
-    @keyframes flash {
-      0% { opacity: 1; }
-      50% { opacity: 0.5; }
-      100% { opacity: 1; }
-    }
-
     @media (max-width: 600px) {
       body {
         font-size: 14px;
@@ -105,26 +66,17 @@
       #container {
         padding: 20px;
       }
-      .username {
-        font-size: 1.8rem; /* ~25px */
+      .title {
+        font-size: 1.8rem;
       }
-      .box-info {
-        font-size: 1.3rem; /* ~18px */
+      .message {
+        font-size: 1.3rem;
       }
-      .milliseconds {
-        font-size: 4rem; /* ~56px */
-      }
-      .timer {
-        font-size: 3.25rem; /* ~46px */
-      }
-      .timestamp {
-        font-size: 1.3rem; /* ~18px */
-      }
-      .flag {
-        font-size: 1.6rem; /* ~22px */
+      .error {
+        font-size: 1rem;
       }
       button {
-        font-size: 1rem; /* ~14px */
+        font-size: 1rem;
         padding: 8px 16px;
       }
     }
@@ -132,13 +84,9 @@
 </head>
 <body>
   <div id="container">
-    <h2 class="username" id="username">@username</h2>
-    <div class="box-info" id="boxinfo">🎁 ?/? <span class="flag">🏳️</span> 👀 ?</div>
-    <div class="timer-grid">
-      <div class="milliseconds" id="milliseconds">00</div>
-      <div class="timer" id="countdown">00:00:00</div>
-    </div>
-    <div class="timestamp" id="dropTime">--:--:--</div>
+    <h1 class="title">BOT JIMMY-HOANG V2.1</h1>
+    <p class="message">Đang triệu hồi TikTok LIVE...</p>
+    <p class="error">Nếu phép lỗi, hãy thử lại</p>
     <button onclick="openTikTokLive()">Mở TikTok Live</button>
   </div>
 
@@ -161,20 +109,12 @@
       return new URLSearchParams(window.location.search).get(name);
     }
 
-    function getFlag(countryCode) {
-      if (!countryCode || countryCode.length !== 2) return "🏳️";
-      const codePoints = [...countryCode.toUpperCase()].map(c => 0x1F1E6 + c.charCodeAt(0) - 65);
-      return String.fromCodePoint(...codePoints);
-    }
-
     async function openTikTokLive() {
-      // Giả định roomId được gửi từ 9Websocket.js, cần thêm vào params
-      // Hiện tại không có roomId trong params, nên tạm dùng fallback
       try {
         const userAgent = navigator.userAgent.toLowerCase();
         const isIOS = /iphone|ipad|ipod/.test(userAgent);
         const isAndroid = /android/.test(userAgent);
-        const username = document.getElementById('username').innerText.slice(1); // Lấy username từ giao diện
+        const username = localStorage.getItem('decodedUsername') || 'unknown';
         const webUrl = `https://www.tiktok.com/@${username}/live`;
 
         if (isIOS) {
@@ -197,89 +137,18 @@
       }
     }
 
-    // Lấy và giải mã tham số base62
+    // Lấy và giải mã tham số base62 từ URL
     const encodedParams = getParam('');
-    let params = {};
+    let username = 'unknown';
     try {
       const decodedString = base62Decode(encodedParams);
-      params = JSON.parse(decodedString);
+      const params = JSON.parse(decodedString);
+      username = params.user || 'unknown';
+      localStorage.setItem('decodedUsername', username); // Lưu username để dùng trong openTikTokLive
     } catch (error) {
       console.error('Error decoding params:', error);
-      const usernameElem = document.getElementById("username");
-      usernameElem.innerText = "Lỗi dữ liệu";
-      usernameElem.style.color = "#0056b3";
-      return;
-    }
-
-    // Lấy các tham số
-    const username = params.user;
-    const box = parseInt(params.box, 10);
-    const divide = parseInt(params.divide, 10);
-    const viewers = parseInt(params.viewers, 10);
-    const countryCode = params.country;
-    const end = parseInt(params.end, 10);
-
-    // Kiểm tra dữ liệu đầu vào
-    if (!username || isNaN(box) || isNaN(divide) || isNaN(viewers) || isNaN(end)) {
-      const usernameElem = document.getElementById("username");
-      usernameElem.innerText = "Lỗi dữ liệu";
-      usernameElem.style.color = "#0056b3";
-    } else {
-      // Hiển thị thông tin
-      document.getElementById("username").innerText = `@${username}`;
-      document.getElementById("boxinfo").innerHTML = `🎁 ${box}/${divide} <span class="flag">${getFlag(countryCode)}</span> 👀 ${viewers}`;
-
-      // Tính thời gian bắt đầu
-      const duration = Math.floor((end - Date.now()) / 1000);
-      const start = end - duration * 1000;
-      const dropTime = new Date(start);
-      document.getElementById("dropTime").innerText = `${dropTime.toLocaleTimeString('vi-VN')}`;
-
-      // Cập nhật đồng hồ đếm ngược
-      let lastUpdate = 0;
-      function updateTimer(timestamp) {
-        if (!lastUpdate || (timestamp - lastUpdate >= 16)) { // ~60fps
-          const now = Date.now();
-          const remainingMs = Math.max(0, end - now);
-          const remainingSec = Math.floor(remainingMs / 1000);
-          const m = Math.floor(remainingSec / 60);
-          const s = remainingSec % 60;
-          const ms = Math.floor((remainingMs % 1000) / 10);
-          document.getElementById("milliseconds").innerText = `${ms.toString().padStart(2, '0')}`;
-          document.getElementById("countdown").innerText = 
-            `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}:${ms.toString().padStart(2, '0')}`;
-          
-          // Cảnh báo khi còn dưới 10 giây
-          const timerElem = document.getElementById("countdown");
-          if (remainingSec <= 10) {
-            timerElem.classList.add('warning');
-          } else {
-            timerElem.classList.remove('warning');
-          }
-
-          // Thông báo khi hết thời gian
-          if (remainingMs <= 0) {
-            document.getElementById("milliseconds").innerText = "00";
-            document.getElementById("countdown").innerText = "00:00:00";
-            alert("Rương đã mở!");
-            return;
-          }
-
-          lastUpdate = timestamp;
-        }
-        if (document.visibilityState === 'visible') {
-          requestAnimationFrame(updateTimer);
-        }
-      }
-
-      // Dừng cập nhật khi trang ẩn
-      document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') {
-          requestAnimationFrame(updateTimer);
-        }
-      });
-
-      requestAnimationFrame(updateTimer);
+      document.querySelector('.message').innerText = 'Lỗi dữ liệu';
+      document.querySelector('.message').style.color = '#e00';
     }
   </script>
 </body>
