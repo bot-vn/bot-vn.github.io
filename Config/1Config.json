@@ -1,0 +1,46 @@
+{
+  "preferredAgents": ["rn-sjc-2-a", "rn-sjc-2-b", "rn-chi-1-a"],
+  "telegram": {
+    "proxyTimeout": 5000,
+    "priorityContinents": [],
+    "specificCountries": [],
+    "minRate": 4.0,
+    "minBox": 50,
+    "enableLiveNoBox": false,
+    "smallBoxThreshold": 80,
+    "largeBoxThreshold": 120,
+    "shortBoxThreshold": 40
+  },
+  "websocket": {
+    "maxConnections": 500,
+    "scanDelay": 1500,
+    "batchSize": 10,
+    "retryDelay": 5000,
+    "maxRetries": 1,
+    "blacklistDuration": 1800
+  },
+  "file": {
+    "log": "./Logs/LOG_YYYY-MM-DD.log",
+    "state": "./Data/ResumeData.json"
+  },
+  "google": {
+    "credentialsPath": "./Data/VIPKEY.json",
+    "liveLogSheetId": "1OlRVc0QqkspyjbyW40pottcQbC19LuhnyzowKYjzEv8",
+    "scopes": ["https://www.googleapis.com/auth/spreadsheets"]
+  },
+  "scan": {
+    "scanSource": "file",
+    "google": {
+      "sheetName": "OnLog",
+      "sheetColumn": "A",
+      "sheetStartRow": 2
+    },
+    "file": {
+      "path": "./Data/list.txt"
+    }
+  },
+  "flags": {
+    "enableTelegram": true
+  },
+  "apiQuotaLimit": 2000
+}
