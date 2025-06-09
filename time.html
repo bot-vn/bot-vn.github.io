@@ -173,6 +173,7 @@
       } else {
         countdownMsElement.innerText = '0.0';
         countdownFullElement.innerText = '00:00:00';
+        countdownMsElement.style.color = '#800020'; // fix: giữ màu đỏ khi reload
         const btn = document.getElementById('actionButton');
         btn.innerText = 'Rương này đã được mở';
         btn.classList.add('disabled');
