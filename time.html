@@ -89,17 +89,22 @@
 </head>
 <body>
   <div class="container">
-    <h2 class="username" id="username">@kavooneska2</h2>
-    <div class="box-info" id="boxinfo">🎁 BOX: <span id="coins">50</span>/<span id="viewerRewardCount">50</span> <span class="flag" id="flag">🇧🇾</span> 👀 <span id="viewers">56</span></div>
+    <h2 class="username" id="username">@username</h2>
+    <div class="box-info" id="boxinfo">🎁 BOX: <span id="coins">--</span>/<span id="viewerRewardCount">--</span> <span class="flag" id="flag">🏳️</span> 👀 <span id="viewers">--</span></div>
     <div class="timer-grid">
-      <div class="countdown-ms" id="countdownMs">32.5</div>
-      <div class="countdown-full" id="countdownFull">00:00:32</div>
+      <div class="countdown-ms" id="countdownMs">--</div>
+      <div class="countdown-full" id="countdownFull">--:--:--</div>
     </div>
     <button id="actionButton" onclick="openTikTokLive()">Canh giờ hoàng đạo</button>
   </div>
   <script>
-    function openTikTokLive() {
-      window.close();
+    function getParam(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    function base64Decode(encoded) {
+      return atob(encoded);
     }
 
     function getFlag(code) {
@@ -108,7 +113,39 @@
       return String.fromCodePoint(...codePoints);
     }
 
-    const endTime = Date.now() + 32500;
+    function openTikTokLive() {
+      window.close();
+    }
+
+    const encodedData = getParam('data');
+    let params = {};
+    if (encodedData) {
+      const decodedData = base64Decode(encodedData);
+      params = JSON.parse(decodedData);
+    } else {
+      params = {
+        user: 'username',
+        box: 50,
+        divide: 50,
+        viewers: 56,
+        country: 'US',
+        end: Date.now() + 32500,
+        createAt: Date.now().toString()
+      };
+    }
+
+    const username = params.user;
+    const coins = parseInt(params.box, 10);
+    const viewerRewardCount = parseInt(params.divide, 10);
+    const viewers = parseInt(params.viewers, 10);
+    const countryCode = params.country;
+    const endTime = parseInt(params.end, 10);
+
+    document.getElementById('username').innerText = `@${username}`;
+    document.getElementById('coins').innerText = coins;
+    document.getElementById('viewerRewardCount').innerText = viewerRewardCount;
+    document.getElementById('viewers').innerText = viewers;
+    document.getElementById('flag').innerText = getFlag(countryCode);
 
     function updateTimer() {
       const now = Date.now();
@@ -141,8 +178,6 @@
         btn.classList.add('disabled');
         btn.classList.add('red-text');
         btn.onclick = () => window.close();
-
-        // 🕓 Đóng tab sau 5 giây
         setTimeout(() => {
           window.close();
         }, 5000);
