@@ -141,6 +141,11 @@
         btn.classList.add('disabled');
         btn.classList.add('red-text');
         btn.onclick = () => window.close();
+
+        // 🕓 Đóng tab sau 5 giây
+        setTimeout(() => {
+          window.close();
+        }, 5000);
       }
     }
 
