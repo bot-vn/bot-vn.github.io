@@ -13,8 +13,8 @@
   },
   "websocket": {
     "maxConnections": 500,
-    "scanDelay": 1500,
-    "batchSize": 10,
+    "scanDelay": 2500,
+    "batchSize": 5,
     "retryDelay": 5000,
     "maxRetries": 1,
     "blacklistDuration": 1800
