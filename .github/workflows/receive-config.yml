@@ -23,7 +23,7 @@ jobs:
 
       - name: Trigger Update Config Workflow
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Sử dụng PAT từ Secrets
+          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }} # Cập nhật khớp với secret name
         run: |
           curl -X POST \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
