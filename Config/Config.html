@@ -2,16 +2,25 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=1, minimum-scale=1.0, maximum-scale=5.0"/>
   <title>Config</title>
   <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     body {
       font-family: Arial, sans-serif;
       background-color: #000;
       display: flex;
       justify-content: center;
       align-items: center;
+      min-height: 100vh;
+      min-width: 100vw;
       height: 100vh;
+      width: 100vw;
       margin: 0;
     }
     .container {
@@ -19,11 +28,17 @@
       padding: 16px;
       border: 1px solid #ccc;
       border-radius: 10px;
-      width: 300px;
+      width: 100%;
+      max-width: 340px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      min-height: 420px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
     h2 {
-      color: #007BFF; /* xanh đậm */
+      color: #dc3545;
       margin-bottom: 12px;
       text-align: center;
       font-weight: bold;
@@ -144,6 +159,15 @@
     }
     #customRegionIds {
       border-radius: 4px;
+    }
+    @media (max-width: 400px) {
+      .container {
+        max-width: 100vw;
+        min-width: 0;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 8px;
+      }
     }
   </style>
 </head>
@@ -296,6 +320,8 @@
     }
     function resetToDefault() {
       document.getElementById('minRate').value = 1.6;
+      document.getElementById('normalRate').value = 1.6;
+      document.getElementById('potentialRate').value = 1.6;
       document.getElementById('minBox').value = 49;
       document.getElementById('smallBoxThreshold').value = 80;
       document.getElementById('idolIds').value = '';
