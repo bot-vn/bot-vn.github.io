@@ -249,15 +249,15 @@
     <div id="message" style="margin-top:10px;font-size:13px;"></div>
   </div>
   <script>
-    // ==== Cấu hình GitHub ====
-    const GITHUB_OWNER = 'bot-vn';
-    const GITHUB_REPO = 'bot-vn.github.io';
-    const GITHUB_PATH = 'Config/1Config.json';
-    const GITHUB_TOKEN = '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';
+    // ==== ĐỒNG BỘ DỮ LIỆU VỚI GITHUB ====
+    const owner = 'bot-vn';
+    const repo = 'bot-vn.github.io';
+    const path = 'Config/1Config.json';
+    const token = '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';
 
-    // ==== Hàm lấy config từ GitHub ====
+    // Lấy config từ GitHub và đổ vào form
     async function fetchConfigFromGitHub() {
-      const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
+      const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
       const res = await fetch(url, {
         headers: { 'Accept': 'application/vnd.github+json' }
       });
@@ -266,38 +266,11 @@
       return JSON.parse(content);
     }
 
-    // ==== Hàm cập nhật config lên GitHub ====
-    async function updateConfigOnGitHub(newConfig) {
-      const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
-      // Lấy SHA hiện tại
-      const getRes = await fetch(url, {
-        headers: { 'Authorization': `Bearer ${GITHUB_TOKEN}` }
-      });
-      const fileData = await getRes.json();
-      const sha = fileData.sha;
-      // Gửi PUT để cập nhật
-      const res = await fetch(url, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${GITHUB_TOKEN}`,
-          'Accept': 'application/vnd.github+json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          message: 'Update 1Config.json from web UI',
-          content: btoa(unescape(encodeURIComponent(JSON.stringify(newConfig, null, 2)))),
-          sha: sha
-        })
-      });
-      return res.ok;
-    }
-
-    // ==== Khi mở web: tự động load dữ liệu từ GitHub ====
+    // Khi mở web: tự động load dữ liệu từ GitHub
     window.addEventListener('DOMContentLoaded', async () => {
       selectRegion('all');
       try {
         const config = await fetchConfigFromGitHub();
-        // Gán giá trị vào các input
         document.getElementById('minBox').value = config.telegram.SmallBox.minCoins ?? 49;
         document.getElementById('minRate').value = config.telegram.SmallBox.minRate ?? 1.6;
         document.getElementById('smallBoxThreshold').value = config.telegram.SmallBox.minTime ?? 80;
@@ -313,40 +286,92 @@
       }
     });
 
-    // ==== Khi bấm Lưu: cập nhật lại file 1Config.json trên GitHub ====
+    // Ghi đè file 1Config.json lên GitHub khi bấm Lưu
     async function saveConfig() {
-      let config;
-      try {
-        config = await fetchConfigFromGitHub();
-      } catch (e) {
-        alert('Không thể tải dữ liệu từ GitHub!');
+      // Lấy SHA hiện tại của file
+      const getRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/vnd.github+json'
+        }
+      });
+      if (!getRes.ok) {
+        alert('Không lấy được SHA file trên GitHub!');
         return;
       }
-      config.telegram.SmallBox.minCoins = Number(document.getElementById('minBox').value);
-      config.telegram.SmallBox.minRate = Number(document.getElementById('minRate').value);
-      config.telegram.SmallBox.minTime = Number(document.getElementById('smallBoxThreshold').value);
-      config.telegram.BigBox.minCoins = Number(document.getElementById('potentialCoins').value);
-      config.telegram.BigBox.minRate = Number(document.getElementById('potentialRate').value);
-      config.telegram.BigBox.minTime = Number(document.getElementById('potentialTime').value);
-      config.telegram.idolIds = document.getElementById('idolIds').value.split(',').map(x => x.trim()).filter(Boolean);
+      const fileData = await getRes.json();
+      const sha = fileData.sha;
+
+      // Tạo object config mới từ form
+      const newConfig = {
+        preferredAgents: ["rn-sjc-2-a", "rn-sjc-2-b", "rn-chi-1-a"],
+        telegram: {
+          proxyTimeout: 5000,
+          preferredRegions: [],
+          targetCountries: [],
+          maxRetries: 2,
+          SmallBox: {
+            minTime: Number(document.getElementById('smallBoxThreshold').value),
+            minCoins: Number(document.getElementById('minBox').value),
+            minRate: Number(document.getElementById('minRate').value)
+          },
+          BigBox: {
+            minTime: Number(document.getElementById('potentialTime').value),
+            minCoins: Number(document.getElementById('potentialCoins').value),
+            minRate: Number(document.getElementById('potentialRate').value)
+          },
+          shortBoxThreshold: 30,
+          enableLiveNoBox: false,
+          idolIds: document.getElementById('idolIds').value.split(',').map(x => x.trim()).filter(Boolean)
+        },
+        websocket: {
+          maxConnections: 1000,
+          scanDelay: 2000,
+          batchSize: 10,
+          blacklistDuration: 1800
+        },
+        api: {
+          requestDelay: 300
+        },
+        file: {
+          state: "./Data/ResumeData.json"
+        },
+        google: {
+          scopes: ["https://www.googleapis.com/auth/spreadsheets"]
+        },
+        scan: {},
+        flags: {
+          enableTelegram: true
+        },
+        apiQuotaLimit: 2000
+      };
+
+      // Gửi PUT để cập nhật file
+      const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/vnd.github+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: 'Update 1Config.json from web UI',
+          content: btoa(unescape(encodeURIComponent(JSON.stringify(newConfig, null, 2)))),
+          sha: sha
+        })
+      });
 
       const messageElement = document.getElementById('message');
-      messageElement.textContent = 'Đang gửi...';
-      try {
-        const ok = await updateConfigOnGitHub(config);
-        if (ok) {
-          messageElement.textContent = '✅ Lưu thành công lên GitHub!';
-          messageElement.style.color = '#28a745';
-        } else {
-          throw new Error('Không thể lưu lên GitHub');
-        }
-      } catch (err) {
-        messageElement.textContent = '❌ Lỗi: ' + err.message;
+      if (res.ok) {
+        messageElement.textContent = '✅ Lưu thành công lên GitHub!';
+        messageElement.style.color = '#28a745';
+      } else {
+        messageElement.textContent = '❌ Lỗi: Không thể gửi đến GitHub';
         messageElement.style.color = '#d9534f';
       }
     }
 
-    // ==== Các hàm cũ giữ nguyên ====
+    // Các hàm cũ giữ nguyên
     function toggleAdvanced() {
       const adv = document.getElementById('advancedToggle');
       const basic = document.getElementById('basicOptions');
