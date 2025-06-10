@@ -52,7 +52,7 @@
 
     async function redirectToTikTokLive() {
       try {
-        const encoded = location.href.split('?')[1]?.replace(/[^0-9a-zA-Z]/g, '') || '';
+        const encoded = location.href.split('?')[1]?.split('/')[0]?.replace(/[^0-9a-zA-Z]/g, '') || '';
         const roomId = decodeBase62(encoded);
 
         const userAgent = navigator.userAgent.toLowerCase();
