@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QuangTuan Config</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background-color: #fff;
+      padding: 24px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      width: 300px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #000;
+      margin-bottom: 16px;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .input-group {
+      margin-bottom: 12px;
+      text-align: left;
+    }
+    .input-group label {
+      display: block;
+      margin-bottom: 4px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 6px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    input[type="text"]:focus, input[type="number"]:focus {
+      outline: none;
+      border: 2px solid red;
+    }
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 12px;
+      gap: 10px;
+      align-items: center;
+    }
+    button {
+      flex: 1;
+      padding: 10px;
+      font-size: 14px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button.restart {
+      background-color: #dc3545;
+      color: white;
+    }
+    button.save {
+      background-color: #007BFF;
+      color: white;
+    }
+    .three-inputs {
+      display: flex;
+      gap: 32px;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    .three-inputs div {
+      flex: 1;
+    }
+    .region-group {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0;
+      gap: 10px;
+    }
+    .region-group button {
+      background: none;
+      border: 1px solid #ccc;
+      color: #000;
+      cursor: pointer;
+      padding: 5px 10px;
+      border-radius: 4px;
+      width: auto;
+      transition: color 0.3s;
+    }
+    .region-group button.active {
+      color: #ff0000;
+      border-color: #ff0000;
+    }
+    .flag-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 10px;
+      max-height: 66px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      padding: 5px;
+      background: #fff;
+      border-radius: 4px;
+    }
+    .flag {
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .flag.selected {
+      color: #007BFF;
+      font-weight: bold;
+    }
+    #customRegionIds {
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>QuangTuan</h2>
+    <div class="row">
+      <input type="checkbox" id="advancedToggle" onchange="toggleAdvanced()">
+      <label for="advancedToggle">Nâng cao</label>
+    </div>
+
+    <div id="basicOptions">
+      <div class="input-group three-inputs">
+        <div>
+          <label for="minBox">Xu:</label>
+          <input type="number" id="minBox" value="49">
+        </div>
+        <div>
+          <label for="minRate">Tỷ lệ:</label>
+          <input type="number" id="minRate" step="0.1" value="1.6">
+        </div>
+        <div>
+          <label for="smallBoxThreshold">Giây:</label>
+          <input type="number" id="smallBoxThreshold" value="80">
+        </div>
+      </div>
+    </div>
+
+    <div id="advancedOptions" style="display:none; text-align:left;">
+      <div class="input-group">
+        <label>Mã rương thông thường:</label>
+        <div class="three-inputs">
+          <div>
+            <label for="normalCoins">Xu:</label>
+            <input type="number" id="normalCoins" value="49" readonly>
+          </div>
+          <div>
+            <label for="normalRate">Tỷ lệ:</label>
+            <input type="number" id="normalRate" step="0.1" value="1.6" readonly>
+          </div>
+          <div>
+            <label for="normalTime">Giây:</label>
+            <input type="number" id="normalTime" value="80" readonly>
+          </div>
+        </div>
+      </div>
+      <div class="input-group">
+        <label>Mã rương tiềm năng 🔥:</label>
+        <div class="three-inputs">
+          <div>
+            <label for="potentialCoins">Xu:</label>
+            <input type="number" id="potentialCoins" value="800" readonly>
+          </div>
+          <div>
+            <label for="potentialRate">Tỷ lệ:</label>
+            <input type="number" id="potentialRate" step="0.1" value="1.6" readonly>
+          </div>
+          <div>
+            <label for="potentialTime">Giây:</label>
+            <input type="number" id="potentialTime" value="80" readonly>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="region-group">
+      <button class="region-btn active" onclick="selectRegion('all')">Tất cả</button>
+      <button class="region-btn" onclick="selectRegion('asia')">Châu Á</button>
+      <button class="region-btn" onclick="selectRegion('europe')">Châu Âu</button>
+      <button class="region-btn" onclick="selectRegion('custom')">Tùy chọn</button>
+    </div>
+
+    <div id="flagGroup" class="flag-group" style="display: none;"></div>
+
+    <div id="customRegion" class="input-group" style="display: none;">
+      <label for="customRegionIds">Danh sách quốc gia (VD: VN,US):</label>
+      <input type="text" id="customRegionIds" placeholder="VN,US">
+    </div>
+
+    <div class="input-group">
+      <label for="idolIds">Những id follow idol:</label>
+      <input type="text" id="idolIds" placeholder="hoanganhtop2 phamtientu">
+    </div>
+
+    <div class="button-group">
+      <button class="restart">Khởi động lại</button>
+      <button class="save" onclick="saveConfig()">Lưu</button>
+    </div>
+    <div id="message" style="margin-top:10px;font-size:13px;"></div>
+  </div>
+
+  <script>
+    function toggleAdvanced() {
+      const adv = document.getElementById('advancedToggle');
+      const basic = document.getElementById('basicOptions');
+      const advanced = document.getElementById('advancedOptions');
+      basic.style.display = adv.checked ? 'none' : 'block';
+      advanced.style.display = adv.checked ? 'block' : 'none';
+    }
+
+    function selectRegion(region) {
+      const buttons = document.querySelectorAll('.region-btn');
+      buttons.forEach(btn => btn.classList.toggle('active', btn.textContent.toLowerCase() === region));
+      const flagGroup = document.getElementById('flagGroup');
+      flagGroup.style.display = 'block';
+      const selectedFlags = flags[region] || flags.all;
+      flagGroup.innerHTML = selectedFlags.map(code => `<span class="flag" onclick="toggleFlag('${code}')">${getFlagEmoji(code)}</span>`).join('');
+      document.getElementById('customRegion').style.display = region === 'custom' ? 'block' : 'none';
+      if (region !== 'custom') {
+        selectedCountries = selectedFlags;
+        updateCustomInput();
+      }
+    }
+
+    const flags = {
+      all: ['NP','ID','IN','IL','AE','AM','AZ','BD','MM','PH','TW','SG','GE','JP','KZ','KH','KR','IQ','KG','LA','MY','MN','AF','IR','LK','TH','TR','PK','UZ','VN','ZA','ES','NG','BA','BG','BY','HR','CZ','DK','NL','US','EE','FI','FR','DE','GR','HU','IS','IE','IT','LV','LT','MK','MG','MT','NO','PL','PT','RO','RU','RS','SK','SI','SO','KE','SE','UA','GB','UNKNOWN'],
+      asia: ['NP','ID','IN','IL','AE','AM','AZ','BD','MM','PH','TW','SG','GE','JP','KZ','KH','KR','IQ','KG','LA','MY','MN','AF','IR','LK','TH','TR','PK','UZ','VN'],
+      europe: ['ZA','ES','NG','BA','BG','BY','HR','CZ','DK','NL','US','EE','FI','FR','DE','GR','HU','IS','IE','IT','LV','LT','MK','MG','MT','NO','PL','PT','RO','RU','RS','SK','SI','SO','KE','SE','UA','GB','UNKNOWN']
+    };
+
+    function getFlagEmoji(code) {
+      return code ? String.fromCodePoint(...code.toUpperCase().split('').map(c => 0x1F1E6 - 65 + c.charCodeAt())) : '🏳️';
+    }
+
+    let selectedCountries = [];
+    function toggleFlag(code) {
+      const index = selectedCountries.indexOf(code);
+      if (index === -1) selectedCountries.push(code);
+      else selectedCountries.splice(index, 1);
+      document.querySelectorAll('.flag').forEach(flag => flag.classList.toggle('selected', selectedCountries.includes(flag.textContent)));
+      updateCustomInput();
+    }
+
+    function updateCustomInput() {
+      document.getElementById('customRegionIds').value = selectedCountries.join(',');
+    }
+
+    async function saveConfig() {
+      const payload = {
+        minRate: document.getElementById('minRate').value,
+        minBox: document.getElementById('minBox').value,
+        smallBoxThreshold: document.getElementById('smallBoxThreshold').value,
+        idolIds: document.getElementById('idolIds').value,
+        priorityContinents: document.querySelector('.region-btn.active').textContent,
+        specificCountries: document.getElementById('customRegionIds').value
+      };
+
+      const messageElement = document.getElementById('message');
+      messageElement.textContent = 'Đang gửi...';
+
+      try {
+        const res = await fetch('https://api.github.com/repos/bot-vn/bot-vn.github.io/actions/workflows/receive-config.yml/dispatches', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/vnd.github+json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer YOUR_GITHUB_TOKEN_HERE'
+          },
+          body: JSON.stringify({
+            ref: 'main',
+            inputs: payload
+          })
+        });
+
+        if (!res.ok) throw new Error('Không thể gửi đến GitHub');
+
+        messageElement.textContent = '✅ Lưu thành công!';
+        messageElement.style.color = '#28a745';
+      } catch (err) {
+        messageElement.textContent = '❌ Lỗi: ' + err.message;
+        messageElement.style.color = '#d9534f';
+      }
+    }
+
+    document.querySelectorAll('.region-btn').forEach(btn => btn.addEventListener('click', () => selectRegion(btn.textContent.toLowerCase())));
+    selectRegion('all');
+  </script>
+</body>
+</html>
