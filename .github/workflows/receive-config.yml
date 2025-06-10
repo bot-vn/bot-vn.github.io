@@ -1,8 +1,20 @@
 name: Receive Config Update with Proxy
 
 on:
-  repository_dispatch: # Nhận request công khai
-    types: [update-config-proxy]
+  workflow_dispatch:
+    inputs:
+      minRate:
+      minBox:
+      smallBoxThreshold:
+      normalMinBox:
+      normalMinRate:
+      normalSmallBoxThreshold:
+      potentialMinBox:
+      potentialMinRate:
+      potentialSmallBoxThreshold:
+      priorityContinents:
+      specificCountries:
+      idolIds:
 
 jobs:
   proxy-config:
@@ -13,9 +25,9 @@ jobs:
 
       - name: Validate Internal Secret
         run: |
-          echo "Payload received: ${{ toJSON(github.event.client_payload) }}" > payload.json
-          INTERNAL_SECRET="${{ secrets.INTERNAL_SECRET }}" # Kiểm tra secret mới
-          if [ "$INTERNAL_SECRET" != "jimmyhoang777" ]; then # Giá trị khớp với Secrets
+          echo "Payload received: ${{ toJSON(github.event.inputs) }}" > payload.json
+          INTERNAL_SECRET="${{ secrets.INTERNAL_SECRET }}"
+          if [ "$INTERNAL_SECRET" != "jimmyhoang777" ]; then
             echo "❌ INTERNAL_SECRET không hợp lệ"
             exit 1
           fi
@@ -32,18 +44,18 @@ jobs:
             -d '{
               "event_type": "update-config",
               "client_payload": {
-                "minRate": ${{ github.event.client_payload.minRate }},
-                "minBox": ${{ github.event.client_payload.minBox }},
-                "smallBoxThreshold": ${{ github.event.client_payload.smallBoxThreshold }},
-                "normalMinBox": ${{ github.event.client_payload.normalMinBox }},
-                "normalMinRate": ${{ github.event.client_payload.normalMinRate }},
-                "normalSmallBoxThreshold": ${{ github.event.client_payload.normalSmallBoxThreshold }},
-                "potentialMinBox": ${{ github.event.client_payload.potentialMinBox }},
-                "potentialMinRate": ${{ github.event.client_payload.potentialMinRate }},
-                "potentialSmallBoxThreshold": ${{ github.event.client_payload.potentialSmallBoxThreshold }},
-                "priorityContinents": ${{ github.event.client_payload.priorityContinents }},
-                "specificCountries": ${{ github.event.client_payload.specificCountries }},
-                "idolIds": ${{ github.event.client_payload.idolIds }}
+                "minRate": ${{ github.event.inputs.minRate }},
+                "minBox": ${{ github.event.inputs.minBox }},
+                "smallBoxThreshold": ${{ github.event.inputs.smallBoxThreshold }},
+                "normalMinBox": ${{ github.event.inputs.normalMinBox }},
+                "normalMinRate": ${{ github.event.inputs.normalMinRate }},
+                "normalSmallBoxThreshold": ${{ github.event.inputs.normalSmallBoxThreshold }},
+                "potentialMinBox": ${{ github.event.inputs.potentialMinBox }},
+                "potentialMinRate": ${{ github.event.inputs.potentialMinRate }},
+                "potentialSmallBoxThreshold": ${{ github.event.inputs.potentialSmallBoxThreshold }},
+                "priorityContinents": ${{ github.event.inputs.priorityContinents }},
+                "specificCountries": ${{ github.event.inputs.specificCountries }},
+                "idolIds": ${{ github.event.inputs.idolIds }}
               }
             }'
           echo "✅ Đã gửi repository_dispatch để cập nhật 1Config.json"
