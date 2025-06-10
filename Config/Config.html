@@ -263,7 +263,12 @@
       });
       const data = await res.json();
       const content = atob(data.content.replace(/\n/g, ''));
-      return JSON.parse(content);
+      try {
+        return JSON.parse(content);
+      } catch (e) {
+        alert('Lỗi đọc file JSON trên GitHub!');
+        return {};
+      }
     }
 
     // Khi mở web: tự động load dữ liệu từ GitHub
@@ -271,16 +276,18 @@
       selectRegion('all');
       try {
         const config = await fetchConfigFromGitHub();
-        document.getElementById('minBox').value = config.telegram.SmallBox.minCoins ?? 49;
-        document.getElementById('minRate').value = config.telegram.SmallBox.minRate ?? 1.6;
-        document.getElementById('smallBoxThreshold').value = config.telegram.SmallBox.minTime ?? 80;
-        document.getElementById('normalCoins').value = config.telegram.SmallBox.minCoins ?? 49;
-        document.getElementById('normalRate').value = config.telegram.SmallBox.minRate ?? 1.6;
-        document.getElementById('normalTime').value = config.telegram.SmallBox.minTime ?? 80;
-        document.getElementById('potentialCoins').value = config.telegram.BigBox.minCoins ?? 800;
-        document.getElementById('potentialRate').value = config.telegram.BigBox.minRate ?? 1.6;
-        document.getElementById('potentialTime').value = config.telegram.BigBox.minTime ?? 120;
-        document.getElementById('idolIds').value = (config.telegram.idolIds || []).join(',');
+        const sb = (config.telegram && config.telegram.SmallBox) ? config.telegram.SmallBox : {};
+        const bb = (config.telegram && config.telegram.BigBox) ? config.telegram.BigBox : {};
+        document.getElementById('minBox').value = sb.minCoins ?? 49;
+        document.getElementById('minRate').value = sb.minRate ?? 1.6;
+        document.getElementById('smallBoxThreshold').value = sb.minTime ?? 80;
+        document.getElementById('normalCoins').value = sb.minCoins ?? 49;
+        document.getElementById('normalRate').value = sb.minRate ?? 1.6;
+        document.getElementById('normalTime').value = sb.minTime ?? 80;
+        document.getElementById('potentialCoins').value = bb.minCoins ?? 800;
+        document.getElementById('potentialRate').value = bb.minRate ?? 1.6;
+        document.getElementById('potentialTime').value = bb.minTime ?? 120;
+        document.getElementById('idolIds').value = (config.telegram && config.telegram.idolIds) ? config.telegram.idolIds.join(',') : '';
       } catch (e) {
         alert('Không thể tải dữ liệu từ GitHub!');
       }
