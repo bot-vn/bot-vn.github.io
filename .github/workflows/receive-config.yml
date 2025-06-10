@@ -1,8 +1,14 @@
 name: Receive Config Update with Proxy
 
 on:
-  repository_dispatch: # Nhận request từ Config.html qua webhook
-    types: [update-config-proxy]
+  workflow_dispatch: # Thay bằng workflow_dispatch, an toàn hơn
+    inputs:
+      secret_key: # Yêu cầu secret key để xác thực
+      minRate:
+      minBox:
+      smallBoxThreshold:
+      priorityContinents:
+      specificCountries:
 
 jobs:
   proxy-config:
@@ -13,9 +19,9 @@ jobs:
 
       - name: Receive and Validate Payload
         run: |
-          echo "Payload received: ${{ toJSON(github.event.client_payload) }}" > payload.json
+          echo "Payload received: ${{ toJSON(github.event.inputs) }}" > payload.json
           SECRET_KEY="${{ secrets.CONFIG_SECRET_KEY }}"
-          if [ "${{ github.event.client_payload.secret_key }}" != "$SECRET_KEY" ]; then
+          if [ "${{ github.event.inputs.secret_key }}" != "$SECRET_KEY" ]; then
             echo "❌ Secret key không hợp lệ"
             exit 1
           fi
@@ -23,7 +29,7 @@ jobs:
 
       - name: Trigger Update Config Workflow
         env:
-          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }} # Cập nhật khớp với secret name
+          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
         run: |
           curl -X POST \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
@@ -32,11 +38,11 @@ jobs:
             -d '{
               "event_type": "update-config",
               "client_payload": {
-                "minRate": ${{ github.event.client_payload.minRate }},
-                "minBox": ${{ github.event.client_payload.minBox }},
-                "smallBoxThreshold": ${{ github.event.client_payload.smallBoxThreshold }},
-                "priorityContinents": ${{ github.event.client_payload.priorityContinents }},
-                "specificCountries": ${{ github.event.client_payload.specificCountries }}
+                "minRate": ${{ github.event.inputs.minRate }},
+                "minBox": ${{ github.event.inputs.minBox }},
+                "smallBoxThreshold": ${{ github.event.inputs.smallBoxThreshold }},
+                "priorityContinents": ${{ github.event.inputs.priorityContinents }},
+                "specificCountries": ${{ github.event.inputs.specificCountries }}
               }
             }'
           echo "✅ Đã gửi repository_dispatch để cập nhật 1Config.json"
