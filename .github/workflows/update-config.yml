@@ -1,0 +1,29 @@
+name: Update Config
+
+on:
+  repository_dispatch:
+    types: [update-config]
+
+jobs:
+  update-config:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update 1Config.json
+        run: |
+          jq '.telegram.SmallBox = $smallBox | .telegram.BigBox = $bigBox' Config/1Config.json \
+            --argjson smallBox '${{ toJson(github.event.client_payload.telegram.SmallBox) }}' \
+            --argjson bigBox '${{ toJson(github.event.client_payload.telegram.BigBox) }}' \
+            > temp.json && mv temp.json Config/1Config.json
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git add Config/1Config.json
+          git commit -m "Update 1Config.json from form"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
