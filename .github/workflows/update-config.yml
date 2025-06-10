@@ -1,4 +1,4 @@
-name: Update Config via Dispatch
+name: Update Config JSON
 
 on:
   repository_dispatch:
@@ -7,38 +7,53 @@ on:
 jobs:
   update-config:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Parse and update config
+      - name: Load inputs
+        id: input
         run: |
-          echo "🔧 Đang xử lý cập nhật 1Config.json"
+          echo "::set-output name=minRate::${{ github.event.client_payload.inputs.minRate }}"
+          echo "::set-output name=minBox::${{ github.event.client_payload.inputs.minBox }}"
+          echo "::set-output name=smallBoxThreshold::${{ github.event.client_payload.inputs.smallBoxThreshold }}"
+          echo "::set-output name=priorityContinents::${{ github.event.client_payload.inputs.priorityContinents }}"
+          echo "::set-output name=specificCountries::${{ github.event.client_payload.inputs.specificCountries }}"
+          echo "::set-output name=idolIds::${{ github.event.client_payload.inputs.idolIds }}"
 
-          # Lấy payload từ event
-          echo "${{ toJSON(github.event.client_payload) }}" > input.json
+      - name: Update 1Config.json
+        run: |
+          file="1Config.json"
+          echo "Reading $file"
+          content=$(cat "$file")
 
-          # Tạo file jq để xử lý json
-          jq --argjson payload "$(cat input.json)" '
-            (.telegram.minRate) = ($payload.minRate | tonumber) |
-            (.telegram.minBox) = ($payload.minBox | tonumber) |
-            (.telegram.smallBoxThreshold) = ($payload.smallBoxThreshold | tonumber) |
-            (.telegram.priorityContinents) = ($payload.priorityContinents) |
-            (.telegram.specificCountries) = ($payload.specificCountries) |
-            (.telegram.normalMinBox) = ($payload.normalMinBox | tonumber) |
-            (.telegram.normalMinRate) = ($payload.normalMinRate | tonumber) |
-            (.telegram.normalSmallBoxThreshold) = ($payload.normalSmallBoxThreshold | tonumber) |
-            (.telegram.potentialMinBox) = ($payload.potentialMinBox | tonumber) |
-            (.telegram.potentialMinRate) = ($payload.potentialMinRate | tonumber) |
-            (.telegram.potentialSmallBoxThreshold) = ($payload.potentialSmallBoxThreshold | tonumber) |
-            (.telegram.idolIds) = ($payload.idolIds)
-          ' 1Config.json > tmp.json && mv tmp.json 1Config.json
+          minRate="${{ steps.input.outputs.minRate }}"
+          minBox="${{ steps.input.outputs.minBox }}"
+          smallBoxThreshold="${{ steps.input.outputs.smallBoxThreshold }}"
+          priorityContinents="${{ steps.input.outputs.priorityContinents }}"
+          specificCountries="${{ steps.input.outputs.specificCountries }}"
+          idolIds="${{ steps.input.outputs.idolIds }}"
+
+          node -e "
+          const fs = require('fs');
+          const path = '1Config.json';
+          const data = JSON.parse(fs.readFileSync(path, 'utf8'));
+
+          data.telegram.minRate = parseFloat(process.env.minRate);
+          data.telegram.minBox = parseInt(process.env.minBox);
+          data.telegram.smallBoxThreshold = parseInt(process.env.smallBoxThreshold);
+          data.telegram.priorityContinents = process.env.priorityContinents ? process.env.priorityContinents.split(',').map(s => s.trim()) : [];
+          data.telegram.specificCountries = process.env.specificCountries ? process.env.specificCountries.split(',').map(s => s.trim()) : [];
+          data.telegram.idolIds = process.env.idolIds ? process.env.idolIds.split(',').map(s => s.trim()).filter(Boolean) : [];
+
+          fs.writeFileSync(path, JSON.stringify(data, null, 2));
+          console.log('✅ Updated 1Config.json');
+          "
 
       - name: Commit changes
         run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
           git add 1Config.json
-          git commit -m "✅ Cập nhật 1Config.json từ config.html" || echo "Không có thay đổi"
+          git commit -m '🔄 Update config via workflow' || echo "No changes to commit"
           git push
