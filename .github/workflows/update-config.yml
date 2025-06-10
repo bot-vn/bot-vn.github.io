@@ -25,7 +25,14 @@ jobs:
             (.telegram.minBox) = ($payload.minBox | tonumber) |
             (.telegram.smallBoxThreshold) = ($payload.smallBoxThreshold | tonumber) |
             (.telegram.priorityContinents) = ($payload.priorityContinents) |
-            (.telegram.specificCountries) = ($payload.specificCountries)
+            (.telegram.specificCountries) = ($payload.specificCountries) |
+            (.telegram.normalMinBox) = ($payload.normalMinBox | tonumber) |
+            (.telegram.normalMinRate) = ($payload.normalMinRate | tonumber) |
+            (.telegram.normalSmallBoxThreshold) = ($payload.normalSmallBoxThreshold | tonumber) |
+            (.telegram.potentialMinBox) = ($payload.potentialMinBox | tonumber) |
+            (.telegram.potentialMinRate) = ($payload.potentialMinRate | tonumber) |
+            (.telegram.potentialSmallBoxThreshold) = ($payload.potentialSmallBoxThreshold | tonumber) |
+            (.telegram.idolIds) = ($payload.idolIds)
           ' 1Config.json > tmp.json && mv tmp.json 1Config.json
 
       - name: Commit changes
