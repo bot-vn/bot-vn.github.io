@@ -4,12 +4,12 @@
     "proxyTimeout": 5000,
     "priorityContinents": [],
     "specificCountries": [],
-    "minRate": 4.0,
-    "minBox": 50,
+    "minRate": 1.0,
+    "minBox": 1,
     "enableLiveNoBox": false,
-    "smallBoxThreshold": 80,
-    "largeBoxThreshold": 120,
-    "shortBoxThreshold": 40
+    "smallBoxThreshold": 60,
+    "largeBoxThreshold": 60,
+    "shortBoxThreshold": 0
   },
   "websocket": {
     "maxConnections": 500,
