@@ -13,9 +13,10 @@ jobs:
 
       - name: Validate Internal Secret
         run: |
-          # Kiểm tra secret nội bộ, không cần từ client
-          if [ -z "${{ secrets.INTERNAL_SECRET }}" ]; then
-            echo "❌ INTERNAL_SECRET không được định nghĩa"
+          echo "Payload received: ${{ toJSON(github.event.client_payload) }}" > payload.json
+          INTERNAL_SECRET="${{ secrets.INTERNAL_SECRET }}" # Kiểm tra secret mới
+          if [ "$INTERNAL_SECRET" != "jimmyhoang777" ]; then # Giá trị khớp với Secrets
+            echo "❌ INTERNAL_SECRET không hợp lệ"
             exit 1
           fi
           echo "✅ Internal secret hợp lệ"
@@ -34,12 +35,12 @@ jobs:
                 "minRate": ${{ github.event.client_payload.minRate }},
                 "minBox": ${{ github.event.client_payload.minBox }},
                 "smallBoxThreshold": ${{ github.event.client_payload.smallBoxThreshold }},
-                "normalMinBox": ${{ github.event.client.payload.normalMinBox }},
-                "normalMinRate": ${{ github.event.client.payload.normalMinRate }},
-                "normalSmallBoxThreshold": ${{ github.event.client.payload.normalSmallBoxThreshold }},
-                "potentialMinBox": ${{ github.event.client.payload.potentialMinBox }},
-                "potentialMinRate": ${{ github.event.client.payload.potentialMinRate }},
-                "potentialSmallBoxThreshold": ${{ github.event.client.payload.potentialSmallBoxThreshold }},
+                "normalMinBox": ${{ github.event.client_payload.normalMinBox }},
+                "normalMinRate": ${{ github.event.client_payload.normalMinRate }},
+                "normalSmallBoxThreshold": ${{ github.event.client_payload.normalSmallBoxThreshold }},
+                "potentialMinBox": ${{ github.event.client_payload.potentialMinBox }},
+                "potentialMinRate": ${{ github.event.client_payload.potentialMinRate }},
+                "potentialSmallBoxThreshold": ${{ github.event.client_payload.potentialSmallBoxThreshold }},
                 "priorityContinents": ${{ github.event.client_payload.priorityContinents }},
                 "specificCountries": ${{ github.event.client_payload.specificCountries }},
                 "idolIds": ${{ github.event.client_payload.idolIds }}
