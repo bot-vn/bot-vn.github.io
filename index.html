@@ -38,41 +38,38 @@
   </div>
 
   <script>
-    const BASE62_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    const BASE62 = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
-    function decodeBase62(str) {
-      let n = 0n;
-      for (const char of str) {
-        const index = BASE62_CHARS.indexOf(char);
-        if (index === -1) throw new Error('Invalid base62 character');
-        n = n * 62n + BigInt(index);
+    function base62Decode(str) {
+      let n = BigInt(0);
+      for (let i = 0; i < str.length; i++) {
+        const value = BASE62.indexOf(str[i]);
+        if (value === -1) throw new Error('Invalid base62');
+        n = n * 62n + BigInt(value);
       }
       return n.toString();
     }
 
     async function redirectToTikTokLive() {
       try {
-        const encoded = location.href.split('?')[1]?.split('/')[0]?.replace(/[^0-9a-zA-Z]/g, '') || '';
-        const roomId = decodeBase62(encoded);
+        const encoded = location.search.slice(1);
+        const roomId = base62Decode(encoded); // dùng chuẩn 12Help.js
 
-        const userAgent = navigator.userAgent.toLowerCase();
-        const isIOS = /iphone|ipad|ipod/.test(userAgent);
+        const ua = navigator.userAgent.toLowerCase();
+        const isIOS = /iphone|ipad|ipod/.test(ua);
+        const isAndroid = /android/.test(ua);
 
-        let tiktokAppUrl = `tiktok://live/room/${roomId}`;
-        if (isIOS) {
-          tiktokAppUrl = `snssdk1180://live?room_id=${roomId}`;
-        }
+        let tiktokAppUrl = isIOS
+          ? `snssdk1180://live?room_id=${roomId}`
+          : `tiktok://live/${roomId}`;
 
-        document.location.href = tiktokAppUrl;
+        location.href = tiktokAppUrl;
 
         setTimeout(() => {
-          if (document.hidden || document.visibilityState === 'hidden') {
-            window.close();
-          } else {
-            window.location.href = `https://www.tiktok.com/live/room/${roomId}`;
+          if (!document.hidden) {
+            location.href = `https://www.tiktok.com/live/room/${roomId}`;
           }
         }, 1000);
-
       } catch (e) {
         document.getElementById("status").innerText = "❌ Có lỗi rồi - Liên hệ Telegram: @JimmyHoang68.";
       }
@@ -80,10 +77,6 @@
 
     function retry() {
       redirectToTikTokLive();
-    }
-
-    if (window.history && window.history.replaceState) {
-      window.history.replaceState(null, document.title, window.location.href);
     }
 
     redirectToTikTokLive();
