@@ -7,78 +7,95 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      font-family: sans-serif;
+      background-color: #ffffff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      margin: 0;
     }
     #container {
       text-align: center;
-      border: 2px solid red;
-      padding: 30px;
-      border-radius: 8px;
+      border: 3px solid #0066FF;
+      padding: 24px;
+      border-radius: 50%;
+      background-color: #ffffff;
+      width: 300px;
+      height: 300px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    h2 {
+      margin-top: 0;
+      color: black;
+      font-size: 24px;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    }
+    #status, .note {
+      color: #444;
+      margin: 10px 0;
+      font-size: 16px;
     }
     button {
-      background: #0000FF;
+      background: #0066FF;
       color: white;
-      padding: 10px 20px;
+      padding: 12px 24px;
       border: none;
       font-size: 16px;
-      border-radius: 4px;
-      margin-top: 15px;
+      border-radius: 6px;
+      margin-top: 10px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <div id="container">
-    <h2>BOT JIMMY-HOANG V2.1</h2>
-    <p id="status">Đang triệu hồi TikTok LIVE...</p>
-    <button onclick="retry()">Nếu phép lỗi, hãy thử lại</button>
+    <div style="line-height: 2.2;">
+      <h2 style="color: #FF6600; margin: 10px 0;">BOT TIKTOK V3.8</h2>
+      <p class="note" style="margin: 10px 0;">Thử khởi động lại Tiktok nếu có lỗi...</p>
+      <p id="status" style="margin: 10px 0; color: #FF6600; font-weight: bold;">Telegram: JimmyHoang68</p>
+      <button onclick="retry()">Đang triệu hồi TikTok LIVE...</button>
+    </div>
   </div>
 
   <script>
-    async function redirectToTikTokLive() {
+    const BASE62_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+
+    function base62Decode(str) {
+      let n = 0n;
+      for (const char of str) {
+        const value = BASE62_CHARS.indexOf(char);
+        n = n * 62n + BigInt(value);
+      }
+      return n.toString();
+    }
+
+    function redirectToTikTokLive() {
       try {
         const encoded = location.search.slice(1);
-        const padded = encoded.padEnd(Math.ceil(encoded.length / 4) * 4, '=');
-        const roomId = atob(padded);
+        const roomId = base62Decode(encoded);
 
-        // Detect platform
-        const userAgent = navigator.userAgent.toLowerCase();
-        const isIOS = /iphone|ipad|ipod/.test(userAgent);
-        const isAndroid = /android/.test(userAgent);
+        const ua = navigator.userAgent.toLowerCase();
+        const isIOS = /iphone|ipad|ipod/.test(ua);
+        const isAndroid = /android/.test(ua);
+        const isMobile = isIOS || isAndroid;
 
-        let tiktokAppUrl;
-        if (isIOS) {
-          tiktokAppUrl = `snssdk1180://live?room_id=${roomId}`;
-        } else {
-          tiktokAppUrl = `tiktok://live/${roomId}`;
+        if (isMobile) {
+          const tiktokAppUrl = isIOS
+            ? `snssdk1180://live?room_id=${roomId}`
+            : `intent://live/${roomId}#Intent;scheme=tiktok;package=com.zhiliaoapp.musically;end`;
+
+          location.href = tiktokAppUrl;
+          setTimeout(() => window.close(), 500);
         }
-
-        // Try open in app
-        document.location.href = tiktokAppUrl;
-
-        // Fallback to web
-        setTimeout(() => {
-          if (document.hidden || document.visibilityState === 'hidden') {
-            window.close();
-          } else {
-            window.location.href = `https://www.tiktok.com/live/room/${roomId}`;
-          }
-        }, 1000);
-
-      } catch (e) {
-        document.getElementById("status").innerText = "❌ Có lỗi rồi - Liên hệ Telegram: @JimmyHoang68.";
-      }
+      } catch (e) {}
     }
 
     function retry() {
       redirectToTikTokLive();
-    }
-
-    if (window.history && window.history.replaceState) {
-      window.history.replaceState(null, document.title, window.location.href);
     }
 
     redirectToTikTokLive();
