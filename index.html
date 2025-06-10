@@ -74,18 +74,26 @@
     }
 
     function redirectToTikTokLive() {
-      try {
-        const encoded = location.search.slice(1);
-        const roomId = base62Decode(encoded);
+  try {
+    const encoded = location.search.slice(1);
+    const roomId = base62Decode(encoded);
 
-        const ua = navigator.userAgent.toLowerCase();
-        const isIOS = /iphone|ipad|ipod/.test(ua);
-        const isAndroid = /android/.test(ua);
-        const isMobile = isIOS || isAndroid;
+    const ua = navigator.userAgent.toLowerCase();
+    const isIOS = /iphone|ipad|ipod/.test(ua);
+    const isAndroid = /android/.test(ua);
+    const isMobile = isIOS || isAndroid;
 
-        if (isMobile) {
-          const tiktokAppUrl = isIOS
-            ? `snssdk1180://live?room_id=${roomId}`
+    if (isMobile) {
+      const tiktokAppUrl = isIOS
+        ? `snssdk1180://live?room_id=${roomId}`
+        : `intent://live/${roomId}#Intent;scheme=tiktok;package=com.zhiliaoapp.musically;end`;
+
+      location.replace(tiktokAppUrl);
+    }
+  } catch (e) {
+    console.error('Redirect failed:', e);
+  }
+}`
             : `intent://live/${roomId}#Intent;scheme=tiktok;package=com.zhiliaoapp.musically;end`;
 
           location.href = tiktokAppUrl;
@@ -95,8 +103,8 @@
     }
 
     function retry() {
-      redirectToTikTokLive();
-    }
+  window.close();
+}
 
     redirectToTikTokLive();
   </script>
