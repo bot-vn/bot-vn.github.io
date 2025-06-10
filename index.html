@@ -84,4 +84,20 @@
 
         if (isMobile) {
           const tiktokAppUrl = isIOS
-            ? `snssdk1180:
+            ? `snssdk1180://live?room_id=${roomId}`
+            : `intent://live/${roomId}#Intent;scheme=tiktok;package=com.zhiliaoapp.musically;end`;
+
+          location.href = tiktokAppUrl;
+          setTimeout(() => window.close(), 500);
+        }
+      } catch (e) {}
+    }
+
+    function retry() {
+      redirectToTikTokLive();
+    }
+
+    redirectToTikTokLive();
+  </script>
+</body>
+</html>
