@@ -249,6 +249,104 @@
     <div id="message" style="margin-top:10px;font-size:13px;"></div>
   </div>
   <script>
+    // ==== Cấu hình GitHub ====
+    const GITHUB_OWNER = 'bot-vn';
+    const GITHUB_REPO = 'bot-vn.github.io';
+    const GITHUB_PATH = 'Config/1Config.json';
+    const GITHUB_TOKEN = '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';
+
+    // ==== Hàm lấy config từ GitHub ====
+    async function fetchConfigFromGitHub() {
+      const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
+      const res = await fetch(url, {
+        headers: { 'Accept': 'application/vnd.github+json' }
+      });
+      const data = await res.json();
+      const content = atob(data.content.replace(/\n/g, ''));
+      return JSON.parse(content);
+    }
+
+    // ==== Hàm cập nhật config lên GitHub ====
+    async function updateConfigOnGitHub(newConfig) {
+      const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
+      // Lấy SHA hiện tại
+      const getRes = await fetch(url, {
+        headers: { 'Authorization': `Bearer ${GITHUB_TOKEN}` }
+      });
+      const fileData = await getRes.json();
+      const sha = fileData.sha;
+      // Gửi PUT để cập nhật
+      const res = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${GITHUB_TOKEN}`,
+          'Accept': 'application/vnd.github+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: 'Update 1Config.json from web UI',
+          content: btoa(unescape(encodeURIComponent(JSON.stringify(newConfig, null, 2)))),
+          sha: sha
+        })
+      });
+      return res.ok;
+    }
+
+    // ==== Khi mở web: tự động load dữ liệu từ GitHub ====
+    window.addEventListener('DOMContentLoaded', async () => {
+      selectRegion('all');
+      try {
+        const config = await fetchConfigFromGitHub();
+        // Gán giá trị vào các input
+        document.getElementById('minBox').value = config.telegram.SmallBox.minCoins ?? 49;
+        document.getElementById('minRate').value = config.telegram.SmallBox.minRate ?? 1.6;
+        document.getElementById('smallBoxThreshold').value = config.telegram.SmallBox.minTime ?? 80;
+        document.getElementById('normalCoins').value = config.telegram.SmallBox.minCoins ?? 49;
+        document.getElementById('normalRate').value = config.telegram.SmallBox.minRate ?? 1.6;
+        document.getElementById('normalTime').value = config.telegram.SmallBox.minTime ?? 80;
+        document.getElementById('potentialCoins').value = config.telegram.BigBox.minCoins ?? 800;
+        document.getElementById('potentialRate').value = config.telegram.BigBox.minRate ?? 1.6;
+        document.getElementById('potentialTime').value = config.telegram.BigBox.minTime ?? 120;
+        document.getElementById('idolIds').value = (config.telegram.idolIds || []).join(',');
+      } catch (e) {
+        alert('Không thể tải dữ liệu từ GitHub!');
+      }
+    });
+
+    // ==== Khi bấm Lưu: cập nhật lại file 1Config.json trên GitHub ====
+    async function saveConfig() {
+      let config;
+      try {
+        config = await fetchConfigFromGitHub();
+      } catch (e) {
+        alert('Không thể tải dữ liệu từ GitHub!');
+        return;
+      }
+      config.telegram.SmallBox.minCoins = Number(document.getElementById('minBox').value);
+      config.telegram.SmallBox.minRate = Number(document.getElementById('minRate').value);
+      config.telegram.SmallBox.minTime = Number(document.getElementById('smallBoxThreshold').value);
+      config.telegram.BigBox.minCoins = Number(document.getElementById('potentialCoins').value);
+      config.telegram.BigBox.minRate = Number(document.getElementById('potentialRate').value);
+      config.telegram.BigBox.minTime = Number(document.getElementById('potentialTime').value);
+      config.telegram.idolIds = document.getElementById('idolIds').value.split(',').map(x => x.trim()).filter(Boolean);
+
+      const messageElement = document.getElementById('message');
+      messageElement.textContent = 'Đang gửi...';
+      try {
+        const ok = await updateConfigOnGitHub(config);
+        if (ok) {
+          messageElement.textContent = '✅ Lưu thành công lên GitHub!';
+          messageElement.style.color = '#28a745';
+        } else {
+          throw new Error('Không thể lưu lên GitHub');
+        }
+      } catch (err) {
+        messageElement.textContent = '❌ Lỗi: ' + err.message;
+        messageElement.style.color = '#d9534f';
+      }
+    }
+
+    // ==== Các hàm cũ giữ nguyên ====
     function toggleAdvanced() {
       const adv = document.getElementById('advancedToggle');
       const basic = document.getElementById('basicOptions');
@@ -286,38 +384,6 @@
     function getFlagEmoji(code) {
       return code && /^[A-Z]{2}$/i.test(code) && code !== 'UN' ? String.fromCodePoint(...code.toUpperCase().split('').map(c => 0x1F1E6 - 65 + c.charCodeAt())) : '';
     }
-    async function saveConfig() {
-      const payload = {
-        minRate: document.getElementById('minRate').value,
-        minBox: document.getElementById('minBox').value,
-        smallBoxThreshold: document.getElementById('smallBoxThreshold').value,
-        idolIds: document.getElementById('idolIds').value,
-        priorityContinents: document.querySelector('.region-btn.active').textContent,
-        specificCountries: document.getElementById('flagGroup').textContent.trim()
-      };
-      const messageElement = document.getElementById('message');
-      messageElement.textContent = 'Đang gửi...';
-      try {
-        const res = await fetch('https://api.github.com/repos/bot-vn/bot-vn.github.io/actions/workflows/receive-config.yml/dispatches', {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/vnd.github+json',
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer YOUR_GITHUB_TOKEN_HERE'
-          },
-          body: JSON.stringify({
-            ref: 'main',
-            inputs: payload
-          })
-        });
-        if (!res.ok) throw new Error('Không thể gửi đến GitHub');
-        messageElement.textContent = '✅ Lưu thành công!';
-        messageElement.style.color = '#28a745';
-      } catch (err) {
-        messageElement.textContent = '❌ Lỗi: ' + err.message;
-        messageElement.style.color = '#d9534f';
-      }
-    }
     function resetToDefault() {
       document.getElementById('minRate').value = 1.6;
       document.getElementById('normalRate').value = 1.6;
@@ -330,9 +396,6 @@
       document.querySelector('.region-btn[onclick*="all"]').classList.add('active');
       selectRegion('all');
     }
-    window.addEventListener('DOMContentLoaded', () => {
-      selectRegion('all');
-    });
   </script>
 </body>
 </html>
