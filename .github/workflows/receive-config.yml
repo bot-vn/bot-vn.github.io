@@ -1,14 +1,8 @@
 name: Receive Config Update with Proxy
 
 on:
-  workflow_dispatch: # Thay bằng workflow_dispatch, an toàn hơn
-    inputs:
-      secret_key: # Yêu cầu secret key để xác thực
-      minRate:
-      minBox:
-      smallBoxThreshold:
-      priorityContinents:
-      specificCountries:
+  repository_dispatch: # Nhận request công khai
+    types: [update-config-proxy]
 
 jobs:
   proxy-config:
@@ -17,15 +11,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Receive and Validate Payload
+      - name: Validate Internal Secret
         run: |
-          echo "Payload received: ${{ toJSON(github.event.inputs) }}" > payload.json
-          SECRET_KEY="${{ secrets.CONFIG_SECRET_KEY }}"
-          if [ "${{ github.event.inputs.secret_key }}" != "$SECRET_KEY" ]; then
-            echo "❌ Secret key không hợp lệ"
+          # Kiểm tra secret nội bộ, không cần từ client
+          if [ -z "${{ secrets.INTERNAL_SECRET }}" ]; then
+            echo "❌ INTERNAL_SECRET không được định nghĩa"
             exit 1
           fi
-          echo "✅ Secret key hợp lệ"
+          echo "✅ Internal secret hợp lệ"
 
       - name: Trigger Update Config Workflow
         env:
@@ -38,11 +31,18 @@ jobs:
             -d '{
               "event_type": "update-config",
               "client_payload": {
-                "minRate": ${{ github.event.inputs.minRate }},
-                "minBox": ${{ github.event.inputs.minBox }},
-                "smallBoxThreshold": ${{ github.event.inputs.smallBoxThreshold }},
-                "priorityContinents": ${{ github.event.inputs.priorityContinents }},
-                "specificCountries": ${{ github.event.inputs.specificCountries }}
+                "minRate": ${{ github.event.client_payload.minRate }},
+                "minBox": ${{ github.event.client_payload.minBox }},
+                "smallBoxThreshold": ${{ github.event.client_payload.smallBoxThreshold }},
+                "normalMinBox": ${{ github.event.client.payload.normalMinBox }},
+                "normalMinRate": ${{ github.event.client.payload.normalMinRate }},
+                "normalSmallBoxThreshold": ${{ github.event.client.payload.normalSmallBoxThreshold }},
+                "potentialMinBox": ${{ github.event.client.payload.potentialMinBox }},
+                "potentialMinRate": ${{ github.event.client.payload.potentialMinRate }},
+                "potentialSmallBoxThreshold": ${{ github.event.client.payload.potentialSmallBoxThreshold }},
+                "priorityContinents": ${{ github.event.client_payload.priorityContinents }},
+                "specificCountries": ${{ github.event.client_payload.specificCountries }},
+                "idolIds": ${{ github.event.client_payload.idolIds }}
               }
             }'
           echo "✅ Đã gửi repository_dispatch để cập nhật 1Config.json"
