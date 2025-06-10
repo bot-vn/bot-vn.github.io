@@ -19,7 +19,7 @@
       padding: 24px;
       border: 1px solid #ccc;
       border-radius: 10px;
-      width: 240px;
+      width: 300px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
     h2 {
@@ -56,9 +56,9 @@
     .button-group {
       display: flex;
       justify-content: space-between;
-      margin-top: 0;
+      margin-top: 12px;
       gap: 10px;
-      align-items: flex-start;
+      align-items: center;
     }
     button {
       flex: 1;
@@ -67,7 +67,6 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      width: auto;
     }
     button.restart {
       background-color: #dc3545;
@@ -135,22 +134,22 @@
 <body>
   <div class="container">
     <h2>QuangTuan</h2>
-
     <div class="row">
-      <label><input type="checkbox" id="advancedToggle" onchange="toggleAdvanced()"> Nâng cao</label>
+      <input type="checkbox" id="advancedToggle" onchange="toggleAdvanced()">
+      <label for="advancedToggle">Nâng cao</label>
     </div>
 
-    <div id="basicOptions" style="display: block;">
-      <div class="input-group" style="display: flex; gap: 32px; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-        <div style="flex:1">
+    <div id="basicOptions">
+      <div class="input-group three-inputs">
+        <div>
           <label for="minBox">Xu:</label>
           <input type="number" id="minBox" value="49">
         </div>
-        <div style="flex:1">
+        <div>
           <label for="minRate">Tỷ lệ:</label>
           <input type="number" id="minRate" step="0.1" value="1.6">
         </div>
-        <div style="flex:1">
+        <div>
           <label for="smallBoxThreshold">Giây:</label>
           <input type="number" id="smallBoxThreshold" value="80">
         </div>
@@ -194,7 +193,7 @@
       </div>
     </div>
 
-    <div class="region-group" style="margin-top: 12px;">
+    <div class="region-group">
       <button class="region-btn active" onclick="selectRegion('all')">Tất cả</button>
       <button class="region-btn" onclick="selectRegion('asia')">Châu Á</button>
       <button class="region-btn" onclick="selectRegion('europe')">Châu Âu</button>
@@ -203,12 +202,12 @@
 
     <div id="flagGroup" class="flag-group" style="display: none;"></div>
 
-    <div id="customRegion" class="input-group" style="display: none; margin-top: 12px;">
+    <div id="customRegion" class="input-group" style="display: none;">
       <label for="customRegionIds">Danh sách quốc gia (VD: VN,US):</label>
       <input type="text" id="customRegionIds" placeholder="VN,US">
     </div>
 
-    <div id="idolInput" class="input-group" style="margin-top: 12px;">
+    <div class="input-group">
       <label for="idolIds">Những id follow idol:</label>
       <input type="text" id="idolIds" placeholder="hoanganhtop2 phamtientu">
     </div>
@@ -229,16 +228,6 @@
       advanced.style.display = adv.checked ? 'block' : 'none';
     }
 
-    const flags = {
-      all: ['NP', 'ID', 'IN', 'IL', 'AE', 'AM', 'AZ', 'BD', 'MM', 'PH', 'TW', 'SG', 'GE', 'JP', 'KZ', 'KH', 'KR', 'IQ', 'KG', 'LA', 'MY', 'MN', 'AF', 'IR', 'LK', 'TH', 'TR', 'PK', 'UZ', 'VN', 'ZA', 'ES', 'NG', 'BA', 'BG', 'BY', 'HR', 'CZ', 'DK', 'NL', 'US', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IS', 'IE', 'IT', 'LV', 'LT', 'MK', 'MG', 'MT', 'NO', 'PL', 'PT', 'RO', 'RU', 'RS', 'SK', 'SI', 'SO', 'KE', 'SE', 'UA', 'GB', 'UNKNOWN'],
-      asia: ['NP', 'ID', 'IN', 'IL', 'AE', 'AM', 'AZ', 'BD', 'MM', 'PH', 'TW', 'SG', 'GE', 'JP', 'KZ', 'KH', 'KR', 'IQ', 'KG', 'LA', 'MY', 'MN', 'AF', 'IR', 'LK', 'TH', 'TR', 'PK', 'UZ', 'VN'],
-      europe: ['ZA', 'ES', 'NG', 'BA', 'BG', 'BY', 'HR', 'CZ', 'DK', 'NL', 'US', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IS', 'IE', 'IT', 'LV', 'LT', 'MK', 'MG', 'MT', 'NO', 'PL', 'PT', 'RO', 'RU', 'RS', 'SK', 'SI', 'SO', 'KE', 'SE', 'UA', 'GB', 'UNKNOWN']
-    };
-
-    function getFlagEmoji(code) {
-      return code ? String.fromCodePoint(...code.toUpperCase().split('').map(c => 0x1F1E6 - 65 + c.charCodeAt())) : '🏳️';
-    }
-
     function selectRegion(region) {
       const buttons = document.querySelectorAll('.region-btn');
       buttons.forEach(btn => btn.classList.toggle('active', btn.textContent.toLowerCase() === region));
@@ -251,6 +240,16 @@
         selectedCountries = selectedFlags;
         updateCustomInput();
       }
+    }
+
+    const flags = {
+      all: ['NP','ID','IN','IL','AE','AM','AZ','BD','MM','PH','TW','SG','GE','JP','KZ','KH','KR','IQ','KG','LA','MY','MN','AF','IR','LK','TH','TR','PK','UZ','VN','ZA','ES','NG','BA','BG','BY','HR','CZ','DK','NL','US','EE','FI','FR','DE','GR','HU','IS','IE','IT','LV','LT','MK','MG','MT','NO','PL','PT','RO','RU','RS','SK','SI','SO','KE','SE','UA','GB','UNKNOWN'],
+      asia: ['NP','ID','IN','IL','AE','AM','AZ','BD','MM','PH','TW','SG','GE','JP','KZ','KH','KR','IQ','KG','LA','MY','MN','AF','IR','LK','TH','TR','PK','UZ','VN'],
+      europe: ['ZA','ES','NG','BA','BG','BY','HR','CZ','DK','NL','US','EE','FI','FR','DE','GR','HU','IS','IE','IT','LV','LT','MK','MG','MT','NO','PL','PT','RO','RU','RS','SK','SI','SO','KE','SE','UA','GB','UNKNOWN']
+    };
+
+    function getFlagEmoji(code) {
+      return code ? String.fromCodePoint(...code.toUpperCase().split('').map(c => 0x1F1E6 - 65 + c.charCodeAt())) : '🏳️';
     }
 
     let selectedCountries = [];
@@ -266,76 +265,45 @@
       document.getElementById('customRegionIds').value = selectedCountries.join(',');
     }
 
-    document.querySelectorAll('.region-btn').forEach(btn => btn.addEventListener('click', () => selectRegion(btn.textContent.toLowerCase())));
-
     async function saveConfig() {
-      const minRate = document.getElementById('minRate').value;
-      const minBox = document.getElementById('minBox').value;
-      const smallBoxThreshold = document.getElementById('smallBoxThreshold').value;
-      const region = document.querySelector('.region-btn.active').textContent.toLowerCase();
-      const customRegionIds = document.getElementById('customRegionIds').value || '';
-      const messageElement = document.getElementById('message');
-      messageElement.textContent = 'Đang lưu...';
-
-      // Lấy nội dung hiện tại của 1Config.json
-      const configUrl = 'https://bot-vn.github.io/1Config.json';
-      let currentConfig = {};
-      try {
-        const response = await fetch(configUrl);
-        currentConfig = await response.json();
-      } catch (e) {
-        console.error('Lỗi tải 1Config.json:', e);
-      }
-
-      // Cập nhật cấu hình mới
-      const updatedConfig = {
-        ...currentConfig,
-        telegram: {
-          ...currentConfig.telegram,
-          minRate: parseFloat(minRate),
-          minBox: parseInt(minBox),
-          smallBoxThreshold: parseInt(smallBoxThreshold),
-          priorityContinents: region === 'tất cả' ? [] : [region === 'châu á' ? 'Asia' : region === 'châu âu' ? 'Europe' : ''],
-          specificCountries: region === 'tùy chọn' ? customRegionIds.split(',').map(c => c.trim().toUpperCase()) : (region === 'tất cả' ? [] : selectedCountries.map(c => c.toUpperCase()))
-        }
+      const payload = {
+        minRate: document.getElementById('minRate').value,
+        minBox: document.getElementById('minBox').value,
+        smallBoxThreshold: document.getElementById('smallBoxThreshold').value,
+        idolIds: document.getElementById('idolIds').value,
+        priorityContinents: document.querySelector('.region-btn.active').textContent,
+        specificCountries: document.getElementById('customRegionIds').value
       };
 
+      const messageElement = document.getElementById('message');
+      messageElement.textContent = 'Đang gửi...';
+
       try {
-        const githubToken = 'your_github_token_here'; // Thay bằng token GitHub cá nhân của bạn
-        const repo = 'bot-vn';
-        const path = '1Config.json';
-        const url = `https://api.github.com/repos/${repo}/contents/${path}`;
-        const response = await fetch(url, {
-          method: 'PUT',
+        const res = await fetch('https://api.github.com/repos/bot-vn/bot-vn.github.io/actions/workflows/receive-config.yml/dispatches', {
+          method: 'POST',
           headers: {
-            'Authorization': `token ${githubToken}`,
-            'Content-Type': 'application/json'
+            'Accept': 'application/vnd.github+json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer YOUR_GITHUB_TOKEN_HERE'
           },
           body: JSON.stringify({
-            message: 'Cập nhật 1Config.json từ Config.html',
-            content: btoa(JSON.stringify(updatedConfig, null, 2)),
-            sha: await getFileSha()
+            ref: 'main',
+            inputs: payload
           })
         });
 
-        if (!response.ok) throw new Error('Không thể cập nhật 1Config.json');
-        messageElement.textContent = 'Đã lưu và cập nhật 1Config.json!';
+        if (!res.ok) throw new Error('Không thể gửi đến GitHub');
+
+        messageElement.textContent = '✅ Lưu thành công!';
         messageElement.style.color = '#28a745';
-      } catch (error) {
-        messageElement.textContent = `Lỗi: ${error.message}`;
+      } catch (err) {
+        messageElement.textContent = '❌ Lỗi: ' + err.message;
         messageElement.style.color = '#d9534f';
       }
     }
 
-    async function getFileSha() {
-      const url = 'https://api.github.com/repos/bot-vn/bot-vn/contents/1Config.json';
-      const response = await fetch(url);
-      const data = await response.json();
-      return data.sha;
-    }
-
-    // Load initial state
-    selectRegion('tất cả');
+    document.querySelectorAll('.region-btn').forEach(btn => btn.addEventListener('click', () => selectRegion(btn.textContent.toLowerCase())));
+    selectRegion('all');
   </script>
 </body>
 </html>
