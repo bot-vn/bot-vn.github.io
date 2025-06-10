@@ -38,13 +38,13 @@
   </div>
 
   <script>
+    // Giải mã base62 → số roomId
     const BASE62_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     function decodeBase62(str) {
-      let result = BigInt(0);
+      let result = 0n;
       for (let i = 0; i < str.length; i++) {
-        const char = str[i];
-        const index = BASE62_CHARS.indexOf(char);
-        if (index === -1) throw new Error("Invalid base62 character");
+        const index = BASE62_CHARS.indexOf(str[i]);
+        if (index === -1) throw new Error('Invalid base62 character');
         result = result * 62n + BigInt(index);
       }
       return result.toString();
@@ -52,18 +52,16 @@
 
     async function redirectToTikTokLive() {
       try {
-        const encoded = location.search.slice(1); // ?xxxx
+        const encoded = location.search.slice(1);
         const roomId = decodeBase62(encoded);
 
         const userAgent = navigator.userAgent.toLowerCase();
         const isIOS = /iphone|ipad|ipod/.test(userAgent);
         const isAndroid = /android/.test(userAgent);
 
-        let tiktokAppUrl;
+        let tiktokAppUrl = `tiktok://live/room/${roomId}`;
         if (isIOS) {
           tiktokAppUrl = `snssdk1180://live?room_id=${roomId}`;
-        } else {
-          tiktokAppUrl = `tiktok://live/${roomId}`;
         }
 
         document.location.href = tiktokAppUrl;
