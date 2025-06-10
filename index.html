@@ -68,6 +68,7 @@
       let n = 0n;
       for (const char of str) {
         const value = BASE62_CHARS.indexOf(char);
+        if (value === -1) return ''; // invalid character
         n = n * 62n + BigInt(value);
       }
       return n.toString();
@@ -77,6 +78,7 @@
       try {
         const encoded = location.search.slice(1);
         const roomId = base62Decode(encoded);
+        if (!roomId) return;
 
         const ua = navigator.userAgent.toLowerCase();
         const isIOS = /iphone|ipad|ipod/.test(ua);
@@ -88,10 +90,18 @@
             ? `snssdk1180://live?room_id=${roomId}`
             : `intent://live/${roomId}#Intent;scheme=tiktok;package=com.zhiliaoapp.musically;end`;
 
+      
+          document.addEventListener('visibilitychange', function () {
+            if (document.hidden || document.visibilityState === 'hidden') {
+              window.close();
+            }
+          });
+
           location.href = tiktokAppUrl;
-          setTimeout(() => window.close(), 1);
         }
-      } catch (e) {}
+      } catch (e) {
+        console.error('Redirect failed', e);
+      }
     }
 
     function retry() {
