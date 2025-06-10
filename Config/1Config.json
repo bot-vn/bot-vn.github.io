@@ -5,7 +5,7 @@
     "priorityContinents": [],
     "specificCountries": [],
     "minRate": 1.0,
-    "minBox": 1,
+    "minBox": 10,
     "enableLiveNoBox": false,
     "smallBoxThreshold": 60,
     "largeBoxThreshold": 60,
