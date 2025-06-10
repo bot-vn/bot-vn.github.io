@@ -1,92 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Bot</title>
-  <meta name="robots" content="noindex,nofollow">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      font-family: sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    #container {
-      text-align: center;
-      border: 2px solid red;
-      padding: 30px;
-      border-radius: 8px;
-    }
-    button {
-      background: #0000FF;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      font-size: 16px;
-      border-radius: 4px;
-      margin-top: 15px;
-    }
-  </style>
+  <title>BOT JIMMY-HOANG V2.1</title>
 </head>
 <body>
-  <div id="container">
-    <h2>BOT JIMMY-HOANG V2.1</h2>
-    <p id="status">Đang triệu hồi TikTok LIVE...</p>
-    <button onclick="retry()">Nếu phép lỗi, hãy thử lại</button>
-  </div>
+  <h1>BOT JIMMY-HOANG V2.1</h1>
+  <p>Đang triệu hồi TikTok LIVE...</p>
+  <p>Nếu phép lỗi, hãy thử lại</p>
 
   <script>
+    // Hàm base62 decode từ 12Help.js
     const BASE62_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-
     function decodeBase62(str) {
       let n = 0n;
       for (const char of str) {
-        const index = BASE62_CHARS.indexOf(char);
-        if (index === -1) throw new Error('Invalid base62 character');
-        n = n * 62n + BigInt(index);
+        const value = BASE62_CHARS.indexOf(char);
+        if (value === -1) throw new Error('Invalid base62 character');
+        n = n * 62n + BigInt(value);
       }
       return n.toString();
     }
 
-    async function redirectToTikTokLive() {
+    // Lấy encodedRoomId từ URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const encodedRoomId = urlParams.get(''); // Lấy phần sau dấu ?
+
+    if (encodedRoomId) {
       try {
-        const encoded = location.search.slice(1);
-        const roomId = decodeBase62(encoded);
-
-        const userAgent = navigator.userAgent.toLowerCase();
-        const isIOS = /iphone|ipad|ipod/.test(userAgent);
-
-        let tiktokAppUrl = `tiktok://live/room/${roomId}`;
-        if (isIOS) {
-          tiktokAppUrl = `snssdk1180://live?room_id=${roomId}`;
-        }
-
-        document.location.href = tiktokAppUrl;
-
-        setTimeout(() => {
-          if (document.hidden || document.visibilityState === 'hidden') {
-            window.close();
-          } else {
-            window.location.href = `https://www.tiktok.com/live/room/${roomId}`;
-          }
-        }, 1000);
-
-      } catch (e) {
-        document.getElementById("status").innerText = "❌ Có lỗi rồi - Liên hệ Telegram: @JimmyHoang68.";
+        const roomId = decodeBase62(encodedRoomId);
+        // Chuyển hướng đến TikTok Live
+        window.location.href = `https://www.tiktok.com/live?room_id=${roomId}`;
+      } catch (error) {
+        console.error('Lỗi giải mã roomId:', error);
+        alert('Không thể vào phòng live. Vui lòng thử lại!');
       }
+    } else {
+      console.error('Không tìm thấy roomId trong URL');
     }
-
-    function retry() {
-      redirectToTikTokLive();
-    }
-
-    if (window.history && window.history.replaceState) {
-      window.history.replaceState(null, document.title, window.location.href);
-    }
-
-    redirectToTikTokLive();
   </script>
 </body>
 </html>
