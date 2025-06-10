@@ -38,13 +38,13 @@
   </div>
 
   <script>
-    const BASE62 = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    const BASE62_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
     function base62Decode(str) {
-      let n = BigInt(0);
-      for (let i = 0; i < str.length; i++) {
-        const value = BASE62.indexOf(str[i]);
-        if (value === -1) throw new Error('Invalid base62');
+      let n = 0n;
+      for (const char of str) {
+        const value = BASE62_CHARS.indexOf(char);
+        if (value === -1) throw new Error("Invalid base62 character");
         n = n * 62n + BigInt(value);
       }
       return n.toString();
@@ -53,13 +53,15 @@
     async function redirectToTikTokLive() {
       try {
         const encoded = location.search.slice(1);
-        const roomId = base62Decode(encoded); // dùng chuẩn 12Help.js
+        if (!encoded) throw new Error("Thiếu roomId");
+
+        const roomId = base62Decode(encoded);
 
         const ua = navigator.userAgent.toLowerCase();
         const isIOS = /iphone|ipad|ipod/.test(ua);
         const isAndroid = /android/.test(ua);
 
-        let tiktokAppUrl = isIOS
+        const tiktokAppUrl = isIOS
           ? `snssdk1180://live?room_id=${roomId}`
           : `tiktok://live/${roomId}`;
 
@@ -69,9 +71,11 @@
           if (!document.hidden) {
             location.href = `https://www.tiktok.com/live/room/${roomId}`;
           }
-        }, 1000);
+        }, 2000); // ⏱ tăng lên 2 giây
+
       } catch (e) {
-        document.getElementById("status").innerText = "❌ Có lỗi rồi - Liên hệ Telegram: @JimmyHoang68.";
+        document.getElementById("status").innerText =
+          "❌ Có lỗi rồi - Liên hệ Telegram: @JimmyHoang68.";
       }
     }
 
