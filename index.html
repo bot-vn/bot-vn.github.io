@@ -38,27 +38,28 @@
   </div>
 
   <script>
-    // Giải mã base62 → số roomId
     const BASE62_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     function decodeBase62(str) {
-      let result = 0n;
-      for (let i = 0; i < str.length; i++) {
-        const index = BASE62_CHARS.indexOf(str[i]);
-        if (index === -1) throw new Error('Invalid base62 character');
-        result = result * 62n + BigInt(index);
+      let n = 0n;
+      for (const char of str) {
+        const value = BASE62_CHARS.indexOf(char);
+        if (value === -1) throw new Error('Invalid base62 character');
+        n = n * 62n + BigInt(value);
       }
-      return result.toString();
+      return n.toString();
     }
 
     async function redirectToTikTokLive() {
       try {
-        const encoded = location.search.slice(1);
-        const roomId = decodeBase62(encoded);
+        const encoded = location.search.slice(1); // Chuỗi sau dấu '?'
+        const roomId = decodeBase62(encoded);     // Giải mã từ base62
 
+        // Phát hiện thiết bị
         const userAgent = navigator.userAgent.toLowerCase();
         const isIOS = /iphone|ipad|ipod/.test(userAgent);
         const isAndroid = /android/.test(userAgent);
 
+        // Chuyển hướng theo thiết bị
         let tiktokAppUrl = `tiktok://live/room/${roomId}`;
         if (isIOS) {
           tiktokAppUrl = `snssdk1180://live?room_id=${roomId}`;
@@ -66,6 +67,7 @@
 
         document.location.href = tiktokAppUrl;
 
+        // Fallback sau 1 giây
         setTimeout(() => {
           if (document.hidden || document.visibilityState === 'hidden') {
             window.close();
