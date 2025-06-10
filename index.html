@@ -7,8 +7,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      background-color: black;
-      font-family: sans-serif;
+      background-color: #121212;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -17,28 +17,43 @@
     }
     #container {
       text-align: center;
-      border: 2px solid red;
-      padding: 30px;
-      border-radius: 8px;
-      background-color: white;
+      border: 3px solid #FF4B4B;
+      padding: 40px;
+      border-radius: 16px;
+      background-color: #ffffff;
+      
+      max-width: 400px;
+    }
+    h2 {
+      margin-top: 0;
+      color: #333;
+      font-size: 24px;
+    }
+    #status {
+      color: #444;
+      margin: 15px 0;
+      font-size: 16px;
     }
     button {
-      background: #0000FF;
+      background: #0066FF;
       color: white;
-      padding: 10px 20px;
+      padding: 12px 24px;
       border: none;
       font-size: 16px;
-      border-radius: 4px;
-      margin-top: 15px;
+      font-weight: bold;
+      border-radius: 6px;
+      margin-top: 20px;
       cursor: pointer;
+      
     }
+    
   </style>
 </head>
 <body>
   <div id="container">
-    <h2>BOT JIMMY-HOANG V2.1</h2>
+    <h2>BOT TIKTOK LIVE V3.8</h2>
     <p id="status">Đang triệu hồi TikTok LIVE...</p>
-    <button onclick="retry()">Nếu phép lỗi, hãy thử lại</button>
+    <button onclick="window.close()">Thử khởi động lại Tiktok nếu có lỗi</button>
   </div>
 
   <script>
@@ -78,7 +93,7 @@
         }, 100);
 
       } catch (e) {
-        document.getElementById("status").innerText = "❌ Có lỗi rồi - Liên hệ Telegram: @JimmyHoang68.";
+        document.getElementById("status").innerText = "❌ Có lỗi rồi - Liên hệ Telegram: @JimmyHoang68";
       }
     }
 
