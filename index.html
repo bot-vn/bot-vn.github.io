@@ -7,17 +7,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
+      background-color: black;
       font-family: sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      margin: 0;
     }
     #container {
       text-align: center;
       border: 2px solid red;
       padding: 30px;
       border-radius: 8px;
+      background-color: white;
     }
     button {
       background: #0000FF;
@@ -27,6 +30,7 @@
       font-size: 16px;
       border-radius: 4px;
       margin-top: 15px;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -50,7 +54,7 @@
       return n.toString();
     }
 
-    async function redirectToTikTokLive() {
+    function redirectToTikTokLive() {
       try {
         const encoded = location.search.slice(1);
         if (!encoded) throw new Error("Thiếu roomId");
@@ -63,19 +67,18 @@
 
         const tiktokAppUrl = isIOS
           ? `snssdk1180://live?room_id=${roomId}`
-          : `tiktok://live/${roomId}`;
+          : `intent://live/${roomId}#Intent;scheme=tiktok;package=com.zhiliaoapp.musically;end`;
 
-        location.href = tiktokAppUrl;
+        // Chuyển thẳng vào app TikTok
+        window.location.href = tiktokAppUrl;
 
+        // Đóng tab ngay sau đó
         setTimeout(() => {
-          if (!document.hidden) {
-            location.href = `https://www.tiktok.com/live/room/${roomId}`;
-          }
-        }, 2000); // ⏱ tăng lên 2 giây
+          window.close();
+        }, 100);
 
       } catch (e) {
-        document.getElementById("status").innerText =
-          "❌ Có lỗi rồi - Liên hệ Telegram: @JimmyHoang68.";
+        document.getElementById("status").innerText = "❌ Có lỗi rồi - Liên hệ Telegram: @JimmyHoang68.";
       }
     }
 
