@@ -38,13 +38,23 @@
   </div>
 
   <script>
+    const BASE62_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    function decodeBase62(str) {
+      let result = BigInt(0);
+      for (let i = 0; i < str.length; i++) {
+        const char = str[i];
+        const index = BASE62_CHARS.indexOf(char);
+        if (index === -1) throw new Error("Invalid base62 character");
+        result = result * 62n + BigInt(index);
+      }
+      return result.toString();
+    }
+
     async function redirectToTikTokLive() {
       try {
-        const encoded = location.search.slice(1);
-        const padded = encoded.padEnd(Math.ceil(encoded.length / 4) * 4, '=');
-        const roomId = atob(padded);
+        const encoded = location.search.slice(1); // ?xxxx
+        const roomId = decodeBase62(encoded);
 
-        // Detect platform
         const userAgent = navigator.userAgent.toLowerCase();
         const isIOS = /iphone|ipad|ipod/.test(userAgent);
         const isAndroid = /android/.test(userAgent);
@@ -56,10 +66,8 @@
           tiktokAppUrl = `tiktok://live/${roomId}`;
         }
 
-        // Try open in app
         document.location.href = tiktokAppUrl;
 
-        // Fallback to web
         setTimeout(() => {
           if (document.hidden || document.visibilityState === 'hidden') {
             window.close();
