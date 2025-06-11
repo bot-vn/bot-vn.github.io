@@ -7,16 +7,16 @@
   <style>
     html, body { height: 100%; margin: 0; padding: 0; box-sizing: border-box; }
     body {
-     font-family: Arial, sans-serif;
-  background-color: #000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  min-height: 100vh;
-  margin: 0;
-  width: 100vw;
-  height: 100vh;
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
+      width: 100vw;
+      height: 100vh;
     }
     .container {
       background-color: #fff;
@@ -24,10 +24,9 @@
       border: 1px solid #ccc;
       border-radius: 10px;
       width: 100%;
-      max-width: 340px;
+      max-width: 360px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       min-height: 420px;
-      box-sizing: border-box;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -65,221 +64,180 @@
     .flag { cursor: pointer; }
     .flag.selected { color: #007BFF; font-weight: bold; }
     #customRegionIds { border-radius: 4px; }
-    @media (max-width: 400px) {
-      .container { max-width: 100vw; min-width: 0; border-radius: 0; box-shadow: none; padding: 8px; }
-    }
   </style>
 </head>
 <body>
   <div class="container">
     <h2>BOT AUTO RƯƠNG</h2>
-   
- 
-    <div id="advancedOptions" style="display:block; text-align:left;">
-  <div class="input-group">
-    <label style="font-weight: bold; display: block; font-size: 14px;">MÃ RƯƠNG NHỎ:</label>
-    <div class="three-inputs">
-      <div>
-        <label for="normalCoins">Xu:</label>
-        <input type="text" id="normalCoins" inputmode="numeric" pattern="[0-9]*" value="49">
+     <div id="advancedOptions" style="display:block; text-align:left;">
+      <div class="input-group">
+        <label style="font-weight: bold; display: block; font-size: 14px;">MÃ RƯƠNG NHỎ:</label>
+        <div class="three-inputs">
+          <div>
+            <label for="normalCoins">Xu:</label>
+            <input type="text" id="normalCoins" inputmode="numeric">
+          </div>
+          <div>
+            <label for="normalRate">Tỷ lệ:</label>
+            <input type="text" id="normalRate" inputmode="decimal">
+          </div>
+          <div>
+            <label for="normalTime">Giây:</label>
+            <input type="text" id="normalTime" inputmode="numeric">
+          </div>
+        </div>
       </div>
-      <div>
-        <label for="normalRate">Tỷ lệ:</label>
-        <input type="text" id="normalRate" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" value="1.6">
-      </div>
-      <div>
-        <label for="normalTime">Giây:</label>
-        <input type="text" id="normalTime" inputmode="numeric" pattern="[0-9]*" value="80">
+      <div class="input-group">
+        <label style="font-weight: bold; display: block; font-size: 14px;">MÃ RƯƠNG LỚN:</label>
+        <div class="three-inputs">
+          <div>
+            <label for="potentialCoins">Xu:</label>
+            <input type="text" id="potentialCoins" inputmode="numeric">
+          </div>
+          <div>
+            <label for="potentialRate">Tỷ lệ:</label>
+            <input type="text" id="potentialRate" inputmode="decimal">
+          </div>
+          <div>
+            <label for="potentialTime">Giây:</label>
+            <input type="text" id="potentialTime" inputmode="numeric">
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="input-group">
-    <label style="font-weight: bold; display: block; font-size: 14px;">MÃ RƯƠNG LỚN:</label>
-    <div class="three-inputs">
-      <div>
-        <label for="potentialCoins">Xu:</label>
-        <input type="text" id="potentialCoins" inputmode="numeric" pattern="[0-9]*" value="800">
-      </div>
-      <div>
-        <label for="potentialRate">Tỷ lệ:</label>
-        <input type="text" id="potentialRate" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" value="1.6">
-      </div>
-      <div>
-        <label for="potentialTime">Giây:</label>
-        <input type="text" id="potentialTime" inputmode="numeric" pattern="[0-9]*" value="80">
-      </div>
-    </div>
-  </div>
-</div>
+
     <div class="region-group">
       <button class="region-btn active" onclick="selectRegion('all')">Tất cả</button>
       <button class="region-btn" onclick="selectRegion('asia')">Châu Á</button>
       <button class="region-btn" onclick="selectRegion('europe')">Châu Âu</button>
       <button class="region-btn" onclick="selectRegion('custom')">Tùy chọn</button>
     </div>
-    <div id="flagGroup" class="flag-group" style="display: none;" contenteditable="true"></div>
+
+    <div id="flagGroup" class="flag-group" contenteditable="false"></div>
+
     <div class="input-group" style="margin-top: 12px;">
       <label for="idolIds">Tài khoản follow idol:</label>
-  <input type="text" id="idolIds" placeholder="Ghi nick tiktok cách nhau bằng dấu ,">
+      <input type="text" id="idolIds" placeholder="Ghi nick tiktok cách nhau bằng dấu ,">
     </div>
+
     <div class="button-group">
       <button class="restart">Khởi động lại</button>
       <button class="save" onclick="saveConfig()">Lưu</button>
     </div>
     <div id="message" style="margin-top:10px;font-size:13px;"></div>
-<input type="hidden" id="minBox" value="49">
-<input type="hidden" id="minRate" value="1.6">
-<input type="hidden" id="smallBoxThreshold" value="80">
   </div>
-  <script>
-    // ==== ĐỒNG BỘ DỮ LIỆU VỚI GITHUB ====
- 
 
-    // Chỉ cho phép nhập số có đúng 1 số sau dấu chấm
-    function validateRateInput(e) {
-      let val = e.target.value.replace(',', '.');
-      if (val === '') return;
-      let num = parseFloat(val);
-      if (isNaN(num)) {
-        e.target.value = '';
-        return;
-      }
-      // Làm tròn về 1 số sau dấu chấm
-      e.target.value = num.toFixed(1);
-    }
-    // Gắn sự kiện cho các input rate
-  
-
- 
-
-    // Ghi đè file 1Config.json lên GitHub khi bấm Lưu
-    // Các hàm cũ giữ nguyên
-    function toggleAdvanced() {
-  // Hàm này đã bị vô hiệu hóa vì không còn nút nâng cao
-}
-    function selectRegion(region) {
-      const buttons = document.querySelectorAll('.region-btn');
-      buttons.forEach(btn => {
-        const text = btn.textContent.trim();
-        let btnRegion = 'all';
-        if (text === 'Châu Á') btnRegion = 'asia';
-        else if (text === 'Châu Âu') btnRegion = 'europe';
-        else if (text === 'Tùy chọn') btnRegion = 'custom';
-        else if (text === 'Tất cả') btnRegion = 'all';
-        btn.classList.toggle('active', btnRegion === region);
-      });
-      const flagGroup = document.getElementById('flagGroup');
-      flagGroup.style.display = 'block';
-      const selectedFlags = flags[region] || flags.all;
-      flagGroup.textContent = selectedFlags.map(code => getFlagEmoji(code)).join(' ');
-    }
-    const flags = (() => {
-      const asia = 'NP,ID,IN,IL,AE,AM,AZ,BD,MM,PH,TW,SG,GE,JP,KZ,KH,KR,IQ,KG,LA,MY,MN,AF,IR,LK,TH,TR,PK,UZ,VN'.split(',');
-      const europe = 'ZA,ES,NG,BA,BG,BY,HR,CZ,DK,NL,US,EE,FI,FR,DE,GR,HU,IS,IE,IT,LV,LT,MK,MG,MT,NO,PL,PT,RO,RU,RS,SK,SI,SO,KE,SE,UA,GB'.split(',');
-      return {
-        all: [...new Set([...asia, ...europe])],
-        asia,
-        europe
-      };
-    })();
-    function getFlagEmoji(code) {
-      return code && /^[A-Z]{2}$/i.test(code) && code !== 'UN' ? String.fromCodePoint(...code.toUpperCase().split('').map(c => 0x1F1E6 - 65 + c.charCodeAt())) : '';
-    }
-    function resetToDefault() {
-      document.getElementById('minRate').value = 1.6;
-      document.getElementById('normalRate').value = 1.6;
-      document.getElementById('potentialRate').value = 1.6;
-      document.getElementById('minBox').value = 49;
-      document.getElementById('smallBoxThreshold').value = 80;
-      document.getElementById('idolIds').value = '';
-      document.getElementById('flagGroup').textContent = flags['all'].map(code => getFlagEmoji(code)).join(' ');
-      document.querySelectorAll('.region-btn').forEach(btn => btn.classList.remove('active'));
-      document.querySelector('.region-btn[onclick*="all"]').classList.add('active');
-      selectRegion('all');
-    }
-  </script>
 <script>
- window.addEventListener('DOMContentLoaded', () => {
-  // Hiển thị emoji quốc gia khi load trang
-  selectRegion('all');
-// Tải config từ server Glitch
-  fetch("https://juicy-transparent-chocolate.glitch.me/get-config")
-    .then(res => res.json())
-    .then(config => {
-      if (!config) return;
+  const flags = (() => {
+    const asia = ["AE","AF","AM","AZ","BD","BH","BN","BT","CY","EG","GE","HK","ID","IL","IN","IQ","IR","JO","JP","KG","KH","KP","KR","KW","KZ","LA","LB","LK","MM","MN","MO","MV","MY","NP","OM","PH","PK","PS","QA","RU","SA","SG","SY","TH","TJ","TL","TM","TR","TW","UZ","VN","YE"];
+    const all = [...new Set([
+      ...asia,
+      "AD","AG","AI","AL","AO","AR","AS","AT","AU","AW","AX","BA","BB","BE","BF","BG","BI","BJ","BL","BM","BO","BR","BS","BW","BY","BZ","CA","CD","CF","CG","CH","CI","CK","CL","CM","CN","CO","CR","CV","CW","CZ","DE","DJ","DK","DM","DO","DZ","EC","EE","ER","ES","ET","FI","FJ","FM","FO","FR","GA","GB","GD","GF","GG","GH","GI","GL","GM","GN","GP","GQ","GR","GT","GU","GW","GY","HN","HR","HT","HU","IE","IM","IS","IT","JE","JM","KE","KI","KM","KN","KY","LC","LI","LR","LS","LT","LU","LV","LY","MA","MC","MD","ME","MF","MG","MH","MK","ML","MS","MT","MU","MW","MX","MZ","NA","NC","NE","NF","NG","NI","NL","NO","NR","NU","NZ","PA","PE","PF","PG","PL","PM","PN","PR","PT","PW","PY","RE","RO","RS","RW","SB","SC","SD","SE","SH","SI","SK","SL","SM","SN","SO","SR","SS","ST","SV","SX","SZ","TC","TD","TG","TO","TT","TV","TZ","UA","UG","US","UY","VA","VC","VE","VG","VI","VU","WF","WS","YT","ZA","ZM","ZW"
+    ])];
+    const europe = all.filter(code => !asia.includes(code));
+    return { all, asia, europe };
+  })();
 
-      document.getElementById("minRate").value = config.minRate ?? '';
-      document.getElementById("minBox").value = config.minBox ?? '';
-      document.getElementById("smallBoxThreshold").value = config.smallBoxThreshold ?? '';
-      document.getElementById("idolIds").value = config.idolIds ?? '';
+  function getFlagEmoji(code) {
+    return code && /^[A-Z]{2}$/.test(code) ? String.fromCodePoint(...code.split('').map(c => 0x1F1E6 + c.charCodeAt(0) - 65)) : '';
+  }
 
-      document.getElementById("potentialRate").value = config.potentialRate ?? '';
-      document.getElementById("potentialTime").value = config.potentialTime ?? '';
-      document.getElementById("potentialCoins").value = config.potentialCoins ?? '';
+  function selectRegion(region) {
+    const flagGroup = document.getElementById("flagGroup");
+    const buttons = document.querySelectorAll(".region-btn");
+    buttons.forEach(btn => btn.classList.remove("active"));
+    document.querySelector(`.region-btn[onclick*="${region}"]`).classList.add("active");
 
-      document.getElementById("normalRate").value = config.normalRate ?? '';
-      document.getElementById("normalTime").value = config.normalTime ?? '';
-      document.getElementById("normalCoins").value = config.normalCoins ?? '';
+    if (region === "custom") {
+  flagGroup.setAttribute("contenteditable", "true");
+  if (flagGroup.textContent.trim() === "") {
+    flagGroup.textContent = flags.all.map(getFlagEmoji).join(' ');
+  }
+} else {
+  const codes = flags[region] || [];
+  flagGroup.textContent = codes.map(getFlagEmoji).join(' ');
+  flagGroup.setAttribute("contenteditable", "false");
+}
 
-      if (config.flagGroup) {
-        document.getElementById("flagGroup").textContent = config.flagGroup;
+  }
+
+  function parseFlagsToCountryCodes(flagString) {
+    const codes = [];
+    for (let i = 0; i < flagString.length; i += 2) {
+      const part = flagString.codePointAt(i);
+      const next = flagString.codePointAt(i + 1);
+      if (!next) continue;
+      const c1 = String.fromCharCode(part - 0x1F1E6 + 65);
+      const c2 = String.fromCharCode(next - 0x1F1E6 + 65);
+      if (/^[A-Z]{2}$/.test(c1 + c2)) codes.push(c1 + c2);
+    }
+    return codes;
+  }
+
+  function saveConfig() {
+    const region = document.querySelector(".region-btn.active")?.textContent?.trim().toLowerCase();
+    let countryCodes = [];
+
+    if (region === "tùy chọn" || region === "custom") {
+      const emojis = document.getElementById("flagGroup").textContent.trim();
+      countryCodes = parseFlagsToCountryCodes(emojis);
+    } else {
+      countryCodes = flags[region === "châu á" ? "asia" : region === "châu âu" ? "europe" : "all"];
+    }
+
+    const payload = {
+      telegram: {
+        targetCountries: countryCodes,
+        idolIds: document.getElementById("idolIds").value.trim(),
+        SmallBox: {
+          minCoins: parseInt(document.getElementById("normalCoins").value),
+          minRate: parseFloat(parseFloat(document.getElementById("normalRate").value.replace(',', '.')).toFixed(1)),
+          minTime: parseInt(document.getElementById("normalTime").value)
+        },
+        BigBox: {
+          minCoins: parseInt(document.getElementById("potentialCoins").value),
+          minRate: parseFloat(parseFloat(document.getElementById("potentialRate").value.replace(',', '.')).toFixed(1)),
+          minTime: parseInt(document.getElementById("potentialTime").value)
+        }
       }
+    };
 
-      if (config.selectedRegion) {
-        const region = config.selectedRegion.toLowerCase();
-        if (['asia', 'châu á'].includes(region)) selectRegion('asia');
-        else if (['europe', 'châu âu'].includes(region)) selectRegion('europe');
-        else if (['tùy chọn', 'custom'].includes(region)) selectRegion('custom');
-        else selectRegion('all');
-      }
+    fetch("https://juicy-transparent-chocolate.glitch.me/save-config", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    })
+    .then(res => res.text())
+    .then(msg => {
+      const messageElement = document.getElementById("message");
+      messageElement.textContent = msg;
+      messageElement.style.color = msg.includes('✅') ? '#28a745' : '#d9534f';
     })
     .catch(err => {
-      console.error('❌ Không thể tải config từ Glitch:', err);
+      const messageElement = document.getElementById("message");
+      messageElement.textContent = '❌ Lỗi gửi dữ liệu: ' + err.message;
+      messageElement.style.color = '#d9534f';
     });
+  }
 
+  // Khi load trang:
+  window.addEventListener("DOMContentLoaded", () => {
+    selectRegion("all");
+    fetch("https://juicy-transparent-chocolate.glitch.me/get-config")
+      .then(res => res.json())
+      .then(config => {
+        const t = config?.telegram || {};
+        document.getElementById("normalCoins").value = t.SmallBox?.minCoins ?? 49;
+        document.getElementById("normalRate").value = (t.SmallBox?.minRate ?? 1.6).toFixed(1);
+        document.getElementById("normalTime").value = t.SmallBox?.minTime ?? 80;
 
-  // Gắn sự kiện validate input cho các ô tỷ lệ
-  ['minRate', 'normalRate', 'potentialRate'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('change', validateRateInput);
+        document.getElementById("potentialCoins").value = t.BigBox?.minCoins ?? 500;
+        document.getElementById("potentialRate").value = (t.BigBox?.minRate ?? 1.6).toFixed(1);
+        document.getElementById("potentialTime").value = t.BigBox?.minTime ?? 120;
+
+        document.getElementById("idolIds").value = t.idolIds ?? '';
+      });
   });
-});
-</script>
-<script>
-function saveConfig() {
-  const payload = {
-    minRate: parseFloat(document.getElementById('minRate').value.replace(',', '.')),
-    minBox: parseInt(document.getElementById('minBox').value),
-    smallBoxThreshold: parseInt(document.getElementById('smallBoxThreshold').value),
-    idolIds: document.getElementById('idolIds').value,
-    potentialRate: parseFloat(document.getElementById('potentialRate').value.replace(',', '.')),
-    potentialTime: parseInt(document.getElementById('potentialTime').value),
-    potentialCoins: parseInt(document.getElementById('potentialCoins').value),
-    normalRate: parseFloat(document.getElementById('normalRate').value.replace(',', '.')),
-    normalTime: parseInt(document.getElementById('normalTime').value),
-    normalCoins: parseInt(document.getElementById('normalCoins').value),
-    selectedRegion: document.querySelector('.region-btn.active')?.textContent || 'Tất cả',
-    flagGroup: document.getElementById('flagGroup')?.textContent.trim() || ''
-  };
-
-  fetch('https://juicy-transparent-chocolate.glitch.me/save-config', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  })
-  .then(res => res.text())
-  .then(msg => {
-    const messageElement = document.getElementById('message');
-    messageElement.textContent = msg;
-    messageElement.style.color = msg.includes('✅') ? '#28a745' : '#d9534f';
-  })
-  .catch(err => {
-    const messageElement = document.getElementById('message');
-    messageElement.textContent = '❌ Lỗi gửi dữ liệu: ' + err.message;
-    messageElement.style.color = '#d9534f';
-  });
-}
 </script>
 </body>
 </html>
- 
