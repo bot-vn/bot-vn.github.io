@@ -245,7 +245,7 @@
       "minTime": 80
     },
     "BigBox": {
-      "minCoins": 600,
+      "minCoins": 500,
       "minRate": 3,
       "minTime": 120
     },
