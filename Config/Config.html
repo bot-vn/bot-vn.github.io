@@ -173,12 +173,23 @@ textarea.input-textarea:focus {
 
     <div class="button-group">
       <button class="restart" onclick="resetToDefault()">Về mặc định</button>
-      <button class="save" onclick="saveConfig()">Lưu</button>
+      <button class="save" onclick="confirmPasswordAndSave()">Lưu</button>
     </div>
     <div id="message" style="margin-top:10px;font-size:13px;"></div>
   </div>
 
 <script>
+function confirmPasswordAndSave() {
+  const password = prompt("🔒 Nhập mật khẩu để lưu cấu hình:");
+  if (password === "3333") {
+    saveConfig();
+  } else if (password !== null) {
+    const messageElement = document.getElementById("message");
+    messageElement.textContent = "❌ Sai mật khẩu!";
+    messageElement.style.color = "#d9534f";
+  }
+}
+
   const flags = (() => {
     const asia = ["AE","AF","AM","AZ","BD","BH","BN","BT","CY","EG","GE","HK","ID","IL","IN","IQ","IR","JO","JP","KG","KH","KP","KR","KW","KZ","LA","LB","LK","MM","MN","MO","MV","MY","NP","OM","PH","PK","PS","QA","RU","SA","SG","SY","TH","TJ","TL","TM","TR","TW","UZ","YE","VN"];
     const all = [...new Set([
