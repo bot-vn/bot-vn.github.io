@@ -7,12 +7,12 @@
     "targetCountries": [],
     "maxRetries": 2,
     "SmallBox": {
-      "minCoins": 400,
+      "minCoins": 700,
       "minRate": 2.0,
       "minTime": 180
     },
     "BigBox": {
-      "minCoins": 1000,
+      "minCoins": 500,
       "minRate": 3.0,
       "minTime": 120
     },
