@@ -325,7 +325,7 @@
     },
     "shortBoxThreshold": 30,
     "enableLiveNoBox": false,
-    "idolIds": "abc, chán nhỉ"
+    "idolIds": "hoangtuthao, yeulacuoi,"
   },
   "websocket": {
     "maxConnections": 1000,
