@@ -5,7 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=1, minimum-scale=1.0, maximum-scale=5.0"/>
   <title>Config</title>
   <style>
-    html, body { height: 100%; margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     body {
       font-family: Arial, sans-serif;
       background-color: #000;
@@ -32,85 +37,200 @@
       flex-direction: column;
       justify-content: center;
     }
-    h2 { color: #dc3545; margin-bottom: 12px; text-align: center; font-weight: bold; }
-    .row { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
-    .input-group { margin-bottom: 10px; text-align: left; }
-    .input-group label { display: block; margin-bottom: 2px; font-weight: bold; font-size: 13px; }
+    h2 {
+      color: #dc3545;
+      margin-bottom: 12px;
+      text-align: center;
+      font-weight: bold;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .input-group {
+      margin-bottom: 10px;
+      text-align: left;
+    }
+    .input-group label {
+      display: block;
+      margin-bottom: 2px;
+      font-weight: bold;
+      font-size: 13px;
+    }
     input[type="text"], input[type="number"] {
-      width: 100%; padding: 4px; border: 1px solid #ccc; border-radius: 4px;
-      font-size: 13px; box-sizing: border-box; transition: border 0.2s ease-in-out;
+      width: 100%;
+      padding: 4px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 13px;
+      box-sizing: border-box;
+      transition: border 0.2s ease-in-out;
     }
     input[type="text"]:focus, input[type="number"]:focus {
-      outline: none; border: 2px solid orange; box-shadow: 0 0 0 2px rgba(255,165,0,0.2);
+      outline: none;
+      border: 2px solid orange;
+      box-shadow: 0 0 0 2px rgba(255,165,0,0.2);
     }
-    .button-group { display: flex; justify-content: space-between; margin-top: 10px; gap: 8px; align-items: center; }
-    button { flex: 1; padding: 8px; font-size: 13px; border: none; border-radius: 5px; cursor: pointer; }
-    button.restart { background-color: #dc3545; color: white; }
-    button.save { background-color: #007BFF; color: white; }
-    .three-inputs { display: flex; gap: 8px; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-    .three-inputs div { flex: 1; }
-    .region-group { display: flex; justify-content: space-between; margin-top: 8px; margin-bottom: 8px; gap: 6px; }
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      gap: 8px;
+      align-items: center;
+    }
+    button {
+      flex: 1;
+      padding: 8px;
+      font-size: 13px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button.restart {
+      background-color: #dc3545;
+      color: white;
+    }
+    button.save {
+      background-color: #007BFF;
+      color: white;
+    }
+    .three-inputs {
+      display: flex;
+      gap: 8px;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+    .three-inputs div {
+      flex: 1;
+    }
+    .region-group {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      gap: 6px;
+    }
     .region-group button {
-      background-color: #f1f1f1; border: 1px solid #ccc; color: #000; cursor: pointer;
-      padding: 2px 6px; border-radius: 4px; width: auto; transition: all 0.2s ease-in-out;
-      font-size: 12px; line-height: 1.2; white-space: nowrap;
+      background-color: #f1f1f1;
+      border: 1px solid #ccc;
+      color: #000;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 4px;
+      width: auto;
+      transition: all 0.2s ease-in-out;
+      font-size: 12px;
+      line-height: 1.2;
+      white-space: nowrap;
     }
-    .region-group button.active { background-color: #007BFF; color: white; border-color: #007BFF; }
+    .region-group button.active {
+      background-color: #007BFF;
+      color: white;
+      border-color: #007BFF;
+    }
     .flag-group {
-      display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; max-height: 60px; overflow-y: auto;
-      border: 1px solid #ccc; padding: 4px; background: #fff; border-radius: 4px; font-size: 18px;
-      min-height: 32px; transition: border 0.2s ease-in-out;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 6px;
+      max-height: 60px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      padding: 4px;
+      background: #fff;
+      border-radius: 4px;
+      font-size: 18px;
+      min-height: 32px;
+      transition: border 0.2s ease-in-out;
     }
-    .flag-group:focus { outline: none; border: 2px solid orange; box-shadow: 0 0 0 2px rgba(255,165,0,0.2); }
-    .flag { cursor: pointer; }
-    .flag.selected { color: #007BFF; font-weight: bold; }
-    #customRegionIds { border-radius: 4px; }
+    .flag-group:focus {
+      outline: none;
+      border: 2px solid orange;
+      box-shadow: 0 0 0 2px rgba(255,165,0,0.2);
+    }
+    .flag {
+      cursor: pointer;
+    }
+    .flag.selected {
+      color: #007BFF;
+      font-weight: bold;
+    }
+    #customRegionIds {
+      border-radius: 4px;
+    }
     @media (max-width: 400px) {
-      .container { max-width: 100vw; min-width: 0; border-radius: 0; box-shadow: none; padding: 8px; }
+      .container {
+        max-width: 100vw;
+        min-width: 0;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 8px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h2>BOT AUTO RƯƠNG</h2>
-   
- 
-    <div id="advancedOptions" style="display:block; text-align:left;">
-  <div class="input-group">
-    <label style="font-weight: bold; display: block; font-size: 14px;">MÃ RƯƠNG NHỎ:</label>
-    <div class="three-inputs">
-      <div>
-        <label for="normalCoins">Xu:</label>
-        <input type="text" id="normalCoins" inputmode="numeric" pattern="[0-9]*" value="49">
-      </div>
-      <div>
-        <label for="normalRate">Tỷ lệ:</label>
-        <input type="text" id="normalRate" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" value="1.6">
-      </div>
-      <div>
-        <label for="normalTime">Giây:</label>
-        <input type="text" id="normalTime" inputmode="numeric" pattern="[0-9]*" value="80">
+    <div class="row">
+      <input type="checkbox" id="advancedToggle" onchange="toggleAdvanced()">
+      <label for="advancedToggle">Nâng cao</label>
+      <button onclick="resetToDefault()" style="margin-left:auto; padding:4px 8px; font-size:12px; cursor:pointer; border:1px solid #ccc; border-radius:4px; background:#f1f1f1;">Về mặc định</button>
+    </div>
+    <div id="basicOptions">
+      <div class="input-group three-inputs">
+        <div>
+          <label for="minBox">Xu:</label>
+          <input type="number" id="minBox" value="49">
+        </div>
+        <div>
+          <label for="minRate">Tỷ lệ:</label>
+          <input type="number" id="minRate" step="0.1" value="1.6">
+        </div>
+        <div>
+          <label for="smallBoxThreshold">Giây:</label>
+          <input type="number" id="smallBoxThreshold" value="80">
+        </div>
       </div>
     </div>
-  </div>
-  <div class="input-group">
-    <label style="font-weight: bold; display: block; font-size: 14px;">MÃ RƯƠNG LỚN:</label>
-    <div class="three-inputs">
-      <div>
-        <label for="potentialCoins">Xu:</label>
-        <input type="text" id="potentialCoins" inputmode="numeric" pattern="[0-9]*" value="800">
+    <div id="advancedOptions" style="display:none; text-align:left;">
+      <div class="input-group">
+        <label>Mã rương nhỏ:</label>
+        <div class="three-inputs">
+          <div>
+            <label for="normalCoins">Xu:</label>
+            <input type="number" id="normalCoins" value="49" >
+          </div>
+          <div>
+            <label for="normalRate">Tỷ lệ:</label>
+            <input type="number" id="normalRate" step="0.1" value="1.6" >
+          </div>
+          <div>
+            <label for="normalTime">Giây:</label>
+            <input type="number" id="normalTime" value="80" >
+          </div>
+        </div>
       </div>
-      <div>
-        <label for="potentialRate">Tỷ lệ:</label>
-        <input type="text" id="potentialRate" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" value="1.6">
-      </div>
-      <div>
-        <label for="potentialTime">Giây:</label>
-        <input type="text" id="potentialTime" inputmode="numeric" pattern="[0-9]*" value="80">
+      <div class="input-group">
+        <label>Mã rương lớn:</label>
+        <div class="three-inputs">
+          <div>
+            <label for="potentialCoins">Xu:</label>
+            <input type="number" id="potentialCoins" value="800" >
+          </div>
+          <div>
+            <label for="potentialRate">Tỷ lệ:</label>
+            <input type="number" id="potentialRate" step="0.1" value="1.6" >
+          </div>
+          <div>
+            <label for="potentialTime">Giây:</label>
+            <input type="number" id="potentialTime" value="80" >
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
     <div class="region-group">
       <button class="region-btn active" onclick="selectRegion('all')">Tất cả</button>
       <button class="region-btn" onclick="selectRegion('asia')">Châu Á</button>
@@ -120,173 +240,24 @@
     <div id="flagGroup" class="flag-group" style="display: none;" contenteditable="true"></div>
     <div class="input-group" style="margin-top: 12px;">
       <label for="idolIds">Tài khoản follow idol:</label>
-  <input type="text" id="idolIds" placeholder="Ghi nick tiktok cách nhau bằng dấu ,">
+      <input type="text" id="idolIds" placeholder="Ghi nick tiktok cách nhau bằng dấu ,">
     </div>
     <div class="button-group">
       <button class="restart">Khởi động lại</button>
-      <button class="save" onclick="save()">Lưu</button>
+      <button class="save" onclick="saveConfig()">Lưu</button>
     </div>
     <div id="message" style="margin-top:10px;font-size:13px;"></div>
   </div>
   <script>
-    // ==== ĐỒNG BỘ DỮ LIỆU VỚI GITHUB ====
-    const owner = 'bot-vn';
-    const repo = 'bot-vn.github.io';
-    const path = 'Config/1Config.json';
-    const token = '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';
-
-    // Chỉ cho phép nhập số có đúng 1 số sau dấu chấm
-    function validateRateInput(e) {
-      let val = e.target.value.replace(',', '.');
-      if (val === '') return;
-      let num = parseFloat(val);
-      if (isNaN(num)) {
-        e.target.value = '';
-        return;
-      }
-      // Làm tròn về 1 số sau dấu chấm
-      e.target.value = num.toFixed(1);
-    }
-    // Gắn sự kiện cho các input rate
-    window.addEventListener('DOMContentLoaded', () => {
-      ['minRate', 'normalRate', 'potentialRate'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.addEventListener('change', validateRateInput);
-      });
-    });
-
-    // Lấy config từ GitHub và đổ vào form
-   async function fetchConfigFromGitHub() {
-  const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
-  const res = await fetch(url, {
-    headers: {
-      'Accept': 'application/vnd.github+json',
-      'Authorization': `Bearer ${token}` // 🔥 THÊM DÒNG NÀY
-    }
-  });
-  if (!res.ok) {
-    throw new Error('Không thể tải config (mã lỗi: ' + res.status + ')');
-  }
-  const data = await res.json();
-  const content = atob(data.content.replace(/\n/g, ''));
-  return JSON.parse(content);
-}
-
-    // Khi mở web: tự động load dữ liệu từ GitHub
-    window.addEventListener('DOMContentLoaded', async () => {
-      selectRegion('all');
-      try {
-        const config = await fetchConfigFromGitHub();
-        document.getElementById('minBox').value = config.telegram.SmallBox.minCoins ?? 49;
-        document.getElementById('minRate').value = Number(config.telegram.SmallBox.minRate ?? 1.6).toFixed(1);
-        document.getElementById('smallBoxThreshold').value = config.telegram.SmallBox.minTime ?? 80;
-        document.getElementById('normalCoins').value = config.telegram.SmallBox.minCoins ?? 49;
-        document.getElementById('normalRate').value = Number(config.telegram.SmallBox.minRate ?? 1.6).toFixed(1);
-        document.getElementById('normalTime').value = config.telegram.SmallBox.minTime ?? 80;
-        document.getElementById('potentialCoins').value = config.telegram.BigBox.minCoins ?? 800;
-        document.getElementById('potentialRate').value = Number(config.telegram.BigBox.minRate ?? 1.6).toFixed(1);
-        document.getElementById('potentialTime').value = config.telegram.BigBox.minTime ?? 120;
-        document.getElementById('idolIds').value = (config.telegram.idolIds || []).join(',');
-      } catch (e) {
-        alert('Không thể tải dữ liệu từ GitHub!');
-      }
-    });
-
-    // Ghi đè file 1Config.json lên GitHub khi bấm Lưu
-    async function saveConfig() {
-      // Lấy SHA hiện tại của file
-      const getRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/vnd.github+json'
-        }
-      });
-      if (!getRes.ok) {
-        alert('Không lấy được SHA file trên GitHub!');
-        return;
-      }
-      const fileData = await getRes.json();
-      const sha = fileData.sha;
-
-      // Tạo object config mới từ form
-      function parseRate(id) {
-        let val = document.getElementById(id).value.replace(',', '.');
-        let num = parseFloat(val);
-        return Number(num.toFixed(1));
-      }
-
-      const newConfig = {
-        preferredAgents: ["rn-sjc-2-a", "rn-sjc-2-b", "rn-chi-1-a"],
-        telegram: {
-          proxyTimeout: 5000,
-          preferredRegions: [],
-          targetCountries: [],
-          maxRetries: 2,
-          SmallBox: {
-            minTime: Number(document.getElementById('smallBoxThreshold').value),
-            minCoins: Number(document.getElementById('minBox').value),
-            minRate: parseRate('minRate')
-          },
-          BigBox: {
-            minTime: Number(document.getElementById('potentialTime').value),
-            minCoins: Number(document.getElementById('potentialCoins').value),
-            minRate: parseRate('potentialRate')
-          },
-          shortBoxThreshold: 30,
-          enableLiveNoBox: false,
-          idolIds: document.getElementById('idolIds').value.split(',').map(x => x.trim()).filter(Boolean)
-        },
-        websocket: {
-          maxConnections: 1000,
-          scanDelay: 2000,
-          batchSize: 10,
-          blacklistDuration: 1800
-        },
-        api: {
-          requestDelay: 300
-        },
-        file: {
-          state: "./Data/ResumeData.json"
-        },
-        google: {
-          scopes: ["https://www.googleapis.com/auth/spreadsheets"]
-        },
-        scan: {},
-        flags: {
-          enableTelegram: true
-        },
-        apiQuotaLimit: 2000
-      };
-
-      // Gửi PUT để cập nhật file
-      const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/vnd.github+json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          message: 'Update 1Config.json from web UI',
-          content: btoa(unescape(encodeURIComponent(JSON.stringify(newConfig, null, 2)))),
-          sha: sha
-        })
-      });
-
-      const messageElement = document.getElementById('message');
-      if (res.ok) {
-        messageElement.textContent = '✅ Lưu thành công lên GitHub!';
-        messageElement.style.color = '#28a745';
-      } else {
-        messageElement.textContent = '❌ Lỗi: Không thể gửi đến GitHub';
-        messageElement.style.color = '#d9534f';
-      }
-    }
-
-    // Các hàm cũ giữ nguyên
     function toggleAdvanced() {
-  // Hàm này đã bị vô hiệu hóa vì không còn nút nâng cao
-}
+      const adv = document.getElementById('advancedToggle');
+      const basic = document.getElementById('basicOptions');
+      const advanced = document.getElementById('advancedOptions');
+      if (adv && basic && advanced) {
+        basic.style.display = adv.checked ? 'none' : 'block';
+        advanced.style.display = adv.checked ? 'block' : 'none';
+      }
+    }
     function selectRegion(region) {
       const buttons = document.querySelectorAll('.region-btn');
       buttons.forEach(btn => {
@@ -315,6 +286,38 @@
     function getFlagEmoji(code) {
       return code && /^[A-Z]{2}$/i.test(code) && code !== 'UN' ? String.fromCodePoint(...code.toUpperCase().split('').map(c => 0x1F1E6 - 65 + c.charCodeAt())) : '';
     }
+    async function saveConfig() {
+      const payload = {
+        minRate: document.getElementById('minRate').value,
+        minBox: document.getElementById('minBox').value,
+        smallBoxThreshold: document.getElementById('smallBoxThreshold').value,
+        idolIds: document.getElementById('idolIds').value,
+        priorityContinents: document.querySelector('.region-btn.active').textContent,
+        specificCountries: document.getElementById('flagGroup').textContent.trim()
+      };
+      const messageElement = document.getElementById('message');
+      messageElement.textContent = 'Đang gửi...';
+      try {
+        const res = await fetch('https://api.github.com/repos/bot-vn/bot-vn.github.io/actions/workflows/receive-config.yml/dispatches', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/vnd.github+json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer YOUR_GITHUB_TOKEN_HERE'
+          },
+          body: JSON.stringify({
+            ref: 'main',
+            inputs: payload
+          })
+        });
+        if (!res.ok) throw new Error('Không thể gửi đến GitHub');
+        messageElement.textContent = '✅ Lưu thành công!';
+        messageElement.style.color = '#28a745';
+      } catch (err) {
+        messageElement.textContent = '❌ Lỗi: ' + err.message;
+        messageElement.style.color = '#d9534f';
+      }
+    }
     function resetToDefault() {
       document.getElementById('minRate').value = 1.6;
       document.getElementById('normalRate').value = 1.6;
@@ -327,26 +330,9 @@
       document.querySelector('.region-btn[onclick*="all"]').classList.add('active');
       selectRegion('all');
     }
+    window.addEventListener('DOMContentLoaded', () => {
+      selectRegion('all');
+    });
   </script>
-<script>
-  const CONFIG_URL = 'https://raw.githubusercontent.com/bot-vn/bot-vn.github.io/main/Config/1Config.json';
-
-  fetch(CONFIG_URL)
-    .then(response => {
-      if (!response.ok) throw new Error('Lỗi tải JSON');
-      return response.json();
-    })
-    .then(data => {
-      document.getElementById('small-coins').value = data.telegram.SmallBox.minCoins;
-      document.getElementById('small-rate').value = data.telegram.SmallBox.minRate;
-      document.getElementById('small-time').value = data.telegram.SmallBox.minTime;
-      document.getElementById('big-coins').value = data.telegram.BigBox.minCoins;
-      document.getElementById('big-rate').value = data.telegram.BigBox.minRate;
-      document.getElementById('big-time').value = data.telegram.BigBox.minTime;
-      document.getElementById('idol-ids').value = data.telegram.idolIds.join(',');
-    })
-    .catch(error => console.error('Lỗi:', error));
-</script>
 </body>
 </html>
- 
