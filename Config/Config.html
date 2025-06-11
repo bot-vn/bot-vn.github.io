@@ -156,15 +156,21 @@
     });
 
     // Lấy config từ GitHub và đổ vào form
-    async function fetchConfigFromGitHub() {
-      const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
-      const res = await fetch(url, {
-        headers: { 'Accept': 'application/vnd.github+json' }
-      });
-      const data = await res.json();
-      const content = atob(data.content.replace(/\n/g, ''));
-      return JSON.parse(content);
+   async function fetchConfigFromGitHub() {
+  const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+  const res = await fetch(url, {
+    headers: {
+      'Accept': 'application/vnd.github+json',
+      'Authorization': `Bearer ${token}` // 🔥 THÊM DÒNG NÀY
     }
+  });
+  if (!res.ok) {
+    throw new Error('Không thể tải config (mã lỗi: ' + res.status + ')');
+  }
+  const data = await res.json();
+  const content = atob(data.content.replace(/\n/g, ''));
+  return JSON.parse(content);
+}
 
     // Khi mở web: tự động load dữ liệu từ GitHub
     window.addEventListener('DOMContentLoaded', async () => {
