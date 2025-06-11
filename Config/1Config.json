@@ -255,16 +255,16 @@
   },
   "websocket": {
     "maxConnections": 1000,
-    "scanDelay": 3000,
+    "scanDelay": 5000,
     "batchSize": 10,
     "retryDelay": 5000,
     "maxRetries": 1,
     "blacklistDuration": 1800
   },
   "api": {
-    "retryDelay": 3000,
+    "retryDelay": 5000,
     "maxRetries": 1,
-    "requestDelay": 1000
+    "requestDelay": 5000
   },
   "file": {
     "log": "./Logs/LOG_YYYY-MM-DD.log",
