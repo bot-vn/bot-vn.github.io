@@ -24,7 +24,7 @@
       border: 1px solid #ccc;
       border-radius: 10px;
       width: 100%;
-      max-width: 360px;
+      max-width: 340px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       min-height: 420px;
       display: flex;
@@ -42,12 +42,38 @@
     input[type="text"]:focus, input[type="number"]:focus {
       outline: none; border: 2px solid orange; box-shadow: 0 0 0 2px rgba(255,165,0,0.2);
     }
+
+textarea:focus {
+  outline: none;
+  border: 2px solid orange;
+  box-shadow: 0 0 0 2px rgba(255,165,0,0.2);
+}
+
     .button-group { display: flex; justify-content: space-between; margin-top: 10px; gap: 8px; align-items: center; }
     button { flex: 1; padding: 8px; font-size: 13px; border: none; border-radius: 5px; cursor: pointer; }
     button.restart { background-color: #dc3545; color: white; }
     button.save { background-color: #007BFF; color: white; }
-    .three-inputs { display: flex; gap: 8px; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-    .three-inputs div { flex: 1; }
+
+.three-inputs {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 13px;
+  gap: 24px;
+}
+.input-pair {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.input-pair label {
+  white-space: nowrap;
+}
+.input-pair input {
+  width: 60px;
+  padding: 4px;
+  box-sizing: border-box;
+}
     .region-group { display: flex; justify-content: space-between; margin-top: 8px; margin-bottom: 8px; gap: 6px; }
     .region-group button {
       background-color: #f1f1f1; border: 1px solid #ccc; color: #000; cursor: pointer;
@@ -72,39 +98,37 @@
      <div id="advancedOptions" style="display:block; text-align:left;">
       <div class="input-group">
         <label style="font-weight: bold; display: block; font-size: 14px;">MÃ RƯƠNG NHỎ:</label>
-        <div class="three-inputs">
-          <div>
-            <label for="normalCoins">Xu:</label>
-            <input type="text" id="normalCoins" inputmode="numeric">
-          </div>
-          <div>
-            <label for="normalRate">Tỷ lệ:</label>
-            <input type="text" id="normalRate" inputmode="decimal">
-          </div>
-          <div>
-            <label for="normalTime">Giây:</label>
-            <input type="text" id="normalTime" inputmode="numeric">
-          </div>
-        </div>
-      </div>
+      <div class="three-inputs">
+  <div class="input-pair">
+    <label for="normalCoins">Xu:</label>
+    <input type="number" id="normalCoins">
+  </div>
+  <div class="input-pair">
+    <label for="normalRate">Tỷ lệ:</label>
+    <input type="number" id="normalRate" step="0.1">
+  </div>
+  <div class="input-pair">
+    <label for="normalTime">Giây:</label>
+    <input type="number" id="normalTime">
+  </div>
+</div>
+
       <div class="input-group">
         <label style="font-weight: bold; display: block; font-size: 14px;">MÃ RƯƠNG LỚN:</label>
-        <div class="three-inputs">
-          <div>
-            <label for="potentialCoins">Xu:</label>
-            <input type="text" id="potentialCoins" inputmode="numeric">
-          </div>
-          <div>
-            <label for="potentialRate">Tỷ lệ:</label>
-            <input type="text" id="potentialRate" inputmode="decimal">
-          </div>
-          <div>
-            <label for="potentialTime">Giây:</label>
-            <input type="text" id="potentialTime" inputmode="numeric">
-          </div>
-        </div>
-      </div>
-    </div>
+<div class="three-inputs">
+  <div class="input-pair">
+    <label for="potentialCoins">Xu:</label>
+    <input type="number" id="potentialCoins">
+  </div>
+  <div class="input-pair">
+    <label for="potentialRate">Tỷ lệ:</label>
+    <input type="number" id="potentialRate" step="0.1">
+  </div>
+  <div class="input-pair">
+    <label for="potentialTime">Giây:</label>
+    <input type="number" id="potentialTime">
+  </div>
+</div>
 
     <div class="region-group">
       <button class="region-btn active" onclick="selectRegion('all')">Tất cả</button>
@@ -117,7 +141,10 @@
 
     <div class="input-group" style="margin-top: 12px;">
       <label for="idolIds">Tài khoản follow idol:</label>
-      <input type="text" id="idolIds" placeholder="Ghi nick tiktok cách nhau bằng dấu ,">
+      <textarea id="idolIds" placeholder="Ghi nick tiktok cách nhau bằng dấu ," rows="1"
+  style="resize: vertical; width: 100%; padding: 4px; border: 1px solid #ccc;
+         border-radius: 4px; font-size: 13px; box-sizing: border-box;
+         line-height: 1.4; height: auto; transition: border 0.2s ease-in-out;"></textarea>
     </div>
 
     <div class="button-group">
@@ -148,16 +175,9 @@
     buttons.forEach(btn => btn.classList.remove("active"));
     document.querySelector(`.region-btn[onclick*="${region}"]`).classList.add("active");
 
-    if (region === "custom") {
-  flagGroup.setAttribute("contenteditable", "true");
-  if (flagGroup.textContent.trim() === "") {
-    flagGroup.textContent = flags.all.map(getFlagEmoji).join(' ');
-  }
-} else {
-  const codes = flags[region] || [];
-  flagGroup.textContent = codes.map(getFlagEmoji).join(' ');
-  flagGroup.setAttribute("contenteditable", "false");
-}
+    const codes = flags[region] || flags.all;
+flagGroup.textContent = codes.map(getFlagEmoji).join(' ');
+flagGroup.setAttribute("contenteditable", "true"); 
 
   }
 
@@ -237,6 +257,13 @@
 
         document.getElementById("idolIds").value = t.idolIds ?? '';
       });
+["normalRate", "potentialRate"].forEach(id => {
+  const input = document.getElementById(id);
+  input.addEventListener("blur", () => {
+    const val = parseFloat(input.value);
+    if (!isNaN(val)) input.value = val.toFixed(1);
+  });
+});
   });
 </script>
 </body>
