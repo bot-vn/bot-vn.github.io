@@ -240,12 +240,12 @@
     ],
     "maxRetries": 2,
     "SmallBox": {
-      "minCoins": 30,
-      "minRate": 2,
+      "minCoins": 50,
+      "minRate": 1.6,
       "minTime": 80
     },
     "BigBox": {
-      "minCoins": 500,
+      "minCoins": 600,
       "minRate": 2,
       "minTime": 120
     },
