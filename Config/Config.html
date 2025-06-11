@@ -189,7 +189,9 @@
     window.addEventListener('DOMContentLoaded', async () => {
       selectRegion('all');
       try {
-        const config = await fetchConfigFromGitHub();
+        const originalConfig = await fetchConfigFromGitHub();
+window.originalConfig = originalConfig; // lưu lại toàn cục
+const config = JSON.parse(JSON.stringify(originalConfig)); // dùng bản clone để hiển thị
         document.getElementById('minBox').value = config.telegram.SmallBox.minCoins ?? 49;
         document.getElementById('minRate').value = Number(config.telegram.SmallBox.minRate ?? 1.6).toFixed(1);
         document.getElementById('smallBoxThreshold').value = config.telegram.SmallBox.minTime ?? 80;
@@ -228,48 +230,29 @@
         return Number(num.toFixed(1));
       }
 
-      const newConfig = {
-        preferredAgents: ["rn-sjc-2-a", "rn-sjc-2-b", "rn-chi-1-a"],
-        telegram: {
-          proxyTimeout: 5000,
-          preferredRegions: [],
-          targetCountries: [],
-          maxRetries: 2,
-          SmallBox: {
-            minTime: Number(document.getElementById('smallBoxThreshold').value),
-            minCoins: Number(document.getElementById('minBox').value),
-            minRate: parseRate('minRate')
-          },
-          BigBox: {
-            minTime: Number(document.getElementById('potentialTime').value),
-            minCoins: Number(document.getElementById('potentialCoins').value),
-            minRate: parseRate('potentialRate')
-          },
-          shortBoxThreshold: 30,
-          enableLiveNoBox: false,
-          idolIds: document.getElementById('idolIds').value.split(',').map(x => x.trim()).filter(Boolean)
-        },
-        websocket: {
-          maxConnections: 1000,
-          scanDelay: 2000,
-          batchSize: 10,
-          blacklistDuration: 1800
-        },
-        api: {
-          requestDelay: 300
-        },
-        file: {
-          state: "./Data/ResumeData.json"
-        },
-        google: {
-          scopes: ["https://www.googleapis.com/auth/spreadsheets"]
-        },
-        scan: {},
-        flags: {
-          enableTelegram: true
-        },
-        apiQuotaLimit: 2000
-      };
+      const original = window.originalConfig || {};
+const newConfig = JSON.parse(JSON.stringify(original)); // clone để giữ cấu trúc
+
+function parseRate(id) {
+  let val = document.getElementById(id).value.replace(',', '.');
+  let num = parseFloat(val);
+  return Number(num.toFixed(1));
+}
+
+newConfig.telegram = {
+  ...original.telegram,
+  SmallBox: {
+    minTime: Number(document.getElementById('smallBoxThreshold').value),
+    minCoins: Number(document.getElementById('minBox').value),
+    minRate: parseRate('minRate')
+  },
+  BigBox: {
+    minTime: Number(document.getElementById('potentialTime').value),
+    minCoins: Number(document.getElementById('potentialCoins').value),
+    minRate: parseRate('potentialRate')
+  },
+  idolIds: document.getElementById('idolIds').value.split(',').map(x => x.trim()).filter(Boolean)
+};
 
       // Gửi PUT để cập nhật file
       const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
