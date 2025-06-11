@@ -120,7 +120,7 @@
     <div id="flagGroup" class="flag-group" style="display: none;" contenteditable="true"></div>
     <div class="input-group" style="margin-top: 12px;">
       <label for="idolIds">Tài khoản follow idol:</label>
-      <input type="text" id="idolIds" placeholder="Ghi nick tiktok cách nhau bằng dấu ,">
+  <input type="text" id="idolIds" placeholder="Ghi nick tiktok cách nhau bằng dấu ,">
     </div>
     <div class="button-group">
       <button class="restart">Khởi động lại</button>
@@ -328,6 +328,25 @@
       selectRegion('all');
     }
   </script>
+<script>
+  const CONFIG_URL = 'https://raw.githubusercontent.com/bot-vn/bot-vn.github.io/main/Config/1Config.json';
+
+  fetch(CONFIG_URL)
+    .then(response => {
+      if (!response.ok) throw new Error('Lỗi tải JSON');
+      return response.json();
+    })
+    .then(data => {
+      document.getElementById('small-coins').value = data.telegram.SmallBox.minCoins;
+      document.getElementById('small-rate').value = data.telegram.SmallBox.minRate;
+      document.getElementById('small-time').value = data.telegram.SmallBox.minTime;
+      document.getElementById('big-coins').value = data.telegram.BigBox.minCoins;
+      document.getElementById('big-rate').value = data.telegram.BigBox.minRate;
+      document.getElementById('big-time').value = data.telegram.BigBox.minTime;
+      document.getElementById('idol-ids').value = data.telegram.idolIds.join(',');
+    })
+    .catch(error => console.error('Lỗi:', error));
+</script>
 </body>
 </html>
  
