@@ -2,7 +2,8 @@
   "preferredAgents": ["rn-sjc-2-a", "rn-sjc-2-b", "rn-chi-1-a"],
   "telegram": {
     "proxyTimeout": 5000,
-    "preferredRegions": [],
+    "preferredRegions": ["Asia", "Europe"],
+    "allCountries": ["NP", "IN", "ZA", "ES", "NG", "ID", "IL", "AE", "AM", "AZ", "BY", "BD", "BA", "BG", "MM", "PH", "TW", "SG", "HR", "CZ", "DK", "NL", "US", "EE", "FI", "FR", "GE", "DE", "GR", "HU", "IS", "IE", "IT", "JP", "KZ", "KH", "KR", "IQ", "KG", "LA", "LV", "LT", "MK", "MG", "MY", "MT", "MN", "NO", "AF", "IR", "PL", "PT", "RO", "RU", "RS", "LK", "SK", "SI", "SO", "KE", "SE", "TH", "TR", "UA", "PK", "UZ", "VN", "GB"],
     "targetCountries": [],
     "maxRetries": 2,
     "SmallBox": {
@@ -16,7 +17,8 @@
       "minTime": 120
     },
     "shortBoxThreshold": 30,
-    "enableLiveNoBox": false
+    "enableLiveNoBox": false,
+    "idolIds": []
   },
   "websocket": {
     "maxConnections": 1000,
