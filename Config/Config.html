@@ -35,13 +35,21 @@
     .row { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
     .input-group { margin-bottom: 10px; text-align: left; }
     .input-group label { display: block; margin-bottom: 2px; font-weight: bold; font-size: 13px; }
-    input[type="text"], input[type="number"] {
-      width: 100%; padding: 4px; border: 1px solid #ccc; border-radius: 4px;
-      font-size: 13px; box-sizing: border-box; transition: border 0.2s ease-in-out;
-    }
-    input[type="text"]:focus, input[type="number"]:focus {
-      outline: none; border: 2px solid orange; box-shadow: 0 0 0 2px rgba(255,165,0,0.2);
-    }
+   input[type="text"], input[type="number"],
+input[inputmode="numeric"], input[inputmode="decimal"] {
+  width: 100%;
+  padding: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 13px;
+  box-sizing: border-box;
+  transition: border 0.2s ease-in-out;
+}
+input:focus {
+  outline: none;
+  border: 2px solid orange;
+  box-shadow: 0 0 0 2px rgba(255,165,0,0.2);
+}
 
 textarea:focus {
   outline: none;
@@ -51,7 +59,7 @@ textarea:focus {
 
     .button-group { display: flex; justify-content: space-between; margin-top: 10px; gap: 8px; align-items: center; }
     button { flex: 1; padding: 8px; font-size: 13px; border: none; border-radius: 5px; cursor: pointer; }
-    button.restart { background-color: #dc3545; color: white; }
+    button.restart { background-color: #6c757d; color: white; }
     button.save { background-color: #007BFF; color: white; }
 
 .three-inputs {
@@ -74,6 +82,22 @@ textarea:focus {
   padding: 4px;
   box-sizing: border-box;
 }
+textarea.input-textarea {
+  width: 100%;
+  padding: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 13px;
+  box-sizing: border-box;
+  resize: vertical;
+  line-height: 1.4;
+  transition: border 0.2s ease-in-out;
+}
+textarea.input-textarea:focus {
+  outline: none;
+  border: 2px solid orange;
+  box-shadow: 0 0 0 2px rgba(255,165,0,0.2);
+}
     .region-group { display: flex; justify-content: space-between; margin-top: 8px; margin-bottom: 8px; gap: 6px; }
     .region-group button {
       background-color: #f1f1f1; border: 1px solid #ccc; color: #000; cursor: pointer;
@@ -94,39 +118,41 @@ textarea:focus {
 </head>
 <body>
   <div class="container">
-    <h2>BOT AUTO RƯƠNG</h2>
+    <div style="text-align:center; margin-bottom: 12px;">
+  <div style="font-size: 32px; line-height: 1;">👑</div>
+  <h2 style="margin: 0 0 16px;">BOT AUTO RƯƠNG</h2>
      <div id="advancedOptions" style="display:block; text-align:left;">
       <div class="input-group">
-        <label style="font-weight: bold; display: block; font-size: 14px;">MÃ RƯƠNG NHỎ:</label>
+        <label style="font-weight: bold; display: block; font-size: 14px;">MÃ RƯƠNG NHỎ: 🟢</label>
       <div class="three-inputs">
   <div class="input-pair">
     <label for="normalCoins">Xu:</label>
-    <input type="number" id="normalCoins">
+    <input inputmode="numeric" pattern="[0-9]*" id="normalCoins" style="font-size:16px;">
   </div>
   <div class="input-pair">
     <label for="normalRate">Tỷ lệ:</label>
-    <input type="number" id="normalRate" step="0.1">
+     <input inputmode="decimal" pattern="[0-9.]*" id="normalRate" style="font-size:16px;">
   </div>
   <div class="input-pair">
     <label for="normalTime">Giây:</label>
-    <input type="number" id="normalTime">
+     <input inputmode="numeric" pattern="[0-9]*" id="normalTime" style="font-size:16px;">
   </div>
 </div>
 
       <div class="input-group">
-        <label style="font-weight: bold; display: block; font-size: 14px;">MÃ RƯƠNG LỚN:</label>
+        <label style="font-weight: bold; display: block; font-size: 14px;">MÃ RƯƠNG LỚN: ⭐⭐⭐</label>
 <div class="three-inputs">
   <div class="input-pair">
     <label for="potentialCoins">Xu:</label>
-    <input type="number" id="potentialCoins">
+    <input inputmode="numeric" pattern="[0-9]*" id="potentialCoins" style="font-size:16px;">
   </div>
   <div class="input-pair">
     <label for="potentialRate">Tỷ lệ:</label>
-    <input type="number" id="potentialRate" step="0.1">
+    <input inputmode="decimal" pattern="[0-9.]*" id="potentialRate" style="font-size:16px;">
   </div>
   <div class="input-pair">
     <label for="potentialTime">Giây:</label>
-    <input type="number" id="potentialTime">
+    <input inputmode="numeric" pattern="[0-9]*" id="potentialTime" style="font-size:16px;">
   </div>
 </div>
 
@@ -141,14 +167,11 @@ textarea:focus {
 
     <div class="input-group" style="margin-top: 12px;">
       <label for="idolIds">Tài khoản follow idol:</label>
-      <textarea id="idolIds" placeholder="Ghi nick tiktok cách nhau bằng dấu ," rows="1"
-  style="resize: vertical; width: 100%; padding: 4px; border: 1px solid #ccc;
-         border-radius: 4px; font-size: 13px; box-sizing: border-box;
-         line-height: 1.4; height: auto; transition: border 0.2s ease-in-out;"></textarea>
+   <textarea id="idolIds" placeholder="Ghi nick tiktok cách nhau bằng dấu ," rows="1" class="input-textarea"></textarea>
     </div>
 
     <div class="button-group">
-      <button class="restart">Khởi động lại</button>
+      <button class="restart" onclick="resetToDefault()">Về mặc định</button>
       <button class="save" onclick="saveConfig()">Lưu</button>
     </div>
     <div id="message" style="margin-top:10px;font-size:13px;"></div>
@@ -156,7 +179,7 @@ textarea:focus {
 
 <script>
   const flags = (() => {
-    const asia = ["AE","AF","AM","AZ","BD","BH","BN","BT","CY","EG","GE","HK","ID","IL","IN","IQ","IR","JO","JP","KG","KH","KP","KR","KW","KZ","LA","LB","LK","MM","MN","MO","MV","MY","NP","OM","PH","PK","PS","QA","RU","SA","SG","SY","TH","TJ","TL","TM","TR","TW","UZ","VN","YE"];
+    const asia = ["AE","AF","AM","AZ","BD","BH","BN","BT","CY","EG","GE","HK","ID","IL","IN","IQ","IR","JO","JP","KG","KH","KP","KR","KW","KZ","LA","LB","LK","MM","MN","MO","MV","MY","NP","OM","PH","PK","PS","QA","RU","SA","SG","SY","TH","TJ","TL","TM","TR","TW","UZ","YE","VN"];
     const all = [...new Set([
       ...asia,
       "AD","AG","AI","AL","AO","AR","AS","AT","AU","AW","AX","BA","BB","BE","BF","BG","BI","BJ","BL","BM","BO","BR","BS","BW","BY","BZ","CA","CD","CF","CG","CH","CI","CK","CL","CM","CN","CO","CR","CV","CW","CZ","DE","DJ","DK","DM","DO","DZ","EC","EE","ER","ES","ET","FI","FJ","FM","FO","FR","GA","GB","GD","GF","GG","GH","GI","GL","GM","GN","GP","GQ","GR","GT","GU","GW","GY","HN","HR","HT","HU","IE","IM","IS","IT","JE","JM","KE","KI","KM","KN","KY","LC","LI","LR","LS","LT","LU","LV","LY","MA","MC","MD","ME","MF","MG","MH","MK","ML","MS","MT","MU","MW","MX","MZ","NA","NC","NE","NF","NG","NI","NL","NO","NR","NU","NZ","PA","PE","PF","PG","PL","PM","PN","PR","PT","PW","PY","RE","RO","RS","RW","SB","SC","SD","SE","SH","SI","SK","SL","SM","SN","SO","SR","SS","ST","SV","SX","SZ","TC","TD","TG","TO","TT","TV","TZ","UA","UG","US","UY","VA","VC","VE","VG","VI","VU","WF","WS","YT","ZA","ZM","ZW"
@@ -265,6 +288,29 @@ flagGroup.setAttribute("contenteditable", "true");
   });
 });
   });
+function fixRateFormat() {
+  ["normalRate", "potentialRate"].forEach(id => {
+    const input = document.getElementById(id);
+    const val = parseFloat(input.value);
+    if (!isNaN(val)) input.value = val.toFixed(1);
+  });
+}
+
+function resetToDefault() {
+  document.getElementById("normalCoins").value = 50;
+  document.getElementById("normalRate").value = 1.6;
+  document.getElementById("normalTime").value = 80;
+
+  document.getElementById("potentialCoins").value = 600;
+  document.getElementById("potentialRate").value = 2.0;
+  document.getElementById("potentialTime").value = 120;
+
+  fixRateFormat();
+
+  const messageElement = document.getElementById("message");
+  messageElement.textContent = "✅ Đã trở về thông số mặc định!";
+  messageElement.style.color = "#28a745";
+}
 </script>
 </body>
 </html>
