@@ -68,7 +68,6 @@
     @media (max-width: 400px) {
       .container { max-width: 100vw; min-width: 0; border-radius: 0; box-shadow: none; padding: 8px; }
     }
-    #message { margin-top:10px;font-size:13px;text-align:center; }
   </style>
 </head>
 <body>
@@ -82,30 +81,16 @@
     <div id="basicOptions">
       <div class="input-group three-inputs">
         <div>
-          <label for="smallBoxCoins">Xu nhỏ:</label>
-          <input type="number" id="smallBoxCoins" value="49">
+          <label for="minBox">Xu:</label>
+          <input type="number" id="minBox" value="49">
         </div>
         <div>
-          <label for="smallBoxRate">Tỷ lệ nhỏ:</label>
-          <input type="number" id="smallBoxRate" step="0.1" value="1.6">
+          <label for="minRate">Tỷ lệ:</label>
+          <input type="number" id="minRate" step="0.1" inputmode="decimal" value="1.6">
         </div>
         <div>
-          <label for="smallBoxTime">Giây nhỏ:</label>
-          <input type="number" id="smallBoxTime" value="80">
-        </div>
-      </div>
-      <div class="input-group three-inputs">
-        <div>
-          <label for="bigBoxCoins">Xu lớn:</label>
-          <input type="number" id="bigBoxCoins" value="800">
-        </div>
-        <div>
-          <label for="bigBoxRate">Tỷ lệ lớn:</label>
-          <input type="number" id="bigBoxRate" step="0.1" value="4.0">
-        </div>
-        <div>
-          <label for="bigBoxTime">Giây lớn:</label>
-          <input type="number" id="bigBoxTime" value="120">
+          <label for="smallBoxThreshold">Giây:</label>
+          <input type="number" id="smallBoxThreshold" value="80">
         </div>
       </div>
     </div>
@@ -158,7 +143,7 @@
     </div>
     <div class="button-group">
       <button class="restart">Khởi động lại</button>
-      <button id="saveButton" class="save">Lưu</button>
+      <button class="save" onclick="saveConfig()">Lưu</button>
     </div>
     <div id="message" style="margin-top:10px;font-size:13px;"></div>
   </div>
@@ -167,7 +152,7 @@
     const owner = 'bot-vn';
     const repo = 'bot-vn.github.io';
     const path = 'Config/1Config.json';
-    const token = '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';
+    const token = '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';
 
     // Chỉ cho phép nhập số có đúng 1 số sau dấu chấm
     function validateRateInput(e) {
@@ -183,7 +168,7 @@
     }
     // Gắn sự kiện cho các input rate
     window.addEventListener('DOMContentLoaded', () => {
-      ['minRate', 'normalRate', 'potentialRate', 'smallBoxRate', 'bigBoxRate'].forEach(id => {
+      ['minRate', 'normalRate', 'potentialRate'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('change', validateRateInput);
       });
@@ -361,49 +346,6 @@
       document.querySelector('.region-btn[onclick*="all"]').classList.add('active');
       selectRegion('all');
     }
-
-    // --- ĐOẠN SCRIPT LƯU CONFIG THEO YÊU CẦU ---
-    // Đảm bảo các input có id: smallBoxCoins, smallBoxRate, smallBoxTime, bigBoxCoins, bigBoxRate, bigBoxTime đã có trong form
-    // Nếu chưa có, bạn cần thêm các input này vào form để script hoạt động đúng
-
-    document.addEventListener("DOMContentLoaded", function() {
-      var saveBtn = document.getElementById("saveButton");
-      if (saveBtn) {
-        saveBtn.addEventListener("click", async () => {
-          const formData = {
-            event_type: "update-config",
-            client_payload: {
-              telegram: {
-                SmallBox: {
-                  minCoins: parseInt(document.getElementById("smallBoxCoins").value) || 50,
-                  minRate: parseFloat(document.getElementById("smallBoxRate").value) || 4.0,
-                  minTime: parseInt(document.getElementById("smallBoxTime").value) || 80,
-                },
-                BigBox: {
-                  minCoins: parseInt(document.getElementById("bigBoxCoins").value) || 500,
-                  minRate: parseFloat(document.getElementById("bigBoxRate").value) || 4.0,
-                  minTime: parseInt(document.getElementById("bigBoxTime").value) || 120,
-                },
-              },
-            },
-          };
-          try {
-            const response = await fetch("https://api.github.com/repos/bot-vn/bot-vn.github.io/dispatches", {
-              method: "POST",
-              headers: {
-                "Accept": "application/vnd.github.v3+json",
-                "Authorization": "Bearer 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",
-              },
-              body: JSON.stringify(formData),
-            });
-            if (response.ok) alert("Lưu thành công!");
-            else alert("Lỗi khi lưu!");
-          } catch (error) {
-            alert("Lỗi kết nối!");
-          }
-        });
-      }
-    });
   </script>
 </body>
 </html>
