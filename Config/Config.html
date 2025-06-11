@@ -49,7 +49,7 @@
     button.save { background-color: #007BFF; color: white; }
     .three-inputs { display: flex; gap: 8px; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
     .three-inputs div { flex: 1; }
-    .region-group { display: flex; justify-content: space-between; margin-bottom: 8px; gap: 6px; }
+    .region-group { display: flex; justify-content: space-between; margin-top: 8px; margin-bottom: 8px; gap: 6px; }
     .region-group button {
       background-color: #f1f1f1; border: 1px solid #ccc; color: #000; cursor: pointer;
       padding: 2px 6px; border-radius: 4px; width: auto; transition: all 0.2s ease-in-out;
@@ -73,30 +73,11 @@
 <body>
   <div class="container">
     <h2>BOT AUTO RƯƠNG</h2>
-    <div class="row">
-      <input type="checkbox" id="advancedToggle" onchange="toggleAdvanced()">
-      <label for="advancedToggle">Nâng cao</label>
-      <button onclick="resetToDefault()" style="margin-left:auto; padding:4px 8px; font-size:12px; cursor:pointer; border:1px solid #ccc; border-radius:4px; background:#f1f1f1;">Về mặc định</button>
-    </div>
-    <div id="basicOptions">
-      <div class="input-group three-inputs">
-        <div>
-          <label for="minBox">Xu:</label>
-          <input type="text" id="minBox" inputmode="numeric" pattern="[0-9]*" value="49">
-        </div>
-        <div>
-          <label for="minRate">Tỷ lệ:</label>
-          <input type="text" id="minRate" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" value="1.6">
-        </div>
-        <div>
-          <label for="smallBoxThreshold">Giây:</label>
-          <input type="text" id="smallBoxThreshold" inputmode="numeric" pattern="[0-9]*" value="80">
-        </div>
-      </div>
-    </div>
-    <div id="advancedOptions" style="display:none; text-align:left;">
+   
+ 
+    <div id="advancedOptions" style="display:block; text-align:left;">
       <div class="input-group">
-        <label>Mã rương nhỏ:</label>
+        <label style="font-weight: bold; display: block; font-size: 14px;">MÃ RƯƠNG NHỎ:</label>
         <div class="three-inputs">
           <div>
             <label for="normalCoins">Xu:</label>
@@ -113,7 +94,7 @@
         </div>
       </div>
       <div class="input-group">
-        <label>Mã rương lớn:</label>
+        <label style="font-weight: bold; display: block; font-size: 14px;">MÃ RƯƠNG LỚN:</label>
         <div class="three-inputs">
           <div>
             <label for="potentialCoins">Xu:</label>
@@ -298,14 +279,8 @@
 
     // Các hàm cũ giữ nguyên
     function toggleAdvanced() {
-      const adv = document.getElementById('advancedToggle');
-      const basic = document.getElementById('basicOptions');
-      const advanced = document.getElementById('advancedOptions');
-      if (adv && basic && advanced) {
-        basic.style.display = adv.checked ? 'none' : 'block';
-        advanced.style.display = adv.checked ? 'block' : 'none';
-      }
-    }
+  // Hàm này đã bị vô hiệu hóa vì không còn nút nâng cao
+}
     function selectRegion(region) {
       const buttons = document.querySelectorAll('.region-btn');
       buttons.forEach(btn => {
