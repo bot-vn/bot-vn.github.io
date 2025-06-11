@@ -202,6 +202,41 @@
  window.addEventListener('DOMContentLoaded', () => {
   // Hiển thị emoji quốc gia khi load trang
   selectRegion('all');
+// Tải config từ server Glitch
+  fetch("https://juicy-transparent-chocolate.glitch.me/get-config")
+    .then(res => res.json())
+    .then(config => {
+      if (!config) return;
+
+      document.getElementById("minRate").value = config.minRate ?? '';
+      document.getElementById("minBox").value = config.minBox ?? '';
+      document.getElementById("smallBoxThreshold").value = config.smallBoxThreshold ?? '';
+      document.getElementById("idolIds").value = config.idolIds ?? '';
+
+      document.getElementById("potentialRate").value = config.potentialRate ?? '';
+      document.getElementById("potentialTime").value = config.potentialTime ?? '';
+      document.getElementById("potentialCoins").value = config.potentialCoins ?? '';
+
+      document.getElementById("normalRate").value = config.normalRate ?? '';
+      document.getElementById("normalTime").value = config.normalTime ?? '';
+      document.getElementById("normalCoins").value = config.normalCoins ?? '';
+
+      if (config.flagGroup) {
+        document.getElementById("flagGroup").textContent = config.flagGroup;
+      }
+
+      if (config.selectedRegion) {
+        const region = config.selectedRegion.toLowerCase();
+        if (['asia', 'châu á'].includes(region)) selectRegion('asia');
+        else if (['europe', 'châu âu'].includes(region)) selectRegion('europe');
+        else if (['tùy chọn', 'custom'].includes(region)) selectRegion('custom');
+        else selectRegion('all');
+      }
+    })
+    .catch(err => {
+      console.error('❌ Không thể tải config từ Glitch:', err);
+    });
+
 
   // Gắn sự kiện validate input cho các ô tỷ lệ
   ['minRate', 'normalRate', 'potentialRate'].forEach(id => {
