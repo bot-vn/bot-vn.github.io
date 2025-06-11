@@ -1,0 +1,41 @@
+name: Receive Config
+
+on:
+  workflow_dispatch:
+    inputs:
+      minRate:
+        required: true
+      minBox:
+        required: true
+      smallBoxThreshold:
+        required: true
+      idolIds:
+        required: false
+      priorityContinents:
+        required: false
+      specificCountries:
+        required: false
+
+jobs:
+  update-config:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Update config
+        run: |
+          echo "{
+            \"minRate\": \"${{ github.event.inputs.minRate }}\",
+            \"minBox\": \"${{ github.event.inputs.minBox }}\",
+            \"smallBoxThreshold\": \"${{ github.event.inputs.smallBoxThreshold }}\",
+            \"idolIds\": \"${{ github.event.inputs.idolIds }}\",
+            \"priorityContinents\": \"${{ github.event.inputs.priorityContinents }}\",
+            \"specificCountries\": \"${{ github.event.inputs.specificCountries }}\"
+          }" > Config/1Config.json
+
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: 'Update 1Config.json via workflow'
+          add: 'Config/1Config.json'
