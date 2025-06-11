@@ -1,60 +1,14 @@
 {
-  "preferredAgents": ["rn-sjc-2-a", "rn-sjc-2-b", "rn-chi-1-a"],
-  "telegram": {
-    "proxyTimeout": 5000,
-    "preferredRegions": ["Asia", "Europe"],
-    "allCountries": ["NP", "IN", "ZA", "ES", "NG", "ID", "IL", "AE", "AM", "AZ", "BY", "BD", "BA", "BG", "MM", "PH", "TW", "SG", "HR", "CZ", "DK", "NL", "US", "EE", "FI", "FR", "GE", "DE", "GR", "HU", "IS", "IE", "IT", "JP", "KZ", "KH", "KR", "IQ", "KG", "LA", "LV", "LT", "MK", "MG", "MY", "MT", "MN", "NO", "AF", "IR", "PL", "PT", "RO", "RU", "RS", "LK", "SK", "SI", "SO", "KE", "SE", "TH", "TR", "UA", "PK", "UZ", "VN", "GB"],
-    "targetCountries": [],
-    "maxRetries": 2,
-    "SmallBox": {
-      "minCoins": 400,
-      "minRate": 2.0,
-      "minTime": 180
-    },
-    "BigBox": {
-      "minCoins": 1000,
-      "minRate": 3.0,
-      "minTime": 120
-    },
-    "shortBoxThreshold": 30,
-    "enableLiveNoBox": false,
-    "idolIds": []
-  },
-  "websocket": {
-    "maxConnections": 1000,
-    "scanDelay": 2000,
-    "batchSize": 10,
-    "retryDelay": 5000,
-    "maxRetries": 1,
-    "blacklistDuration": 1800
-  },
-  "api": {
-    "retryDelay": 600,
-    "maxRetries": 1,
-    "requestDelay": 300
-  },
-  "file": {
-    "log": "./Logs/LOG_YYYY-MM-DD.log",
-    "state": "./Data/ResumeData.json"
-  },
-  "google": {
-    "credentialsPath": "./Data/VIPKEY.json",
-    "liveLogSheetId": "1OlRVc0QqkspyjbyW40pottcQbC19LuhnyzowKYjzEv8",
-    "scopes": ["https://www.googleapis.com/auth/spreadsheets"]
-  },
-  "scan": {
-    "scanSource": "file",
-    "google": {
-      "sheetName": "OnLog",
-      "sheetColumn": "A",
-      "sheetStartRow": 2
-    },
-    "file": {
-      "path": "./Data/list.txt"
-    }
-  },
-  "flags": {
-    "enableTelegram": true
-  },
-  "apiQuotaLimit": 2000
+  "minRate": 1.6,
+  "minBox": 49,
+  "smallBoxThreshold": 80,
+  "idolIds": "",
+  "potentialRate": 1.6,
+  "potentialTime": 80,
+  "potentialCoins": 999,
+  "normalRate": 1.6,
+  "normalTime": 80,
+  "normalCoins": 99,
+  "selectedRegion": "Tất cả",
+  "flagGroup": "🇳🇵 🇮🇩 🇮🇳 🇮🇱 🇦🇪 🇦🇲 🇦🇿 🇧🇩 🇲🇲 🇵🇭 🇹🇼 🇸🇬 🇬🇪 🇯🇵 🇰🇿 🇰🇭 🇰🇷 🇮🇶 🇰🇬 🇱🇦 🇲🇾 🇲🇳 🇦🇫 🇮🇷 🇱🇰 🇹🇭 🇹🇷 🇵🇰 🇺🇿 🇻🇳 🇿🇦 🇪🇸 🇳🇬 🇧🇦 🇧🇬 🇧🇾 🇭🇷 🇨🇿 🇩🇰 🇳🇱 🇺🇸 🇪🇪 🇫🇮 🇫🇷 🇩🇪 🇬🇷 🇭🇺 🇮🇸 🇮🇪 🇮🇹 🇱🇻 🇱🇹 🇲🇰 🇲🇬 🇲🇹 🇳🇴 🇵🇱 🇵🇹 🇷🇴 🇷🇺 🇷🇸 🇸🇰 🇸🇮 🇸🇴 🇰🇪 🇸🇪 🇺🇦 🇬🇧"
 }
