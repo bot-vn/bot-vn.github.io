@@ -325,7 +325,7 @@
     },
     "shortBoxThreshold": 30,
     "enableLiveNoBox": false,
-    "idolIds": "abc"
+    "idolIds": "abc, chán nhỉ"
   },
   "websocket": {
     "maxConnections": 1000,
