@@ -255,16 +255,16 @@
   },
   "websocket": {
     "maxConnections": 1000,
-    "scanDelay": 2500,
+    "scanDelay": 3000,
     "batchSize": 10,
     "retryDelay": 5000,
     "maxRetries": 1,
     "blacklistDuration": 1800
   },
   "api": {
-    "retryDelay": 600,
+    "retryDelay": 3000,
     "maxRetries": 1,
-    "requestDelay": 400
+    "requestDelay": 1000
   },
   "file": {
     "log": "./Logs/LOG_YYYY-MM-DD.log",
@@ -279,5 +279,5 @@
   "flags": {
     "enableTelegram": true
   },
-  "apiQuotaLimit": 18000
+  "apiQuotaLimit": 1000
 }
