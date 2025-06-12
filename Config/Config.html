@@ -480,7 +480,21 @@ const intervalTime = duration / 100;
 const progressText = document.getElementById("loadingText");
 const progressCircle = document.getElementById("circleProgress");
 
-let fetchDone = false;  // ✅ Đánh dấu trạng thái fetch
+let fetchDone = false; 
+
+let lastTap = 0;
+document.querySelector('.circle-wrapper').addEventListener('touchend', (e) => {
+  const currentTime = new Date().getTime();
+  const tapLength = currentTime - lastTap;
+  if (tapLength < 300 && tapLength > 0) {
+    
+    clearInterval(loadingInterval);
+    clearInterval(dotInterval);
+    document.getElementById("loadingScreen").style.display = "none";
+    document.querySelector(".container").style.display = "flex";
+  }
+  lastTap = currentTime;
+});
 
 const colorGradient = ['#00f5ff', '#00e0ff', '#00cfff', '#00bfff', '#009eff', '#007eff', '#005eff', '#003eff', '#001eff', '#000dff'];
 
