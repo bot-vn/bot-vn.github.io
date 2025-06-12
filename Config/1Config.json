@@ -7,11 +7,9 @@
   "telegram": {
     "proxyTimeout": 5000,
     "targetCountries": [
-      "AD",
-      "AG",
-      "AI",
-      "AL",
-      "AO"
+      "AE",
+      "AF",
+      "AM"
     ],
     "maxRetries": 2,
     "SmallBox": {
