@@ -179,6 +179,14 @@ textarea.input-textarea:focus {
   </div>
 
 <script>
+let currentRegion = "all";
+let manualEdit = false;
+let lastEditedFlags = {
+  all: null,
+  asia: null,
+  europe: null,
+  custom: null
+};
 function confirmPasswordAndSave() {
   const password = prompt("🔒 Nhập mật khẩu để lưu cấu hình:");
   if (password === "3333") {
@@ -204,17 +212,23 @@ function confirmPasswordAndSave() {
     return code && /^[A-Z]{2}$/.test(code) ? String.fromCodePoint(...code.split('').map(c => 0x1F1E6 + c.charCodeAt(0) - 65)) : '';
   }
 
-  function selectRegion(region) {
-    const flagGroup = document.getElementById("flagGroup");
-    const buttons = document.querySelectorAll(".region-btn");
-    buttons.forEach(btn => btn.classList.remove("active"));
-    document.querySelector(`.region-btn[onclick*="${region}"]`).classList.add("active");
+ function selectRegion(region) {
+  const flagGroup = document.getElementById("flagGroup");
+  const buttons = document.querySelectorAll(".region-btn");
+  buttons.forEach(btn => btn.classList.remove("active"));
+  document.querySelector(`.region-btn[onclick*="${region}"]`).classList.add("active");
 
+  // Nếu đã từng chỉnh sửa vùng này thì hiển thị lại emoji đã sửa
+  if (lastEditedFlags[region]) {
+    flagGroup.textContent = lastEditedFlags[region];
+  } else {
     const codes = flags[region] || flags.all;
-flagGroup.textContent = codes.map(getFlagEmoji).join(' ');
-flagGroup.setAttribute("contenteditable", "true"); 
-
+    flagGroup.textContent = codes.map(getFlagEmoji).join(' ');
   }
+
+  flagGroup.setAttribute("contenteditable", "true");
+  currentRegion = region;
+}
 
   function parseFlagsToCountryCodes(flagString) {
     const codes = [];
@@ -291,13 +305,38 @@ flagGroup.setAttribute("contenteditable", "true");
         document.getElementById("potentialTime").value = t.BigBox?.minTime ?? 120;
 
         document.getElementById("idolIds").value = t.idolIds ?? '';
-      });
+
+if (t.targetCountries?.length) {
+  const countries = t.targetCountries;
+  const regionName = Object.keys(flags).find(key => {
+    const setA = new Set(flags[key]);
+    const setB = new Set(countries);
+    return setA.size === setB.size && [...setA].every(x => setB.has(x));
+  }) || "custom";
+
+  const emojis = countries.map(getFlagEmoji).join(' ');
+  document.getElementById("flagGroup").textContent = emojis;
+  lastEditedFlags[regionName] = emojis;
+  currentRegion = regionName;
+
+  const buttons = document.querySelectorAll(".region-btn");
+  buttons.forEach(btn => btn.classList.remove("active"));
+  document.querySelector(`.region-btn[onclick*="${regionName}"]`)?.classList.add("active");
+}  
+ 
+  });
 ["normalRate", "potentialRate"].forEach(id => {
   const input = document.getElementById(id);
   input.addEventListener("blur", () => {
     const val = parseFloat(input.value);
     if (!isNaN(val)) input.value = val.toFixed(1);
   });
+});
+// ✅ Gắn sau cùng — ngoài forEach
+document.getElementById("flagGroup").addEventListener("input", () => {
+  const region = currentRegion;
+  const text = document.getElementById("flagGroup").textContent;
+  lastEditedFlags[region] = text;
 });
   });
 function fixRateFormat() {
