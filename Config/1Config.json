@@ -1,1 +1,79 @@
-{"preferredAgents":["rn-sjc-2-a","rn-sjc-2-b","rn-chi-1-a"],"telegram":{"proxyTimeout":5000,"targetCountries":["AE","AM","BD","BN","CY","GE","ID","IN","IR","JP","KH","KR","KZ","LB","MM","MO","MY","OM","PK","QA","SA","SY","TJ","TM","TW","YE"],"maxRetries":2,"SmallBox":{"minCoins":50,"minRate":2,"minTime":80},"BigBox":{"minCoins":800,"minRate":3,"minTime":120},"shortBoxThreshold":30,"enableLiveNoBox":false,"idolIds":[]},"websocket":{"maxConnections":1000,"scanDelay":2500,"batchSize":10,"retryDelay":5000,"maxRetries":1,"blacklistDuration":1800},"api":{"retryDelay":5000,"maxRetries":1,"requestDelay":2500},"file":{"log":"./Logs/LOG_YYYY-MM-DD.log","state":"./Data/ResumeData.json"},"scan":{"scanSource":"file","file":{"path":"./Data/list.txt"}},"flags":{"enableTelegram":true},"apiQuotaLimit":1000}
+{
+  "preferredAgents": [
+    "rn-sjc-2-a",
+    "rn-sjc-2-b",
+    "rn-chi-1-a"
+  ],
+  "telegram": {
+    "proxyTimeout": 5000,
+    "targetCountries": [
+      "AE",
+      "AM",
+      "BD",
+      "BN",
+      "CY",
+      "GE",
+      "ID",
+      "IN",
+      "IR",
+      "JP",
+      "KH",
+      "KR",
+      "KZ",
+      "LB",
+      "MM",
+      "MO",
+      "MY",
+      "OM",
+      "PK",
+      "QA",
+      "SA",
+      "SY",
+      "TJ",
+      "TM",
+      "TW",
+      "YE"
+    ],
+    "maxRetries": 2,
+    "SmallBox": {
+      "minCoins": 50,
+      "minRate": 2,
+      "minTime": 80
+    },
+    "BigBox": {
+      "minCoins": 300,
+      "minRate": 3,
+      "minTime": 120
+    },
+    "shortBoxThreshold": 30,
+    "enableLiveNoBox": false,
+    "idolIds": []
+  },
+  "websocket": {
+    "maxConnections": 1000,
+    "scanDelay": 2500,
+    "batchSize": 10,
+    "retryDelay": 5000,
+    "maxRetries": 1,
+    "blacklistDuration": 1800
+  },
+  "api": {
+    "retryDelay": 5000,
+    "maxRetries": 1,
+    "requestDelay": 2500
+  },
+  "file": {
+    "log": "./Logs/LOG_YYYY-MM-DD.log",
+    "state": "./Data/ResumeData.json"
+  },
+  "scan": {
+    "scanSource": "file",
+    "file": {
+      "path": "./Data/list.txt"
+    }
+  },
+  "flags": {
+    "enableTelegram": true
+  },
+  "apiQuotaLimit": 1000
+}
