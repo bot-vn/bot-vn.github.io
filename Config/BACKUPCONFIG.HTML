@@ -188,6 +188,7 @@ let lastEditedFlags = {
   europe: null,
   custom: null
 };
+
 function confirmPasswordAndSave() {
   const password = prompt("🔒 Nhập mật khẩu để lưu cấu hình:");
   if (password === "3333") {
@@ -199,144 +200,171 @@ function confirmPasswordAndSave() {
   }
 }
 
-  const flags = (() => {
-    const asia = ["AE","AF","AM","AZ","BD","BH","BN","BT","CY","EG","GE","HK","ID","IL","IN","IQ","IR","JO","JP","KG","KH","KP","KR","KW","KZ","LA","LB","LK","MM","MN","MO","MV","MY","NP","OM","PH","PK","PS","QA","RU","SA","SG","SY","TH","TJ","TL","TM","TR","TW","UZ","YE","VN"];
-    const all = [...new Set([
-      ...asia,
-      "AD","AG","AI","AL","AO","AR","AS","AT","AU","AW","AX","BA","BB","BE","BF","BG","BI","BJ","BL","BM","BO","BR","BS","BW","BY","BZ","CA","CD","CF","CG","CH","CI","CK","CL","CM","CN","CO","CR","CV","CW","CZ","DE","DJ","DK","DM","DO","DZ","EC","EE","ER","ES","ET","FI","FJ","FM","FO","FR","GA","GB","GD","GF","GG","GH","GI","GL","GM","GN","GP","GQ","GR","GT","GU","GW","GY","HN","HR","HT","HU","IE","IM","IS","IT","JE","JM","KE","KI","KM","KN","KY","LC","LI","LR","LS","LT","LU","LV","LY","MA","MC","MD","ME","MF","MG","MH","MK","ML","MS","MT","MU","MW","MX","MZ","NA","NC","NE","NF","NG","NI","NL","NO","NR","NU","NZ","PA","PE","PF","PG","PL","PM","PN","PR","PT","PW","PY","RE","RO","RS","RW","SB","SC","SD","SE","SH","SI","SK","SL","SM","SN","SO","SR","SS","ST","SV","SX","SZ","TC","TD","TG","TO","TT","TV","TZ","UA","UG","US","UY","VA","VC","VE","VG","VI","VU","WF","WS","YT","ZA","ZM","ZW"
-    ])];
-    const europe = all.filter(code => !asia.includes(code));
-    return { all, asia, europe };
-  })();
+const flags = (() => {
+  const asia = ["AE","AF","AM","AZ","BD","BH","BN","BT","CY","EG","GE","HK","ID","IL","IN","IQ","IR","JO","JP","KG","KH","KP","KR","KW","KZ","LA","LB","LK","MM","MN","MO","MV","MY","NP","OM","PH","PK","PS","QA","RU","SA","SG","SY","TH","TJ","TL","TM","TR","TW","UZ","YE","VN"];
+  const all = [...new Set([
+    ...asia,
+    "AD","AG","AI","AL","AO","AR","AS","AT","AU","AW","AX","BA","BB","BE","BF","BG","BI","BJ","BL","BM","BO","BR","BS","BW","BY","BZ","CA","CD","CF","CG","CH","CI","CK","CL","CM","CN","CO","CR","CV","CW","CZ","DE","DJ","DK","DM","DO","DZ","EC","EE","ER","ES","ET","FI","FJ","FM","FO","FR","GA","GB","GD","GF","GG","GH","GI","GL","GM","GN","GP","GQ","GR","GT","GU","GW","GY","HN","HR","HT","HU","IE","IM","IS","IT","JE","JM","KE","KI","KM","KN","KY","LC","LI","LR","LS","LT","LU","LV","LY","MA","MC","MD","ME","MF","MG","MH","MK","ML","MS","MT","MU","MW","MX","MZ","NA","NC","NE","NF","NG","NI","NL","NO","NR","NU","NZ","PA","PE","PF","PG","PL","PM","PN","PR","PT","PW","PY","RE","RO","RS","RW","SB","SC","SD","SE","SH","SI","SK","SL","SM","SN","SO","SR","SS","ST","SV","SX","SZ","TC","TD","TG","TO","TT","TV","TZ","UA","UG","US","UY","VA","VC","VE","VG","VI","VU","WF","WS","YT","ZA","ZM","ZW"
+  ])];
+  const europe = all.filter(code => !asia.includes(code));
+  return { all, asia, europe };
+})();
 
-  function getFlagEmoji(code) {
-    return code && /^[A-Z]{2}$/.test(code) ? String.fromCodePoint(...code.split('').map(c => 0x1F1E6 + c.charCodeAt(0) - 65)) : '';
-  }
+function getFlagEmoji(code) {
+  return code && /^[A-Z]{2}$/.test(code) ? String.fromCodePoint(...code.split('').map(c => 0x1F1E6 + c.charCodeAt(0) - 65)) : '';
+}
 
- function selectRegion(region) {
+function selectRegion(region) {
   const flagGroup = document.getElementById("flagGroup");
   const buttons = document.querySelectorAll(".region-btn");
   buttons.forEach(btn => btn.classList.remove("active"));
   document.querySelector(`.region-btn[onclick*="${region}"]`).classList.add("active");
 
-  // Nếu đã từng chỉnh sửa vùng này thì hiển thị lại emoji đã sửa
-  if (lastEditedFlags[region] !== null) {
-  flagGroup.textContent = lastEditedFlags[region];
+  // Luôn reset emoji từ flags khi chọn vùng mới
+  let emojis;
+if (region === "custom") {
+  emojis = lastEditedFlags.custom || "";
 } else {
-  const codes = flags[region] || flags.all;
-  flagGroup.textContent = codes.map(getFlagEmoji).join(' ');
+ const codes = flags[region] || flags.all;
+  if (!lastEditedFlags[region]) {
+    lastEditedFlags[region] = codes.map(getFlagEmoji).join(" ");
+  }
+  emojis = lastEditedFlags[region];
 }
 
+flagGroup.textContent = emojis;
   flagGroup.setAttribute("contenteditable", "true");
   currentRegion = region;
 }
 
-  function parseFlagsToCountryCodes(flagString) {
-    const codes = [];
-    for (let i = 0; i < flagString.length; i += 2) {
-      const part = flagString.codePointAt(i);
-      const next = flagString.codePointAt(i + 1);
-      if (!next) continue;
-      const c1 = String.fromCharCode(part - 0x1F1E6 + 65);
-      const c2 = String.fromCharCode(next - 0x1F1E6 + 65);
-      if (/^[A-Z]{2}$/.test(c1 + c2)) codes.push(c1 + c2);
+function parseFlagsToCountryCodes(flagString) {
+  const codes = [];
+  const chars = [...flagString]; // Quan trọng: spread để xử lý từng emoji
+
+  for (let i = 0; i < chars.length; i++) {
+    const c1 = chars[i].codePointAt(0);
+    const c2 = chars[i + 1]?.codePointAt(0);
+
+    if (!c1 || !c2) continue;
+
+    // Kiểm tra nếu cả 2 ký tự đều là Regional Indicator (emoji quốc kỳ)
+    if (0x1F1E6 <= c1 && c1 <= 0x1F1FF && 0x1F1E6 <= c2 && c2 <= 0x1F1FF) {
+      const iso1 = String.fromCharCode(c1 - 0x1F1E6 + 65);
+      const iso2 = String.fromCharCode(c2 - 0x1F1E6 + 65);
+      codes.push(iso1 + iso2);
+      i++; // bỏ qua ký tự thứ 2 đã xử lý
     }
-    return codes;
   }
 
-  function saveConfig() {
-    const region = document.querySelector(".region-btn.active")?.textContent?.trim().toLowerCase();
-    let countryCodes = [];
-
+  return codes;
+}
+function saveConfig() {
   const emojis = document.getElementById("flagGroup").textContent.trim();
-countryCodes = parseFlagsToCountryCodes(emojis);
+  const countryCodes = parseFlagsToCountryCodes(emojis);
 
-    const payload = {
-      telegram: {
-        targetCountries: countryCodes,
-        idolIds: document.getElementById("idolIds").value.trim(),
-        SmallBox: {
-          minCoins: parseInt(document.getElementById("normalCoins").value),
-          minRate: parseFloat(parseFloat(document.getElementById("normalRate").value.replace(',', '.')).toFixed(1)),
-          minTime: parseInt(document.getElementById("normalTime").value)
-        },
-        BigBox: {
-          minCoins: parseInt(document.getElementById("potentialCoins").value),
-          minRate: parseFloat(parseFloat(document.getElementById("potentialRate").value.replace(',', '.')).toFixed(1)),
-          minTime: parseInt(document.getElementById("potentialTime").value)
-        }
-      }
-    };
+  const payload = {
+    telegram: {
+      targetCountries: countryCodes,
+      idolIds: document.getElementById("idolIds").value.trim(),
+     SmallBox: {
+  minCoins: parseInt(document.getElementById("normalCoins").value),
+  minRate: +(Number(document.getElementById("normalRate").value.replace(',', '.')).toFixed(1)),
+  minTime: parseInt(document.getElementById("normalTime").value)
+},
+BigBox: {
+  minCoins: parseInt(document.getElementById("potentialCoins").value),
+  minRate: +(Number(document.getElementById("potentialRate").value.replace(',', '.')).toFixed(1)),
+  minTime: parseInt(document.getElementById("potentialTime").value)
+}
+    }
+  };
 
-    fetch("https://juicy-transparent-chocolate.glitch.me/save-config", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    })
-    .then(res => res.text())
-    .then(msg => {
-      const messageElement = document.getElementById("message");
-      messageElement.textContent = msg;
-      messageElement.style.color = msg.includes('✅') ? '#28a745' : '#d9534f';
-    })
-    .catch(err => {
-      const messageElement = document.getElementById("message");
-      messageElement.textContent = '❌ Lỗi gửi dữ liệu: ' + err.message;
-      messageElement.style.color = '#d9534f';
-    });
-  }
+  fetch("https://juicy-transparent-chocolate.glitch.me/save-config", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  })
+  .then(res => res.text())
+  .then(msg => {
+    const messageElement = document.getElementById("message");
+    messageElement.textContent = msg;
+    messageElement.style.color = msg.includes('✅') ? '#28a745' : '#d9534f';
+  })
+  .catch(err => {
+    const messageElement = document.getElementById("message");
+    messageElement.textContent = '❌ Lỗi gửi dữ liệu: ' + err.message;
+    messageElement.style.color = '#d9534f';
+  });
+}
 
-  // Khi load trang:
-  window.addEventListener("DOMContentLoaded", () => {
-   
-    fetch("https://juicy-transparent-chocolate.glitch.me/get-config")
-      .then(res => res.json())
-      .then(config => {
-        const t = config?.telegram || {};
-        document.getElementById("normalCoins").value = t.SmallBox?.minCoins ?? 49;
-        document.getElementById("normalRate").value = (t.SmallBox?.minRate ?? 1.6).toFixed(1);
-        document.getElementById("normalTime").value = t.SmallBox?.minTime ?? 80;
+window.addEventListener("DOMContentLoaded", () => {
+  fetch("https://juicy-transparent-chocolate.glitch.me/get-config")
+    .then(res => res.json())
+    .then(config => {
+      const t = config?.telegram || {};
+      document.getElementById("normalCoins").value = t.SmallBox?.minCoins ?? 49;
+      document.getElementById("normalRate").value = (t.SmallBox?.minRate ?? 1.6).toFixed(1);
+      document.getElementById("normalTime").value = t.SmallBox?.minTime ?? 80;
 
-        document.getElementById("potentialCoins").value = t.BigBox?.minCoins ?? 500;
-        document.getElementById("potentialRate").value = (t.BigBox?.minRate ?? 1.6).toFixed(1);
-        document.getElementById("potentialTime").value = t.BigBox?.minTime ?? 120;
+      document.getElementById("potentialCoins").value = t.BigBox?.minCoins ?? 500;
+      document.getElementById("potentialRate").value = (t.BigBox?.minRate ?? 1.6).toFixed(1);
+      document.getElementById("potentialTime").value = t.BigBox?.minTime ?? 120;
 
-        document.getElementById("idolIds").value = t.idolIds ?? '';
+      document.getElementById("idolIds").value = t.idolIds ?? '';
 
-if (t.targetCountries?.length) {
+    if (t.targetCountries?.length) {
   const countries = t.targetCountries;
-  const regionName = Object.keys(flags).find(key => {
-    const setA = new Set(flags[key]);
-    const setB = new Set(countries);
-    return setA.size === setB.size && [...setA].every(x => setB.has(x));
-  }) || "custom";
 
+let regionName = "custom";
+
+const inAsia = countries.every(code => flags.asia.includes(code));
+const inEurope = countries.every(code => flags.europe.includes(code));
+const inAll = countries.every(code => flags.all.includes(code));
+const isExactAll = flags.all.length === countries.length &&
+                   flags.all.every(code => countries.includes(code));
+
+if (isExactAll) {
+  regionName = "all";
+} else if (inAsia) {
+  regionName = "asia";
+} else if (inEurope) {
+  regionName = "europe";
+}
   const emojis = countries.map(getFlagEmoji).join(' ');
   document.getElementById("flagGroup").textContent = emojis;
-  lastEditedFlags[regionName] = emojis;
+    lastEditedFlags[regionName] = emojis;
   currentRegion = regionName;
+
+  
+ if (regionName === "custom") {
+  lastEditedFlags.custom = emojis;
+} else {
+  
+  lastEditedFlags.custom = flags.all.map(getFlagEmoji).join(" ");
+}
+
 
   const buttons = document.querySelectorAll(".region-btn");
   buttons.forEach(btn => btn.classList.remove("active"));
   document.querySelector(`.region-btn[onclick*="${regionName}"]`)?.classList.add("active");
-selectRegion(regionName);
-}  
- 
+}
+    });
+
+  ["normalRate", "potentialRate"].forEach(id => {
+    const input = document.getElementById(id);
+    input.addEventListener("blur", () => {
+      const val = parseFloat(input.value);
+      if (!isNaN(val)) input.value = val.toFixed(1);
+    });
   });
-["normalRate", "potentialRate"].forEach(id => {
-  const input = document.getElementById(id);
-  input.addEventListener("blur", () => {
-    const val = parseFloat(input.value);
-    if (!isNaN(val)) input.value = val.toFixed(1);
+
+  document.getElementById("flagGroup").addEventListener("input", () => {
+    const region = currentRegion;
+    const text = document.getElementById("flagGroup").textContent;
+    lastEditedFlags[region] = text;
   });
 });
-// ✅ Gắn sau cùng — ngoài forEach
-document.getElementById("flagGroup").addEventListener("input", () => {
-  const region = currentRegion;
-  const text = document.getElementById("flagGroup").textContent;
-  lastEditedFlags[region] = text;
-});
-  });
+
 function fixRateFormat() {
   ["normalRate", "potentialRate"].forEach(id => {
     const input = document.getElementById(id);
@@ -346,32 +374,29 @@ function fixRateFormat() {
 }
 
 function resetToDefault() {
-  // Reset số liệu
   document.getElementById("normalCoins").value = 50;
   document.getElementById("normalRate").value = 1.6;
   document.getElementById("normalTime").value = 80;
-
   document.getElementById("potentialCoins").value = 600;
   document.getElementById("potentialRate").value = 2.0;
   document.getElementById("potentialTime").value = 120;
 
   fixRateFormat();
 
-  // Reset emoji mặc định cho all, asia, europe
   ["all", "asia", "europe"].forEach(region => {
     const emojis = flags[region].map(getFlagEmoji).join(" ");
     lastEditedFlags[region] = emojis;
   });
   lastEditedFlags.custom = flags.all.map(getFlagEmoji).join(" ");
 
-  // Trở lại vùng all mặc định
   selectRegion("all");
 
-  // Hiển thị thông báo
   const messageElement = document.getElementById("message");
   messageElement.textContent = "📌 Đã chọn cấu hình mặc định!";
   messageElement.style.color = "#28a745";
-}</script>
+}
+</script>
+
 <div id="footerContact">Telegram & Facebook: JimmyHoang68</div>
 
 <style>
