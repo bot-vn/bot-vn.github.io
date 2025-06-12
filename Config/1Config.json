@@ -10,7 +10,13 @@
       "AD",
       "AG",
       "AI",
-      "AL"
+      "AL",
+      "AO",
+      "AR",
+      "AS",
+      "AT",
+      "AU",
+      "AW"
     ],
     "maxRetries": 2,
     "SmallBox": {
