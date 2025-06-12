@@ -246,7 +246,7 @@
     },
     "BigBox": {
       "minCoins": 600,
-      "minRate": 2,
+      "minRate": 5,
       "minTime": 120
     },
     "shortBoxThreshold": 30,
