@@ -119,35 +119,45 @@ textarea.input-textarea:focus {
   </style>
 </head>
 <body>
-  <div class="container">
+  <div id="loadingScreen">
+    <div class="circle-wrapper">
+      <div class="circle-loader">
+        <div class="circle-progress" id="circleProgress"></div>
+        <div id="loadingText">Đang tải 0%</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container" style="display: none;">
     <div style="text-align:center; margin-bottom: 12px;">
   <div style="font-size: 32px; line-height: 1;">👑</div>
   <h2 style="margin: 0 0 16px;">BOT AUTO RƯƠNG</h2>
-     <div id="advancedOptions" style="display:block; text-align:left;">
-      <div class="input-group">
-        <label style="font-weight: bold; display: block; font-size: 14px;">MÃ RƯƠNG NHỎ: 🟢</label>
-      <div class="three-inputs">
-  <div class="input-pair">
-    <label for="normalCoins">Xu:</label>
-    <input inputmode="numeric" pattern="[0-9]*" id="normalCoins" style="font-size:16px;">
-  </div>
-  <div class="input-pair">
-    <label for="normalRate">Tỷ lệ:</label>
-     <input inputmode="decimal" pattern="[0-9.]*" id="normalRate" style="font-size:16px;">
-  </div>
-  <div class="input-pair">
-    <label for="normalTime">Giây:</label>
-     <input inputmode="numeric" pattern="[0-9]*" id="normalTime" style="font-size:16px;">
-  </div>
-</div>
+   <div id="advancedOptions" style="display:block; text-align:left;">
+  <div class="input-group"> <!-- 🟢THÔNG BÁO MÃ RƯƠNG NHỎ -->
+    <label style="font-weight: bold; display: block; font-size: 14px;">THÔNG BÁO RƯƠNG NHỎ: 🟢</label>
+    <div class="three-inputs">
+      <div class="input-pair">
+        <label for="normalCoins">Xu:</label>
+        <input inputmode="numeric" pattern="[0-9]*" id="normalCoins" style="font-size:16px;">
+      </div>
+      <div class="input-pair">
+        <label for="normalRate">Tỷ lệ:</label>
+        <input inputmode="decimal" pattern="[0-9.]*" id="normalRate" style="font-size:16px;">
+      </div>
+      <div class="input-pair">
+        <label for="normalTime">Giây:</label>
+        <input inputmode="numeric" pattern="[0-9]*" id="normalTime" style="font-size:16px;">
+      </div>
+    </div>
+  </div> <!-- ✅ ĐÓNG input-group rương nhỏ -->
 
-      <div class="input-group">
-        <label style="font-weight: bold; display: block; font-size: 14px;">MÃ RƯƠNG LỚN: ⭐⭐⭐</label>
-<div class="three-inputs">
-  <div class="input-pair">
-    <label for="potentialCoins">Xu:</label>
-    <input inputmode="numeric" pattern="[0-9]*" id="potentialCoins" style="font-size:16px;">
-  </div>
+  <div class="input-group"> <!-- ⭐⭐⭐THÔNG BÁO RƯƠNG LỚN -->
+    <label style="font-weight: bold; display: block; font-size: 14px;">THÔNG BÁO RƯƠNG LỚN: ⭐⭐⭐</label>
+    <div class="three-inputs">
+      <div class="input-pair">
+        <label for="potentialCoins">Xu:</label>
+        <input inputmode="numeric" pattern="[0-9]*" id="potentialCoins" style="font-size:16px;">
+      </div>
   <div class="input-pair">
     <label for="potentialRate">Tỷ lệ:</label>
     <input inputmode="decimal" pattern="[0-9.]*" id="potentialRate" style="font-size:16px;">
@@ -311,6 +321,7 @@ window.addEventListener("DOMContentLoaded", () => {
       document.getElementById("potentialTime").value = t.BigBox?.minTime ?? 120;
 
       document.getElementById("idolIds").value = t.idolIds ?? '';
+fetchDone = true;
 
     if (t.targetCountries?.length) {
   const countries = t.targetCountries;
@@ -411,6 +422,135 @@ function resetToDefault() {
     left: 0;
     z-index: 9999;
   }
+#loadingScreen {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background-color: black;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  z-index: 99999;
+  text-align: center;
+}
+.circle-wrapper {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+.circle-loader {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.circle-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: conic-gradient(#33ccff 0deg, transparent 0deg);
+  mask-image: radial-gradient(circle 92px at center, transparent 88px, black 88px);
+  -webkit-mask-image: radial-gradient(circle 92px at center, transparent 88px, black 88px);
+  box-shadow: 0 0 20px rgba(51, 204, 255, 0.9);
+  transition: background 0.3s ease;
+}
+#loadingText {
+  position: relative;
+  z-index: 2;
+  font-size: 18px;
+  color: white;
+  font-weight: bold;
+  text-shadow: 0 0 6px #00ccff;
+}
 </style>
+
+<script>
+let percent = 0;
+const duration = 5000;
+const intervalTime = duration / 100;
+const progressText = document.getElementById("loadingText");
+const progressCircle = document.getElementById("circleProgress");
+
+let fetchDone = false;  // ✅ Đánh dấu trạng thái fetch
+
+const colorGradient = ['#00f5ff', '#00e0ff', '#00cfff', '#00bfff', '#009eff', '#007eff', '#005eff', '#003eff', '#001eff', '#000dff'];
+
+const blendColor = (startHex, endHex, ratio) => {
+  const hexToRgb = hex => hex.match(/\w\w/g).map(x => parseInt(x, 16));
+  const rgbToHex = rgb => '#' + rgb.map(x => x.toString(16).padStart(2, '0')).join('');
+  const [r1, g1, b1] = hexToRgb(startHex);
+  const [r2, g2, b2] = hexToRgb(endHex);
+  const r = Math.round(r1 + (r2 - r1) * ratio);
+  const g = Math.round(g1 + (g2 - g1) * ratio);
+  const b = Math.round(b1 + (b2 - b1) * ratio);
+  return rgbToHex([r, g, b]);
+};
+
+const loadingInterval = setInterval(() => {
+  percent++;
+  const degree = Math.floor((percent / 100) * 360);
+  const segments = 100;
+  const segmentSize = degree / segments;
+  let gradient = '';
+  for (let i = 0; i < segments; i++) {
+    const start = i * segmentSize;
+    const end = (i + 1) * segmentSize;
+    const t = i / segments;
+    const colorIndex = t * (colorGradient.length - 1);
+    const lower = Math.floor(colorIndex);
+    const upper = Math.min(lower + 1, colorGradient.length - 1);
+    const blend = colorIndex - lower;
+    const segColor = blendColor(colorGradient[lower], colorGradient[upper], blend);
+    gradient += `${segColor} ${start}deg ${end}deg${i < segments - 1 ? ', ' : ''}`;
+  }
+  gradient += `, transparent ${degree}deg`;
+  progressCircle.style.background = `conic-gradient(${gradient})`;
+
+  if (percent < 100) {
+    progressText.textContent = `Đang tải ${percent}%`;
+  } else {
+    clearInterval(loadingInterval);
+    if (fetchDone) {
+      progressText.textContent = "✅ Xong!";
+      progressCircle.style.background = `conic-gradient(#00ff99 360deg, transparent 0deg)`;
+      setTimeout(() => {
+        document.getElementById("loadingScreen").style.display = "none";
+        document.querySelector(".container").style.display = "flex";
+      }, 300);
+    } else {
+      startDotsAnimation();
+    }
+  }
+}, intervalTime);
+
+// Nháy "Sắp xong rồi.", "..", "..." nếu fetch chưa xong
+let dotInterval = null;
+function startDotsAnimation() {
+  let dots = 0;
+  dotInterval = setInterval(() => {
+    dots = (dots + 1) % 4;
+    let text = "Sắp xong rồi" + ".".repeat(dots);
+    progressText.textContent = text;
+    if (fetchDone) {
+      clearInterval(dotInterval);
+      progressText.textContent = "✅ Xong!";
+      progressCircle.style.background = `conic-gradient(#00ff99 360deg, transparent 0deg)`;
+      setTimeout(() => {
+        document.getElementById("loadingScreen").style.display = "none";
+        document.querySelector(".container").style.display = "flex";
+      }, 300);
+    }
+  }, 500);
+}
+</script>
 </body>
 </html>
