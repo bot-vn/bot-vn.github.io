@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=1, minimum-scale=1.0, maximum-scale=5.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Config</title>
   <style>
     html, body { height: 100%; margin: 0; padding: 0; box-sizing: border-box; }
@@ -76,6 +76,7 @@ textarea:focus {
 }
 .input-pair label {
   white-space: nowrap;
+font-size: 14px; 
 }
 .input-pair input {
   width: 60px;
@@ -114,6 +115,7 @@ textarea.input-textarea:focus {
     .flag { cursor: pointer; }
     .flag.selected { color: #007BFF; font-weight: bold; }
     #customRegionIds { border-radius: 4px; }
+
   </style>
 </head>
 <body>
@@ -172,12 +174,31 @@ textarea.input-textarea:focus {
 
     <div class="button-group">
       <button class="restart" onclick="resetToDefault()">Về mặc định</button>
-      <button class="save" onclick="saveConfig()">Lưu</button>
+      <button class="save" onclick="confirmPasswordAndSave()">Lưu</button>
     </div>
     <div id="message" style="margin-top:10px;font-size:13px;"></div>
   </div>
 
 <script>
+let currentRegion = "all";
+let manualEdit = false;
+let lastEditedFlags = {
+  all: null,
+  asia: null,
+  europe: null,
+  custom: null
+};
+function confirmPasswordAndSave() {
+  const password = prompt("🔒 Nhập mật khẩu để lưu cấu hình:");
+  if (password === "3333") {
+    saveConfig();
+  } else if (password !== null) {
+    const messageElement = document.getElementById("message");
+    messageElement.textContent = "❌ Sai mật khẩu!";
+    messageElement.style.color = "#d9534f";
+  }
+}
+
   const flags = (() => {
     const asia = ["AE","AF","AM","AZ","BD","BH","BN","BT","CY","EG","GE","HK","ID","IL","IN","IQ","IR","JO","JP","KG","KH","KP","KR","KW","KZ","LA","LB","LK","MM","MN","MO","MV","MY","NP","OM","PH","PK","PS","QA","RU","SA","SG","SY","TH","TJ","TL","TM","TR","TW","UZ","YE","VN"];
     const all = [...new Set([
@@ -192,17 +213,23 @@ textarea.input-textarea:focus {
     return code && /^[A-Z]{2}$/.test(code) ? String.fromCodePoint(...code.split('').map(c => 0x1F1E6 + c.charCodeAt(0) - 65)) : '';
   }
 
-  function selectRegion(region) {
-    const flagGroup = document.getElementById("flagGroup");
-    const buttons = document.querySelectorAll(".region-btn");
-    buttons.forEach(btn => btn.classList.remove("active"));
-    document.querySelector(`.region-btn[onclick*="${region}"]`).classList.add("active");
+ function selectRegion(region) {
+  const flagGroup = document.getElementById("flagGroup");
+  const buttons = document.querySelectorAll(".region-btn");
+  buttons.forEach(btn => btn.classList.remove("active"));
+  document.querySelector(`.region-btn[onclick*="${region}"]`).classList.add("active");
 
-    const codes = flags[region] || flags.all;
-flagGroup.textContent = codes.map(getFlagEmoji).join(' ');
-flagGroup.setAttribute("contenteditable", "true"); 
+  // Nếu đã từng chỉnh sửa vùng này thì hiển thị lại emoji đã sửa
+  if (lastEditedFlags[region] !== null) {
+  flagGroup.textContent = lastEditedFlags[region];
+} else {
+  const codes = flags[region] || flags.all;
+  flagGroup.textContent = codes.map(getFlagEmoji).join(' ');
+}
 
-  }
+  flagGroup.setAttribute("contenteditable", "true");
+  currentRegion = region;
+}
 
   function parseFlagsToCountryCodes(flagString) {
     const codes = [];
@@ -279,13 +306,38 @@ flagGroup.setAttribute("contenteditable", "true");
         document.getElementById("potentialTime").value = t.BigBox?.minTime ?? 120;
 
         document.getElementById("idolIds").value = t.idolIds ?? '';
-      });
+
+if (t.targetCountries?.length) {
+  const countries = t.targetCountries;
+  const regionName = Object.keys(flags).find(key => {
+    const setA = new Set(flags[key]);
+    const setB = new Set(countries);
+    return setA.size === setB.size && [...setA].every(x => setB.has(x));
+  }) || "custom";
+
+  const emojis = countries.map(getFlagEmoji).join(' ');
+  document.getElementById("flagGroup").textContent = emojis;
+  lastEditedFlags[regionName] = emojis;
+  currentRegion = regionName;
+
+  const buttons = document.querySelectorAll(".region-btn");
+  buttons.forEach(btn => btn.classList.remove("active"));
+  document.querySelector(`.region-btn[onclick*="${regionName}"]`)?.classList.add("active");
+}  
+ 
+  });
 ["normalRate", "potentialRate"].forEach(id => {
   const input = document.getElementById(id);
   input.addEventListener("blur", () => {
     const val = parseFloat(input.value);
     if (!isNaN(val)) input.value = val.toFixed(1);
   });
+});
+// ✅ Gắn sau cùng — ngoài forEach
+document.getElementById("flagGroup").addEventListener("input", () => {
+  const region = currentRegion;
+  const text = document.getElementById("flagGroup").textContent;
+  lastEditedFlags[region] = text;
 });
   });
 function fixRateFormat() {
@@ -297,6 +349,7 @@ function fixRateFormat() {
 }
 
 function resetToDefault() {
+  // Reset số liệu
   document.getElementById("normalCoins").value = 50;
   document.getElementById("normalRate").value = 1.6;
   document.getElementById("normalTime").value = 80;
@@ -307,10 +360,20 @@ function resetToDefault() {
 
   fixRateFormat();
 
+  // Reset emoji mặc định cho all, asia, europe
+  ["all", "asia", "europe"].forEach(region => {
+    const emojis = flags[region].map(getFlagEmoji).join(" ");
+    lastEditedFlags[region] = emojis;
+  });
+  lastEditedFlags.custom = flags.all.map(getFlagEmoji).join(" ");
+
+  // Trở lại vùng all mặc định
+  selectRegion("all");
+
+  // Hiển thị thông báo
   const messageElement = document.getElementById("message");
-  messageElement.textContent = "✅ Đã trở về thông số mặc định!";
+  messageElement.textContent = "✅ Đã chọn cấu hình mặc định!";
   messageElement.style.color = "#28a745";
-}
-</script>
+}</script>
 </body>
 </html>
