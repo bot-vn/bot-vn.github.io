@@ -7,18 +7,22 @@
   "telegram": {
     "proxyTimeout": 5000,
     "targetCountries": [
-      "AE",
-      "AF",
-      "AM",
-      "AZ",
-      "BD",
-      "BH",
-      "BN"
+      "AD",
+      "AG",
+      "AI",
+      "AL",
+      "AO",
+      "AR",
+      "AS",
+      "AT",
+      "AU",
+      "AW",
+      "AX"
     ],
     "maxRetries": 2,
     "SmallBox": {
       "minCoins": 50,
-      "minRate": 4,
+      "minRate": 1.6,
       "minTime": 80
     },
     "BigBox": {
