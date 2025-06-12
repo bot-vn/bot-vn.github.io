@@ -115,6 +115,7 @@ textarea.input-textarea:focus {
     .flag { cursor: pointer; }
     .flag.selected { color: #007BFF; font-weight: bold; }
     #customRegionIds { border-radius: 4px; }
+
   </style>
 </head>
 <body>
@@ -219,12 +220,12 @@ function confirmPasswordAndSave() {
   document.querySelector(`.region-btn[onclick*="${region}"]`).classList.add("active");
 
   // Nếu đã từng chỉnh sửa vùng này thì hiển thị lại emoji đã sửa
-  if (lastEditedFlags[region]) {
-    flagGroup.textContent = lastEditedFlags[region];
-  } else {
-    const codes = flags[region] || flags.all;
-    flagGroup.textContent = codes.map(getFlagEmoji).join(' ');
-  }
+  if (lastEditedFlags[region] !== null) {
+  flagGroup.textContent = lastEditedFlags[region];
+} else {
+  const codes = flags[region] || flags.all;
+  flagGroup.textContent = codes.map(getFlagEmoji).join(' ');
+}
 
   flagGroup.setAttribute("contenteditable", "true");
   currentRegion = region;
@@ -348,6 +349,7 @@ function fixRateFormat() {
 }
 
 function resetToDefault() {
+  // Reset số liệu
   document.getElementById("normalCoins").value = 50;
   document.getElementById("normalRate").value = 1.6;
   document.getElementById("normalTime").value = 80;
@@ -358,10 +360,20 @@ function resetToDefault() {
 
   fixRateFormat();
 
+  // Reset emoji mặc định cho all, asia, europe
+  ["all", "asia", "europe"].forEach(region => {
+    const emojis = flags[region].map(getFlagEmoji).join(" ");
+    lastEditedFlags[region] = emojis;
+  });
+  lastEditedFlags.custom = flags.all.map(getFlagEmoji).join(" ");
+
+  // Trở lại vùng all mặc định
+  selectRegion("all");
+
+  // Hiển thị thông báo
   const messageElement = document.getElementById("message");
-  messageElement.textContent = "✅ Đã trở về thông số mặc định!";
+  messageElement.textContent = "✅ Đã chọn cấu hình mặc định!";
   messageElement.style.color = "#28a745";
-}
-</script>
+}</script>
 </body>
 </html>
