@@ -182,11 +182,28 @@
         btn.onclick = () => window.close();
         setTimeout(() => {
           window.close();
-        }, 5000);
+        }, 9000);
       }
     }
 
-    requestAnimationFrame(updateTimer);
-  </script>
+   requestAnimationFrame(updateTimer);
+</script>
+
+<div id="footerContact">Telegram & Facebook: JimmyHoang68</div>
+
+<style>
+  #footerContact {
+    text-align: center;
+    color: white;
+    font-size: 13px;
+    padding: 10px 0;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 9999;
+  }
+</style>
+
 </body>
 </html>
