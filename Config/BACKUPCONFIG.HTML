@@ -288,7 +288,7 @@ countryCodes = parseFlagsToCountryCodes(emojis);
 
   // Khi load trang:
   window.addEventListener("DOMContentLoaded", () => {
-    selectRegion("all");
+   
     fetch("https://juicy-transparent-chocolate.glitch.me/get-config")
       .then(res => res.json())
       .then(config => {
@@ -319,6 +319,7 @@ if (t.targetCountries?.length) {
   const buttons = document.querySelectorAll(".region-btn");
   buttons.forEach(btn => btn.classList.remove("active"));
   document.querySelector(`.region-btn[onclick*="${regionName}"]`)?.classList.add("active");
+selectRegion(regionName);
 }  
  
   });
