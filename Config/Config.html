@@ -2,379 +2,191 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Config</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Time Interface</title>
   <style>
-    html, body { height: 100%; margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: Arial, sans-serif;
-      background-color: #000;
+      text-align: center;
+      padding: 20px;
+      background-color: #1a1a1a;
       display: flex;
       justify-content: center;
       align-items: center;
-      flex-direction: column;
-      min-height: 100vh;
-      margin: 0;
-      width: 100vw;
       height: 100vh;
+      margin: 0;
+      font-size: 18px;
+      overflow: hidden;
     }
     .container {
-      background-color: #fff;
-      padding: 16px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      width: 100%;
-      max-width: 340px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      min-height: 420px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      display: inline-block;
+      text-align: center;
+      background-color: white;
+      padding: 24px;
+      border: 4px solid #000000;
+      border-radius: 12px;
+      width: 300px;
     }
-    h2 { color: #dc3545; margin-bottom: 12px; text-align: center; font-weight: bold; }
-    .row { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
-    .input-group { margin-bottom: 10px; text-align: left; }
-    .input-group label { display: block; margin-bottom: 2px; font-weight: bold; font-size: 13px; }
-   input[type="text"], input[type="number"],
-input[inputmode="numeric"], input[inputmode="decimal"] {
-  width: 100%;
-  padding: 4px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 13px;
-  box-sizing: border-box;
-  transition: border 0.2s ease-in-out;
-}
-input:focus {
-  outline: none;
-  border: 2px solid orange;
-  box-shadow: 0 0 0 2px rgba(255,165,0,0.2);
-}
-
-textarea:focus {
-  outline: none;
-  border: 2px solid orange;
-  box-shadow: 0 0 0 2px rgba(255,165,0,0.2);
-}
-
-    .button-group { display: flex; justify-content: space-between; margin-top: 10px; gap: 8px; align-items: center; }
-    button { flex: 1; padding: 8px; font-size: 13px; border: none; border-radius: 5px; cursor: pointer; }
-    button.restart { background-color: #6c757d; color: white; }
-    button.save { background-color: #007BFF; color: white; }
-
-.three-inputs {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 12px;
-  font-size: 16px;
-  gap: 10px;
-}
-.input-pair {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.input-pair label {
-  white-space: nowrap;
-font-size: 14px; 
-}
-.input-pair input {
-  width: 60px;
-  padding: 4px;
-  box-sizing: border-box;
-}
-textarea.input-textarea {
-  width: 100%;
-  padding: 4px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 13px;
-  box-sizing: border-box;
-  resize: vertical;
-  line-height: 1.4;
-  transition: border 0.2s ease-in-out;
-}
-textarea.input-textarea:focus {
-  outline: none;
-  border: 2px solid orange;
-  box-shadow: 0 0 0 2px rgba(255,165,0,0.2);
-}
-    .region-group { display: flex; justify-content: space-between; margin-top: 18px; margin-bottom: 8px; gap: 6px; }
-    .region-group button {
-      background-color: #f1f1f1; border: 1px solid #ccc; color: #000; cursor: pointer;
-      padding: 2px 6px; border-radius: 4px; width: auto; transition: all 0.2s ease-in-out;
-      font-size: 12px; line-height: 1.2; white-space: nowrap;
+    .username {
+      color: #0056b3;
+      font-weight: bold;
+      font-size: 20px;
+      margin-bottom: 12px;
     }
-    .region-group button.active { background-color: #007BFF; color: white; border-color: #007BFF; }
-    .flag-group {
-      display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; max-height: 60px; overflow-y: auto;
-      border: 1px solid #ccc; padding: 4px; background: #fff; border-radius: 4px; font-size: 18px;
-      min-height: 32px; transition: border 0.2s ease-in-out;
+    .box-info {
+      font-size: 18px;
+      margin: 14px 0;
+      color: #000;
+      font-weight: bold;
     }
-    .flag-group:focus { outline: none; border: 2px solid orange; box-shadow: 0 0 0 2px rgba(255,165,0,0.2); }
-    .flag { cursor: pointer; }
-    .flag.selected { color: #007BFF; font-weight: bold; }
-    #customRegionIds { border-radius: 4px; }
-
+    .flag {
+      margin: 0 6px;
+    }
+    .timer-grid {
+      margin: 20px 0;
+    }
+    .countdown-ms {
+      font-size: 130px;
+      font-weight: bold;
+      color: #000;
+      margin: 0;
+      transition: color 0.3s;
+      font-family: Arial, sans-serif;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    }
+    .countdown-full {
+      font-size: 40px;
+      margin-bottom: 10px;
+      color: #000;
+      font-family: Arial, sans-serif;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      padding: 10px 12px;
+      border: none;
+      font-size: 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 12px;
+      width: 90%;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    button.disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+    button.red-text {
+      color: #ff0000;
+    }
+    @keyframes flash {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <div style="text-align:center; margin-bottom: 12px;">
-  <div style="font-size: 32px; line-height: 1;">👑</div>
-  <h2 style="margin: 0 0 16px;">BOT AUTO RƯƠNG</h2>
-     <div id="advancedOptions" style="display:block; text-align:left;">
-      <div class="input-group">
-        <label style="font-weight: bold; display: block; font-size: 14px;">MÃ RƯƠNG NHỎ: 🟢</label>
-      <div class="three-inputs">
-  <div class="input-pair">
-    <label for="normalCoins">Xu:</label>
-    <input inputmode="numeric" pattern="[0-9]*" id="normalCoins" style="font-size:16px;">
-  </div>
-  <div class="input-pair">
-    <label for="normalRate">Tỷ lệ:</label>
-     <input inputmode="decimal" pattern="[0-9.]*" id="normalRate" style="font-size:16px;">
-  </div>
-  <div class="input-pair">
-    <label for="normalTime">Giây:</label>
-     <input inputmode="numeric" pattern="[0-9]*" id="normalTime" style="font-size:16px;">
-  </div>
-</div>
-
-      <div class="input-group">
-        <label style="font-weight: bold; display: block; font-size: 14px;">MÃ RƯƠNG LỚN: ⭐⭐⭐</label>
-<div class="three-inputs">
-  <div class="input-pair">
-    <label for="potentialCoins">Xu:</label>
-    <input inputmode="numeric" pattern="[0-9]*" id="potentialCoins" style="font-size:16px;">
-  </div>
-  <div class="input-pair">
-    <label for="potentialRate">Tỷ lệ:</label>
-    <input inputmode="decimal" pattern="[0-9.]*" id="potentialRate" style="font-size:16px;">
-  </div>
-  <div class="input-pair">
-    <label for="potentialTime">Giây:</label>
-    <input inputmode="numeric" pattern="[0-9]*" id="potentialTime" style="font-size:16px;">
-  </div>
-</div>
-
-    <div class="region-group">
-      <button class="region-btn active" onclick="selectRegion('all')">Tất cả</button>
-      <button class="region-btn" onclick="selectRegion('asia')">Châu Á</button>
-      <button class="region-btn" onclick="selectRegion('europe')">Châu Âu</button>
-      <button class="region-btn" onclick="selectRegion('custom')">Tùy chọn</button>
+    <h2 class="username" id="username">@username</h2>
+    <div class="box-info" id="boxinfo">🎁 BOX: <span id="coins">--</span>/<span id="viewerRewardCount">--</span> <span class="flag" id="flag">🏳️</span> 👀 <span id="viewers">--</span></div>
+    <div class="timer-grid">
+      <div class="countdown-ms" id="countdownMs">--</div>
+      <div class="countdown-full" id="countdownFull">--:--:--</div>
     </div>
-
-    <div id="flagGroup" class="flag-group" contenteditable="false"></div>
-
-    <div class="input-group" style="margin-top: 16px;">
-      <label for="idolIds">TÀI KHOẢN FOLLOW iDOL:</label>
-   <textarea id="idolIds" placeholder="Ghi nick tiktok cách nhau bằng dấu ," rows="1" class="input-textarea"></textarea>
-    </div>
-
-    <div class="button-group">
-      <button class="restart" onclick="resetToDefault()">Về mặc định</button>
-      <button class="save" onclick="confirmPasswordAndSave()">Lưu</button>
-    </div>
-    <div id="message" style="margin-top:10px;font-size:13px;"></div>
+    <button id="actionButton" onclick="openTikTokLive()">Canh giờ hoàng đạo</button>
   </div>
-
-<script>
-let currentRegion = "all";
-let manualEdit = false;
-let lastEditedFlags = {
-  all: null,
-  asia: null,
-  europe: null,
-  custom: null
-};
-function confirmPasswordAndSave() {
-  const password = prompt("🔒 Nhập mật khẩu để lưu cấu hình:");
-  if (password === "3333") {
-    saveConfig();
-  } else if (password !== null) {
-    const messageElement = document.getElementById("message");
-    messageElement.textContent = "❌ Sai mật khẩu!";
-    messageElement.style.color = "#d9534f";
-  }
-}
-
-  const flags = (() => {
-    const asia = ["AE","AF","AM","AZ","BD","BH","BN","BT","CY","EG","GE","HK","ID","IL","IN","IQ","IR","JO","JP","KG","KH","KP","KR","KW","KZ","LA","LB","LK","MM","MN","MO","MV","MY","NP","OM","PH","PK","PS","QA","RU","SA","SG","SY","TH","TJ","TL","TM","TR","TW","UZ","YE","VN"];
-    const all = [...new Set([
-      ...asia,
-      "AD","AG","AI","AL","AO","AR","AS","AT","AU","AW","AX","BA","BB","BE","BF","BG","BI","BJ","BL","BM","BO","BR","BS","BW","BY","BZ","CA","CD","CF","CG","CH","CI","CK","CL","CM","CN","CO","CR","CV","CW","CZ","DE","DJ","DK","DM","DO","DZ","EC","EE","ER","ES","ET","FI","FJ","FM","FO","FR","GA","GB","GD","GF","GG","GH","GI","GL","GM","GN","GP","GQ","GR","GT","GU","GW","GY","HN","HR","HT","HU","IE","IM","IS","IT","JE","JM","KE","KI","KM","KN","KY","LC","LI","LR","LS","LT","LU","LV","LY","MA","MC","MD","ME","MF","MG","MH","MK","ML","MS","MT","MU","MW","MX","MZ","NA","NC","NE","NF","NG","NI","NL","NO","NR","NU","NZ","PA","PE","PF","PG","PL","PM","PN","PR","PT","PW","PY","RE","RO","RS","RW","SB","SC","SD","SE","SH","SI","SK","SL","SM","SN","SO","SR","SS","ST","SV","SX","SZ","TC","TD","TG","TO","TT","TV","TZ","UA","UG","US","UY","VA","VC","VE","VG","VI","VU","WF","WS","YT","ZA","ZM","ZW"
-    ])];
-    const europe = all.filter(code => !asia.includes(code));
-    return { all, asia, europe };
-  })();
-
-  function getFlagEmoji(code) {
-    return code && /^[A-Z]{2}$/.test(code) ? String.fromCodePoint(...code.split('').map(c => 0x1F1E6 + c.charCodeAt(0) - 65)) : '';
-  }
-
- function selectRegion(region) {
-  const flagGroup = document.getElementById("flagGroup");
-  const buttons = document.querySelectorAll(".region-btn");
-  buttons.forEach(btn => btn.classList.remove("active"));
-  document.querySelector(`.region-btn[onclick*="${region}"]`).classList.add("active");
-
-  // Nếu đã từng chỉnh sửa vùng này thì hiển thị lại emoji đã sửa
-  if (lastEditedFlags[region] !== null) {
-  flagGroup.textContent = lastEditedFlags[region];
-} else {
-  const codes = flags[region] || flags.all;
-  flagGroup.textContent = codes.map(getFlagEmoji).join(' ');
-}
-
-  flagGroup.setAttribute("contenteditable", "true");
-  currentRegion = region;
-}
-
-  function parseFlagsToCountryCodes(flagString) {
-    const codes = [];
-    for (let i = 0; i < flagString.length; i += 2) {
-      const part = flagString.codePointAt(i);
-      const next = flagString.codePointAt(i + 1);
-      if (!next) continue;
-      const c1 = String.fromCharCode(part - 0x1F1E6 + 65);
-      const c2 = String.fromCharCode(next - 0x1F1E6 + 65);
-      if (/^[A-Z]{2}$/.test(c1 + c2)) codes.push(c1 + c2);
+  <script>
+    function getParam(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
     }
-    return codes;
-  }
 
-  function saveConfig() {
-    const region = document.querySelector(".region-btn.active")?.textContent?.trim().toLowerCase();
-    let countryCodes = [];
+    function base64Decode(encoded) {
+      return atob(encoded);
+    }
 
-    if (region === "tùy chọn" || region === "custom") {
-      const emojis = document.getElementById("flagGroup").textContent.trim();
-      countryCodes = parseFlagsToCountryCodes(emojis);
+    function getFlag(code) {
+      if (!code || code.length !== 2) return '🏳️';
+      const codePoints = [...code.toUpperCase()].map(c => 0x1F1E6 + c.charCodeAt(0) - 65);
+      return String.fromCodePoint(...codePoints);
+    }
+
+    function openTikTokLive() {
+      window.close();
+    }
+
+    const encodedData = getParam('data');
+    let params = {};
+    if (encodedData) {
+      const decodedData = base64Decode(encodedData);
+      params = JSON.parse(decodedData);
     } else {
-      countryCodes = flags[region === "châu á" ? "asia" : region === "châu âu" ? "europe" : "all"];
+      params = {
+        user: 'username',
+        box: 50,
+        divide: 50,
+        viewers: 56,
+        country: 'US',
+        end: Date.now() + 32500,
+        createAt: Date.now().toString()
+      };
     }
 
-    const payload = {
-      telegram: {
-        targetCountries: countryCodes,
-        idolIds: document.getElementById("idolIds").value.trim(),
-        SmallBox: {
-          minCoins: parseInt(document.getElementById("normalCoins").value),
-          minRate: parseFloat(parseFloat(document.getElementById("normalRate").value.replace(',', '.')).toFixed(1)),
-          minTime: parseInt(document.getElementById("normalTime").value)
-        },
-        BigBox: {
-          minCoins: parseInt(document.getElementById("potentialCoins").value),
-          minRate: parseFloat(parseFloat(document.getElementById("potentialRate").value.replace(',', '.')).toFixed(1)),
-          minTime: parseInt(document.getElementById("potentialTime").value)
+    const username = params.user;
+    const coins = parseInt(params.box, 10);
+    const viewerRewardCount = parseInt(params.divide, 10);
+    const viewers = parseInt(params.viewers, 10);
+    const countryCode = params.country;
+    const endTime = parseInt(params.end, 10);
+
+    document.getElementById('username').innerText = `@${username}`;
+    document.getElementById('coins').innerText = coins;
+    document.getElementById('viewerRewardCount').innerText = viewerRewardCount;
+    document.getElementById('viewers').innerText = viewers;
+    document.getElementById('flag').innerText = getFlag(countryCode);
+
+    function updateTimer() {
+      const now = Date.now();
+      const remainingMs = Math.max(0, endTime - now);
+      const totalSeconds = Math.floor(remainingMs / 1000);
+      const ms = Math.floor((remainingMs % 1000) / 100);
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      const countdownMsElement = document.getElementById('countdownMs');
+      const countdownFullElement = document.getElementById('countdownFull');
+
+      countdownMsElement.innerText = `${seconds}.${ms}`;
+      countdownFullElement.innerText = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+      if (remainingMs > 0) {
+        if (totalSeconds < 6) {
+          countdownMsElement.style.color = '#800020';
+        } else {
+          countdownMsElement.style.color = '#000';
+          countdownFullElement.style.color = '#000';
         }
+        requestAnimationFrame(updateTimer);
+      } else {
+        countdownMsElement.innerText = '0.0';
+        countdownFullElement.innerText = '00:00:00';
+        countdownMsElement.style.color = '#800020'; // fix: giữ màu đỏ khi reload
+        const btn = document.getElementById('actionButton');
+        btn.innerText = 'Rương này đã được mở';
+        btn.classList.add('disabled');
+        btn.classList.add('red-text');
+        btn.onclick = () => window.close();
+        setTimeout(() => {
+          window.close();
+        }, 5000);
       }
-    };
+    }
 
-    fetch("https://juicy-transparent-chocolate.glitch.me/save-config", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    })
-    .then(res => res.text())
-    .then(msg => {
-      const messageElement = document.getElementById("message");
-      messageElement.textContent = msg;
-      messageElement.style.color = msg.includes('✅') ? '#28a745' : '#d9534f';
-    })
-    .catch(err => {
-      const messageElement = document.getElementById("message");
-      messageElement.textContent = '❌ Lỗi gửi dữ liệu: ' + err.message;
-      messageElement.style.color = '#d9534f';
-    });
-  }
-
-  // Khi load trang:
-  window.addEventListener("DOMContentLoaded", () => {
-    selectRegion("all");
-    fetch("https://juicy-transparent-chocolate.glitch.me/get-config")
-      .then(res => res.json())
-      .then(config => {
-        const t = config?.telegram || {};
-        document.getElementById("normalCoins").value = t.SmallBox?.minCoins ?? 49;
-        document.getElementById("normalRate").value = (t.SmallBox?.minRate ?? 1.6).toFixed(1);
-        document.getElementById("normalTime").value = t.SmallBox?.minTime ?? 80;
-
-        document.getElementById("potentialCoins").value = t.BigBox?.minCoins ?? 500;
-        document.getElementById("potentialRate").value = (t.BigBox?.minRate ?? 1.6).toFixed(1);
-        document.getElementById("potentialTime").value = t.BigBox?.minTime ?? 120;
-
-        document.getElementById("idolIds").value = t.idolIds ?? '';
-
-if (t.targetCountries?.length) {
-  const countries = t.targetCountries;
-  const regionName = Object.keys(flags).find(key => {
-    const setA = new Set(flags[key]);
-    const setB = new Set(countries);
-    return setA.size === setB.size && [...setA].every(x => setB.has(x));
-  }) || "custom";
-
-  const emojis = countries.map(getFlagEmoji).join(' ');
-  document.getElementById("flagGroup").textContent = emojis;
-  lastEditedFlags[regionName] = emojis;
-  currentRegion = regionName;
-
-  const buttons = document.querySelectorAll(".region-btn");
-  buttons.forEach(btn => btn.classList.remove("active"));
-  document.querySelector(`.region-btn[onclick*="${regionName}"]`)?.classList.add("active");
-}  
- 
-  });
-["normalRate", "potentialRate"].forEach(id => {
-  const input = document.getElementById(id);
-  input.addEventListener("blur", () => {
-    const val = parseFloat(input.value);
-    if (!isNaN(val)) input.value = val.toFixed(1);
-  });
-});
-// ✅ Gắn sau cùng — ngoài forEach
-document.getElementById("flagGroup").addEventListener("input", () => {
-  const region = currentRegion;
-  const text = document.getElementById("flagGroup").textContent;
-  lastEditedFlags[region] = text;
-});
-  });
-function fixRateFormat() {
-  ["normalRate", "potentialRate"].forEach(id => {
-    const input = document.getElementById(id);
-    const val = parseFloat(input.value);
-    if (!isNaN(val)) input.value = val.toFixed(1);
-  });
-}
-
-function resetToDefault() {
-  // Reset số liệu
-  document.getElementById("normalCoins").value = 50;
-  document.getElementById("normalRate").value = 1.6;
-  document.getElementById("normalTime").value = 80;
-
-  document.getElementById("potentialCoins").value = 600;
-  document.getElementById("potentialRate").value = 2.0;
-  document.getElementById("potentialTime").value = 120;
-
-  fixRateFormat();
-
-  // Reset emoji mặc định cho all, asia, europe
-  ["all", "asia", "europe"].forEach(region => {
-    const emojis = flags[region].map(getFlagEmoji).join(" ");
-    lastEditedFlags[region] = emojis;
-  });
-  lastEditedFlags.custom = flags.all.map(getFlagEmoji).join(" ");
-
-  // Trở lại vùng all mặc định
-  selectRegion("all");
-
-  // Hiển thị thông báo
-  const messageElement = document.getElementById("message");
-  messageElement.textContent = "✅ Đã chọn cấu hình mặc định!";
-  messageElement.style.color = "#28a745";
-}
+   requestAnimationFrame(updateTimer);
 </script>
 
 <div id="footerContact">Telegram & Facebook: JimmyHoang68</div>
@@ -385,12 +197,11 @@ function resetToDefault() {
     color: white;
     font-size: 13px;
     padding: 10px 0;
-    background-color: #000;
     width: 100%;
     position: fixed;
     bottom: 0;
     left: 0;
-    z-index: 999;
+    z-index: 9999;
   }
 </style>
 
