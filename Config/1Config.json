@@ -255,8 +255,8 @@
   },
   "websocket": {
     "maxConnections": 1000,
-    "scanDelay": 300,
-    "batchSize": 20,
+    "scanDelay": 3000,
+    "batchSize": 10,
     "retryDelay": 5000,
     "maxRetries": 1,
     "blacklistDuration": 1800
@@ -264,7 +264,7 @@
   "api": {
     "retryDelay": 5000,
     "maxRetries": 1,
-    "requestDelay": 300
+    "requestDelay": 3000
   },
   "file": {
     "log": "./Logs/LOG_YYYY-MM-DD.log",
