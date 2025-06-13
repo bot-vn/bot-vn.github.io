@@ -256,7 +256,7 @@
   "websocket": {
     "maxConnections": 1000,
     "scanDelay": 300,
-    "batchSize": 10,
+    "batchSize": 20,
     "retryDelay": 5000,
     "maxRetries": 1,
     "blacklistDuration": 1800
