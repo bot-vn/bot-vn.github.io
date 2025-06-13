@@ -279,5 +279,5 @@
   "flags": {
     "enableTelegram": true
   },
-  "apiQuotaLimit": 1000
+  "apiQuotaLimit": 2000
 }
