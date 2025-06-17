@@ -361,13 +361,16 @@ if (isExactAll) {
 }
     });
 
-  ["normalRate", "potentialRate"].forEach(id => {
-    const input = document.getElementById(id);
-    input.addEventListener("blur", () => {
-      const val = parseFloat(input.value);
-      if (!isNaN(val)) input.value = val.toFixed(1);
-    });
+["normalRate", "potentialRate"].forEach(id => {
+  const input = document.getElementById(id);
+  input.addEventListener("blur", () => {
+    const raw = input.value.replace(',', '.');  // Cho phép nhập dấu phẩy
+    const val = parseFloat(raw);
+    if (!isNaN(val)) {
+      input.value = val.toFixed(1);  // Hiển thị đúng định dạng
+    }
   });
+});
 
   document.getElementById("flagGroup").addEventListener("input", () => {
     const region = currentRegion;
@@ -379,8 +382,11 @@ if (isExactAll) {
 function fixRateFormat() {
   ["normalRate", "potentialRate"].forEach(id => {
     const input = document.getElementById(id);
-    const val = parseFloat(input.value);
-    if (!isNaN(val)) input.value = val.toFixed(1);
+    const raw = input.value.replace(',', '.');
+    const val = parseFloat(raw);
+    if (!isNaN(val)) {
+      input.value = val.toFixed(1);
+    }
   });
 }
 
