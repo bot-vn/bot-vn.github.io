@@ -1,0 +1,47 @@
+{
+  "preferredAgents": ["rn-sjc-2-a", "rn-sjc-2-b", "rn-chi-1-a"],
+  "telegram": {
+    "proxyTimeout": 5000,
+    "targetCountries": [],
+    "maxRetries": 1,
+    "SmallBox": {
+      "minCoins": 50,
+      "minRate": 1.0,
+      "minTime": 80
+    },
+    "BigBox": {
+      "minCoins": 500,
+      "minRate": 1.0,
+      "minTime": 120
+    },
+    "minReportTime": 30,
+    "enableLiveNoBox": false
+  },
+  "websocket": {
+    "maxConnections": 5000,
+    "scanDelay": 600,
+    "batchSize": 10,
+    "retryDelay": 5000,
+    "maxRetries": 0,
+    "blacklistDuration": 1800
+  },
+  "api": {
+    "retryDelay": 600,
+    "maxRetries": 0,
+    "requestDelay": 600
+  },
+  "file": {
+    "log": "./Logs/LOG_YYYY-MM-DD.log",
+    "state": "./Data/ResumeData.json"
+  },
+  "scan": {
+    "scanSource": "file",
+    "file": {
+      "path": "./list.txt"
+    }
+  },
+  "flags": {
+    "enableTelegram": true
+  },
+  "apiQuotaLimit": 5000
+}
