@@ -8,7 +8,7 @@
     "maxRetries": 0,
     "retryDelayBase": 0,
     "SmallBox": {
-      "minCoins": 20,
+      "minCoins": 50,
       "minRate": 1.0,
       "minTime": 80
     },
@@ -17,14 +17,14 @@
       "minRate": 1.0,
       "minTime": 120
     },
-    "minReportTime": 40,
+    "minReportTime": 30,
     "enableLiveNoBox": false
   },
   "websocket": {
     "trackingInterval": 3000,
     "maxConnections": 5000,
     "scanDelay": 600,
-    "batchSize": 20,
+    "batchSize": 30,
     "retryDelay": 0,
     "maxRetries": 0,
     "blacklistDuration": 1800,
