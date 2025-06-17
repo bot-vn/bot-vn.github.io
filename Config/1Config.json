@@ -255,7 +255,7 @@
     "trackingInterval": 3000,
     "maxConnections": 9000,
     "scanDelay": 1000,
-    "batchSize": 10,
+    "batchSize": 5,
     "retryDelay": 0,
     "maxRetries": 0,
     "blacklistDuration": 1800,
@@ -279,7 +279,7 @@
   "flags": {
     "enableTelegram": true
   },
-  "apiQuotaLimit": 2000,
+  "apiQuotaLimit": 20000,
   "preferredAgents": [
     "rn-sjc-2-a",
     "rn-sjc-2-b",
