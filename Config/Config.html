@@ -347,38 +347,42 @@ if (isExactAll) {
   currentRegion = regionName;
 
   
- if (regionName === "custom") {
+if (regionName === "custom") {
   lastEditedFlags.custom = emojis;
 } else {
-  
   lastEditedFlags.custom = flags.all.map(getFlagEmoji).join(" ");
 }
 
-
-  const buttons = document.querySelectorAll(".region-btn");
-  buttons.forEach(btn => btn.classList.remove("active"));
-  document.querySelector(`.region-btn[onclick*="${regionName}"]`)?.classList.add("active");
+const buttons = document.querySelectorAll(".region-btn");
+buttons.forEach(btn => btn.classList.remove("active"));
+document.querySelector(`.region-btn[onclick*="${regionName}"]`)?.classList.add("active");
 }
-    });
+});
 
 ["normalRate", "potentialRate"].forEach(id => {
   const input = document.getElementById(id);
   input.addEventListener("blur", () => {
-    const raw = input.value.replace(',', '.');  // Cho phép nhập dấu phẩy
+    const raw = input.value.replace(',', '.');  
     const val = parseFloat(raw);
     if (!isNaN(val)) {
-      input.value = val.toFixed(1);  // Hiển thị đúng định dạng
+      input.value = val.toFixed(1);  
     }
   });
 });
 
-  document.getElementById("flagGroup").addEventListener("input", () => {
-    const region = currentRegion;
-    const text = document.getElementById("flagGroup").textContent;
-    lastEditedFlags[region] = text;
-  });
+document.getElementById("flagGroup").addEventListener("input", () => {
+  const region = currentRegion;
+  const text = document.getElementById("flagGroup").textContent;
+  lastEditedFlags[region] = text;
 });
 
+document.getElementById("flagGroup").addEventListener("blur", () => {
+  const rawText = document.getElementById("flagGroup").textContent.trim();
+  const cleanCodes = parseFlagsToCountryCodes(rawText);
+  document.getElementById("flagGroup").textContent = cleanCodes.map(getFlagEmoji).join(" ");
+  lastEditedFlags[currentRegion] = document.getElementById("flagGroup").textContent;
+});
+}); 
 function fixRateFormat() {
   ["normalRate", "potentialRate"].forEach(id => {
     const input = document.getElementById(id);
