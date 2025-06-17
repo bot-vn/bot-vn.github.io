@@ -240,7 +240,7 @@
     "retryDelayBase": 0,
     "SmallBox": {
       "minCoins": 50,
-      "minRate": 4,
+      "minRate": 2,
       "minTime": 80
     },
     "BigBox": {
