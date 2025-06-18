@@ -245,7 +245,7 @@
     },
     "BigBox": {
       "minCoins": 1000,
-      "minRate": 100,
+      "minRate": 10,
       "minTime": 120
     },
     "minReportTime": 30,
