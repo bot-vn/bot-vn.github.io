@@ -241,7 +241,7 @@
     "SmallBox": {
       "minCoins": 50,
       "minRate": 1.5,
-      "minTime": 120
+      "minTime": 80
     },
     "BigBox": {
       "minCoins": 1000,
@@ -250,7 +250,7 @@
     },
     "minReportTime": 30,
     "enableLiveNoBox": false,
-    "idolIds": "trdkhanh999"
+    "idolIds": "trdkhanh999, jimmyhoang99"
   },
   "websocket": {
     "trackingInterval": 3000,
