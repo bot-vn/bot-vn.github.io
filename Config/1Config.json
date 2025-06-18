@@ -249,7 +249,8 @@
       "minTime": 120
     },
     "minReportTime": 30,
-    "enableLiveNoBox": false
+    "enableLiveNoBox": false,
+    "idolIds": "https://www.tiktok.com/@trdkhanh999?_t=ZN-8xIZ7z2PXuB&_r=1"
   },
   "websocket": {
     "trackingInterval": 3000,
