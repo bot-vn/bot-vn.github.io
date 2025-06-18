@@ -239,13 +239,13 @@
     "maxRetries": 0,
     "retryDelayBase": 0,
     "SmallBox": {
-      "minCoins": 50,
+      "minCoins": 100,
       "minRate": 2,
       "minTime": 80
     },
     "BigBox": {
       "minCoins": 1000,
-      "minRate": 1,
+      "minRate": 6,
       "minTime": 120
     },
     "minReportTime": 30,
