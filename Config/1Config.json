@@ -255,8 +255,8 @@
   "websocket": {
     "trackingInterval": 3000,
     "maxConnections": 9000,
-    "scanDelay": 3000,
-    "batchSize": 5,
+    "scanDelay": 1000,
+    "batchSize": 10,
     "retryDelay": 0,
     "maxRetries": 0,
     "blacklistDuration": 1800,
@@ -280,7 +280,7 @@
   "flags": {
     "enableTelegram": true
   },
-  "apiQuotaLimit": 20000,
+  "apiQuotaLimit": 2000,
   "preferredAgents": [
     "rn-sjc-2-a",
     "rn-sjc-2-b",
