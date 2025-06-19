@@ -266,28 +266,22 @@ function parseFlagsToCountryCodes(flagString) {
     }
   }
 
-  return codes;
-}
-function saveConfig() {
-  const emojis = document.getElementById("flagGroup").textContent.trim();
-  const countryCodes = parseFlagsToCountryCodes(emojis);
-
-  const payload = {
-    telegram: {
-      targetCountries: countryCodes,
-      idolIds: document.getElementById("idolIds").value.trim(),
-     SmallBox: {
-  minCoins: parseInt(document.getElementById("normalCoins").value),
-  minRate: +(Number(document.getElementById("normalRate").value.replace(',', '.')).toFixed(1)),
-  minTime: parseInt(document.getElementById("normalTime").value)
-},
-BigBox: {
-  minCoins: parseInt(document.getElementById("potentialCoins").value),
-  minRate: +(Number(document.getElementById("potentialRate").value.replace(',', '.')).toFixed(1)),
-  minTime: parseInt(document.getElementById("potentialTime").value)
-}
+const payload = {
+  telegram: {
+    idolIds: document.getElementById("idolIds").value.trim(),
+    SmallBox: {
+      minCoins: parseInt(document.getElementById("normalCoins").value),
+      minRate: +(Number(document.getElementById("normalRate").value.replace(',', '.')).toFixed(1)),
+      minTime: parseInt(document.getElementById("normalTime").value)
+    },
+    BigBox: {
+      minCoins: parseInt(document.getElementById("potentialCoins").value),
+      minRate: +(Number(document.getElementById("potentialRate").value.replace(',', '.')).toFixed(1)),
+      minTime: parseInt(document.getElementById("potentialTime").value)
     }
-  };
+  },
+  targetCountries: countryCodes  
+};
 
   fetch("https://juicy-transparent-chocolate.glitch.me/save-config", {
     method: "POST",
@@ -323,8 +317,8 @@ window.addEventListener("DOMContentLoaded", () => {
       document.getElementById("idolIds").value = t.idolIds ?? '';
 fetchDone = true;
 
-    if (t.targetCountries?.length) {
-  const countries = t.targetCountries;
+   if (config.targetCountries?.length) {
+  const countries = config.targetCountries;
 
 let regionName = "custom";
 
@@ -395,11 +389,11 @@ function fixRateFormat() {
 }
 
 function resetToDefault() {
-  document.getElementById("normalCoins").value = 50;
-  document.getElementById("normalRate").value = 1.6;
+  document.getElementById("normalCoins").value = 20;
+  document.getElementById("normalRate").value = 1.5;
   document.getElementById("normalTime").value = 80;
-  document.getElementById("potentialCoins").value = 600;
-  document.getElementById("potentialRate").value = 2.0;
+  document.getElementById("potentialCoins").value = 800;
+  document.getElementById("potentialRate").value = 1.0;
   document.getElementById("potentialTime").value = 120;
 
   fixRateFormat();
