@@ -50,7 +50,7 @@
   "flags": {
     "enableTelegram": true
   },
-  "apiQuotaLimit": 2000,
+  "apiQuotaLimit": 1000,
   "preferredAgents": [
     "rn-sjc-2-a",
     "rn-sjc-2-b",
