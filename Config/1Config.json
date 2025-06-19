@@ -7,7 +7,7 @@
     "maxRetries": 0,
     "retryDelayBase": 0,
     "SmallBox": {
-      "minCoins": 50,
+      "minCoins": 20,
       "minRate": 1.5,
       "minTime": 80
     },
