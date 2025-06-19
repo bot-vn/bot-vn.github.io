@@ -22,9 +22,9 @@
   },
   "websocket": {
     "trackingInterval": 3000,
-    "maxConnections": 6000,
+    "maxConnections": 3000,
     "scanDelay": 1000,
-    "batchSize": 30,
+    "batchSize": 20,
     "retryDelay": 0,
     "maxRetries": 0,
     "blacklistDuration": 1800,
