@@ -1,6 +1,6 @@
 {
   "bot": {
-    "reloadInterval": 30000
+    "reloadInterval": 10000
   },
   "telegram": {
     "proxyTimeout": 5000,
