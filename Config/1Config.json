@@ -23,7 +23,7 @@
   "websocket": {
     "trackingInterval": 3000,
     "maxConnections": 2000,
-    "scanDelay": 6000,
+    "scanDelay": 4000,
     "batchSize": 10,
     "retryDelay": 0,
     "maxRetries": 0,
