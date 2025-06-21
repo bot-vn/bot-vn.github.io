@@ -7,7 +7,7 @@
     "maxRetries": 0,
     "retryDelayBase": 0,
     "SmallBox": {
-      "minCoins": 50,
+      "minCoins": 30,
       "minRate": 1.5,
       "minTime": 80
     },
@@ -24,7 +24,7 @@
     "trackingInterval": 3000,
     "maxConnections": 2000,
     "scanDelay": 6000,
-    "batchSize": 30,
+    "batchSize": 5,
     "retryDelay": 0,
     "maxRetries": 0,
     "blacklistDuration": 1800,
