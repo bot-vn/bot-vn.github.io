@@ -24,7 +24,7 @@
     "trackingInterval": 3000,
     "maxConnections": 2000,
     "scanDelay": 8000,
-    "batchSize": 10,
+    "batchSize": 5,
     "retryDelay": 0,
     "maxRetries": 0,
     "blacklistDuration": 1800,
