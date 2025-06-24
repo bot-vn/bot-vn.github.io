@@ -25,13 +25,15 @@
     "trackingInterval": 1000,
     "maxConnections": 5000,
     
-    "scanDelay": 3000,
+    "scanDelay": 10000,
     "batchSize": 10,
     
-    "retryDelay": 5000,
+    "retryDelay": 0,
     "maxRetries": 0,
     "blacklistDuration": 3600,
-    "wsThreshold": 0.8
+    "wsThreshold": 0.8,
+    "maxEnvelopes": 5000,
+    "maxLoggedMessages": 1000
   },
   "file": {
     "state": "./Data/ResumeData.json"
