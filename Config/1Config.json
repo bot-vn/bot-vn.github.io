@@ -25,10 +25,10 @@
     "trackingInterval": 1000,
     "maxConnections": 5000,
     
-    "scanDelay": 1000,
+    "scanDelay": 500,
     "batchSize": 20,
     
-    "retryDelay": 0,
+    "retryDelay": 10000,
     "maxRetries": 0,
     "blacklistDuration": 3600,
     "wsThreshold": 0.8,
