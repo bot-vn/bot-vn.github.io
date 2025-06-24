@@ -1,12 +1,13 @@
 {
   "bot": {
-    "reloadInterval": 10000
+    "reloadInterval": 10000,
+    "sendStartupMessage": false
   },
   "telegram": {
     "proxyTimeout": 5000,
     "maxRetries": 0,
     "retryDelayBase": 0,
-
+    
     "SmallBox": {
       "minCoins": 30,
       "minRate": 1.5,
@@ -23,8 +24,10 @@
   "websocket": {
     "trackingInterval": 1000,
     "maxConnections": 5000,
+    
     "scanDelay": 1000,
     "batchSize": 20,
+    
     "retryDelay": 0,
     "maxRetries": 0,
     "blacklistDuration": 3600,
