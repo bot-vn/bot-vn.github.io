@@ -28,7 +28,7 @@
     "scanDelay": 10000,
     "batchSize": 10,
     
-    "retryDelay": 0,
+    "retryDelay": 5000,
     "maxRetries": 0,
     "blacklistDuration": 3600,
     "wsThreshold": 0.8
