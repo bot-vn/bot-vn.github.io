@@ -27,7 +27,7 @@
     "batchSize": 5,
     "retryDelay": 0,
     "maxRetries": 0,
-    "blacklistDuration": 1800,
+    "blacklistDuration": 3600,
     "wsThreshold": 0.8
   },
   "file": {
