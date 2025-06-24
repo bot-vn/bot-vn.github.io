@@ -10,9 +10,9 @@
         "max": 120
       },
       "regular": {
-        "short": 60,
-        "long": 120,
-        "max": 180
+        "short": 40,
+        "long": 80,
+        "max": 160
       },
       "RecentOnline": 240,
       "DayOff": 2
