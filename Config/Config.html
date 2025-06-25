@@ -201,13 +201,28 @@ let lastEditedFlags = {
 
 function confirmPasswordAndSave() {
   const password = prompt("🔒 Nhập mật khẩu để lưu cấu hình:");
-  if (password === "3333") {
-    saveConfig();
-  } else if (password !== null) {
+  if (!password) return;
+
+  fetch("https://juicy-transparent-chocolate.glitch.me/check-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ password })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      saveConfig();
+    } else {
+      const messageElement = document.getElementById("message");
+      messageElement.textContent = "❌ Sai mật khẩu!";
+      messageElement.style.color = "#d9534f";
+    }
+  })
+  .catch(err => {
     const messageElement = document.getElementById("message");
-    messageElement.textContent = "❌ Sai mật khẩu!";
+    messageElement.textContent = "❌ Lỗi xác thực: " + err.message;
     messageElement.style.color = "#d9534f";
-  }
+  });
 }
 
 const flags = (() => {
@@ -230,26 +245,26 @@ function selectRegion(region) {
   buttons.forEach(btn => btn.classList.remove("active"));
   document.querySelector(`.region-btn[onclick*="${region}"]`).classList.add("active");
 
-  // Luôn reset emoji từ flags khi chọn vùng mới
-  let emojis;
-if (region === "custom") {
-  emojis = lastEditedFlags.custom || "";
-} else {
- const codes = flags[region] || flags.all;
-  if (!lastEditedFlags[region]) {
-    lastEditedFlags[region] = codes.map(getFlagEmoji).join(" ");
-  }
-  emojis = lastEditedFlags[region];
-}
 
-flagGroup.textContent = emojis;
+  let emojis;
+  if (region === "custom") {
+    emojis = lastEditedFlags.custom || "";
+  } else {
+    const codes = flags[region] || flags.all;
+    if (!lastEditedFlags[region]) {
+      lastEditedFlags[region] = codes.map(getFlagEmoji).join(" ");
+    }
+    emojis = lastEditedFlags[region];
+  }
+
+  flagGroup.textContent = emojis;
   flagGroup.setAttribute("contenteditable", "true");
   currentRegion = region;
 }
 
 function parseFlagsToCountryCodes(flagString) {
   const codes = [];
-  const chars = [...flagString]; // Quan trọng: spread để xử lý từng emoji
+  const chars = [...flagString]; 
 
   for (let i = 0; i < chars.length; i++) {
     const c1 = chars[i].codePointAt(0);
@@ -257,7 +272,7 @@ function parseFlagsToCountryCodes(flagString) {
 
     if (!c1 || !c2) continue;
 
-    // Kiểm tra nếu cả 2 ký tự đều là Regional Indicator (emoji quốc kỳ)
+  
     if (0x1F1E6 <= c1 && c1 <= 0x1F1FF && 0x1F1E6 <= c2 && c2 <= 0x1F1FF) {
       const iso1 = String.fromCharCode(c1 - 0x1F1E6 + 65);
       const iso2 = String.fromCharCode(c2 - 0x1F1E6 + 65);
@@ -266,22 +281,29 @@ function parseFlagsToCountryCodes(flagString) {
     }
   }
 
-const payload = {
-  telegram: {
-    idolIds: document.getElementById("idolIds").value.trim(),
-    SmallBox: {
-      minCoins: parseInt(document.getElementById("normalCoins").value),
-      minRate: +(Number(document.getElementById("normalRate").value.replace(',', '.')).toFixed(1)),
-      minTime: parseInt(document.getElementById("normalTime").value)
+  return codes;
+}
+
+function saveConfig() {
+  const flagString = document.getElementById("flagGroup").textContent.trim();
+  const countryCodes = parseFlagsToCountryCodes(flagString);
+
+  const payload = {
+    telegram: {
+      idolIds: document.getElementById("idolIds").value.trim(),
+      SmallBox: {
+        minCoins: parseInt(document.getElementById("normalCoins").value),
+        minRate: +(Number(document.getElementById("normalRate").value.replace(',', '.')).toFixed(1)),
+        minTime: parseInt(document.getElementById("normalTime").value)
+      },
+      BigBox: {
+        minCoins: parseInt(document.getElementById("potentialCoins").value),
+        minRate: +(Number(document.getElementById("potentialRate").value.replace(',', '.')).toFixed(1)),
+        minTime: parseInt(document.getElementById("potentialTime").value)
+      }
     },
-    BigBox: {
-      minCoins: parseInt(document.getElementById("potentialCoins").value),
-      minRate: +(Number(document.getElementById("potentialRate").value.replace(',', '.')).toFixed(1)),
-      minTime: parseInt(document.getElementById("potentialTime").value)
-    }
-  },
-  targetCountries: countryCodes  
-};
+    targetCountries: countryCodes  
+  };
 
   fetch("https://juicy-transparent-chocolate.glitch.me/save-config", {
     method: "POST",
