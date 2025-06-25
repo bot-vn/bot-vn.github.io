@@ -1,6 +1,6 @@
 {
   "bot": {
-    "sendStartupMessage": false,
+    "sendStartupMessage": true,
     "apiCheckInterval": 1800000,
     "webhookPollingInterval": 10000,
     "userCheckInterval": {
