@@ -22,7 +22,6 @@
     "proxyTimeout": 5000,
     "maxRetries": 0,
     "retryDelayBase": 0,
-    
     "SmallBox": {
       "minCoins": 30,
       "minRate": 1.5,
@@ -39,10 +38,8 @@
   "websocket": {
     "trackingInterval": 1000,
     "maxConnections": 5000,
-    
     "scanDelay": 6000,
     "batchSize": 10,
-    
     "retryDelay": 10000,
     "maxRetries": 1,
     "maxLoggedMessages": 1000,
@@ -281,6 +278,19 @@
     "TZ",
     "UA",
     "UG",
-    "US"
+    "US",
+    "UY",
+    "VA",
+    "VC",
+    "VE",
+    "VG",
+    "VI",
+    "VU",
+    "WF",
+    "WS",
+    "YT",
+    "ZA",
+    "ZM",
+    "ZW"
   ]
 }
