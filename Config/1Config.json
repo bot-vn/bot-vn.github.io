@@ -41,7 +41,7 @@
     "maxConnections": 5000,
     
     "scanDelay": 6000,
-    "batchSize": 10,
+    "batchSize": 5,
     
     "retryDelay": 10000,
     "maxRetries": 1,
