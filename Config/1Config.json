@@ -40,7 +40,7 @@
     "trackingInterval": 1000,
     "maxConnections": 5000,
     
-    "scanDelay": 1000,
+    "scanDelay": 10,
     "batchSize": 20,
     
     "retryDelay": 10000,
