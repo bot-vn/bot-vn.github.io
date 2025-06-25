@@ -5,14 +5,14 @@
     "webhookPollingInterval": 10000,
     "userCheckInterval": {
       "vip": {
-        "short": 30,
+        "short": 15,
         "long": 60,
         "max": 120
       },
       "regular": {
-        "short": 60,
-        "long": 90,
-        "max": 180
+        "short": 30,
+        "long": 60,
+        "max": 120
       },
       "RecentOnline": 240,
       "DayOff": 2
