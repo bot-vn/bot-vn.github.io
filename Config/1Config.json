@@ -26,7 +26,7 @@
     "trackingInterval": 1000,
     "maxConnections": 5000,
     
-    "scanDelay": 1000,
+    "scanDelay": 1500,
     "batchSize": 20,
     "vipRatio": 0.3,
     "regularRatio": 0.7,
