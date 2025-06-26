@@ -27,7 +27,7 @@
     "maxConnections": 5000,
     
     "scanDelay": 1000,
-    "batchSize": 40,
+    "batchSize": 10,
     
     "vipRatio": 0.2,
     "regularRatio": 0.5,
