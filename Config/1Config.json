@@ -30,8 +30,8 @@
     "batchSize": 40,
     
     "vipRatio": 0.3,
-    "regularRatio": 0.6,
-    "newRatio": 0.1,
+    "regularRatio": 0.5,
+    "newRatio": 0.2,
     
     "retryDelay": 10000,
     "maxRetries": 0,
