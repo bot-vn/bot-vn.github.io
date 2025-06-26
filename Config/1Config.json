@@ -29,8 +29,8 @@
     "scanDelay": 4000,
     "batchSize": 10,
     
-    "vipRatio": 0.3,
-    "regularRatio": 0.5,
+    "vipRatio": 0.4,
+    "regularRatio": 0.4,
     "newRatio": 0.2,
     
     "retryDelay": 10000,
