@@ -19,7 +19,7 @@
   },
   "websocket": {
     "bot1": {
-      "scanDelay": 1000,
+      "scanDelay": 3000,
       "batchSize": 10,
       "maxRounds": 0,
       "restartAfterHours": 0
