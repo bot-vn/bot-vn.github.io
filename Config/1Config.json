@@ -19,19 +19,19 @@
   },
   "websocket": {
     "bot1": {
-      "scanDelay": 3000,
+      "scanDelay": 5000,
       "batchSize": 5,
       "maxRounds": 0,
       "restartAfterHours": 0
     },
     "bot2": {
-      "scanDelay": 3000,
+      "scanDelay": 5000,
       "batchSize": 5,
       "maxRounds": 0,
       "restartAfterHours": 0
     },
     "bot3": {
-      "scanDelay": 3000,
+      "scanDelay": 5000,
       "batchSize": 5,
       "maxRounds": 0,
       "restartAfterHours": 0
