@@ -1,13 +1,9 @@
 {
   "bot": {
     "sendStartupMessage": false,
-    "apiCheckInterval": 1800000,
     "webhookPollingInterval": 10000
   },
   "telegram": {
-    "proxyTimeout": 5000,
-    "maxRetries": 0,
-    "retryDelayBase": 0,
     "SmallBox": {
       "minCoins": 40,
       "minRate": 1.1,
@@ -40,7 +36,6 @@
     "regularListPath": "./Data/2UserList.txt",
     "newListPath": "./Data/3NewList.txt"
   },
-  "apiQuotaLimit": 1000,
   "preferredAgents": [
     "rn-chi-1-a",
     "rn-chi-1-b",
