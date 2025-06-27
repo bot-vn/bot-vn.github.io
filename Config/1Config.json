@@ -22,18 +22,18 @@
     "enableScanning": true,
     "bot1": {
       "batchSize": 10,
-      "maxRounds": 4,
+      "maxRounds": 2,
       "restartAfterHours": 0.5
     },
     "bot2": {
       "batchSize": 10,
-      "maxRounds": 4,
+      "maxRounds": 2,
       "restartAfterHours": 1
     },
     "bot3": {
       "batchSize": 10,
       "maxRounds": 2,
-      "restartAfterHours": 1
+      "restartAfterHours": 2
     },
     "trackingInterval": 1000,
     "maxLoggedMessages": 1000,
