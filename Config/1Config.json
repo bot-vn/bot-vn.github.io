@@ -19,7 +19,7 @@
   },
   "websocket": {
     "trackingInterval": 1000,
-    "scanDelay": 15000,
+    "scanDelay": 1000,
     "batchSize": 10,
     "vipRatio": 0.3,
     "regularRatio": 0.6,
