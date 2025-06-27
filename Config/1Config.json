@@ -18,7 +18,7 @@
     "idolIds": "trdkhanh999, jimmyhoang99"
   },
   "websocket": {
-    "scanDelay": 6000,
+    "scanDelay": 10000,
     "bot1": {
       "batchSize": 10,
       "maxRounds": 4,
