@@ -18,28 +18,26 @@
     "idolIds": "trdkhanh999, jimmyhoang99"
   },
   "websocket": {
+    "scanDelay": 1000,
     "bot1": {
-      "scanDelay": 1000,
       "batchSize": 10,
-      "maxRounds": 0,
-      "restartAfterHours": 0
+      "maxRounds": 4,
+      "restartAfterHours": 0.5
     },
     "bot2": {
-      "scanDelay": 1000,
-      "batchSize": 15,
-      "maxRounds": 0,
-      "restartAfterHours": 0
+      "batchSize": 10,
+      "maxRounds": 4,
+      "restartAfterHours": 1
     },
     "bot3": {
-      "scanDelay": 1000,
-      "batchSize": 5,
-      "maxRounds": 0,
-      "restartAfterHours": 0
+      "batchSize": 10,
+      "maxRounds": 2,
+      "restartAfterHours": 1
     },
     "trackingInterval": 1000,
     "maxLoggedMessages": 1000,
-    "maxRamThreshold": 1,
-    "resumeRamThreshold": 0.95,
+    "maxRamThreshold": 0.9,
+    "resumeRamThreshold": 0.85,
     "pauseDurationMS": 60000,
     "disconnectDelay": 10000
   },
@@ -58,6 +56,6 @@
     "rn-sjc-2-b"
   ],
   "targetCountries": [
-    "AE", "AF", "AM", "AZ", "BD", "BH", "BN", "BT", "CY", "EG", "GE", "HK", "ID", "IL", "IN", "IQ", "IR", "JO", "JP", "KG", "KH", "KP", "KR", "KW", "KZ", "LA", "LB", "LK", "MM", "MN", "MO", "MV", "MY", "NP", "OM", "PH", "PK", "PS", "QA", "RU", "SA", "SG", "SY", "TH", "TJ", "TL", "TM", "TR", "TW", "UZ", "YE", "VN", "AD", "AG", "AI", "AL", "AO", "AR", "AS", "AT", "AU", "AW", "AX", "BA", "BB", "BE", "BF", "BG", "BI", "BJ", "BL", "BM", "BO", "BR", "BS", "BW", "BY", "BZ", "CA", "CD", "CF", "CG", "CH", "CI", "CK", "CL", "CM", "CN", "CO", "CR", "CV", "CW", "CZ", "DE", "DJ", "DK", "DM", "DO", "DZ", "EC", "EE", "ER", "ES", "ET", "FI", "FJ", "FM", "FO", "FR", "GA", "GB", "GD", "GF", "GG", "GH", "GI", "GL", "GM", "GN", "GP", "GQ", "GR", "GT", "GU", "GW", "GY", "HN", "HR", "HT", "HU", "IE", "IM", "IS", "IT", "JE", "JM", "KE", "KI", "KM", "KN", "KY", "LC", "LI", "LR", "LS", "LT", "LU", "LV", "LY", "MA", "MC", "MD", "ME", "MF", "MG", "MH", "MK", "ML", "MS", "MT", "MU", "MW", "MX", "MZ", "NA", "NC", "NE", "NF", "NG", "NI", "NL", "NO", "NR", "NU", "NZ", "PA", "PE", "PF", "PG", "PL", "PM", "PN", "PR", "PT", "PW", "PY", "RE", "RO", "RS", "RW", "SB", "SC", "SD", "SE", "SH", "SI", "SK", "SL", "SM", "SN", "SO", "SR", "SS", "ST", "SV", "SX", "SZ", "TC", "TD", "TG", "TO", "TT", "TV", "TZ", "UA", "UG", "US", "UY", "VA", "VC", "VE", "VG", "VI", "VU", "WF", "WS", "YT", "ZA", "ZM", "ZW"
+    "AE","AF","AM","AZ","BD","BH","BN","BT","CY","EG","GE","HK","ID","IL","IN","IQ","IR","JO","JP","KG","KH","KP","KR","KW","KZ","LA","LB","LK","MM","MN","MO","MV","MY","NP","OM","PH","PK","PS","QA","RU","SA","SG","SY","TH","TJ","TL","TM","TR","TW","UZ","YE","VN","AD","AG","AI","AL","AO","AR","AS","AT","AU","AW","AX","BA","BB","BE","BF","BG","BI","BJ","BL","BM","BO","BR","BS","BW","BY","BZ","CA","CD","CF","CG","CH","CI","CK","CL","CM","CN","CO","CR","CV","CW","CZ","DE","DJ","DK","DM","DO","DZ","EC","EE","ER","ES","ET","FI","FJ","FM","FO","FR","GA","GB","GD","GF","GG","GH","GI","GL","GM","GN","GP","GQ","GR","GT","GU","GW","GY","HN","HR","HT","HU","IE","IM","IS","IT","JE","JM","KE","KI","KM","KN","KY","LC","LI","LR","LS","LT","LU","LV","LY","MA","MC","MD","ME","MF","MG","MH","MK","ML","MS","MT","MU","MW","MX","MZ","NA","NC","NE","NF","NG","NI","NL","NO","NR","NU","NZ","PA","PE","PF","PG","PL","PM","PN","PR","PT","PW","PY","RE","RO","RS","RW","SB","SC","SD","SE","SH","SI","SK","SL","SM","SN","SO","SR","SS","ST","SV","SX","SZ","TC","TD","TG","TO","TT","TV","TZ","UA","UG","US","UY","VA","VC","VE","VG","VI","VU","WF","WS","YT","ZA","ZM","ZW"
   ]
 }
