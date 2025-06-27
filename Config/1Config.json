@@ -18,10 +18,10 @@
     "idolIds": "trdkhanh999, jimmyhoang99"
   },
   "websocket": {
-    "scanDelay": 500,
+    "scanDelay": 3000,
     "enableScanning": true,
     "bot1": {
-      "batchSize": 2,
+      "batchSize": 20,
       "maxRounds": 2,
       "restartAfterHours": 0.5
     },
