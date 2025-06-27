@@ -18,13 +18,19 @@
     "idolIds": "trdkhanh999, jimmyhoang99"
   },
   "websocket": {
-    "scanDelay": 1000,
-    "batchSize": 10,
-    
-    "vipRatio": 0.3,
-    "regularRatio": 0.6,
-    "newRatio": 0.1,
-    
+    "bot1": {
+      "scanDelay": 1000,
+      "batchSize": 10
+    },
+    "bot2": {
+      "scanDelay": 1000,
+      "batchSize": 10
+    },
+    "bot3": {
+      "scanDelay": 1000,
+      "batchSize": 10
+    },
+    "trackingInterval": 1000,
     "maxLoggedMessages": 1000,
     "maxRamThreshold": 1,
     "resumeRamThreshold": 0.95,
