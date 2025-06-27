@@ -19,15 +19,15 @@
   },
   "websocket": {
     "bot1": {
-      "scanDelay": 2000,
+      "scanDelay": 1000,
       "batchSize": 10
     },
     "bot2": {
-      "scanDelay": 2000,
+      "scanDelay": 1000,
       "batchSize": 10
     },
     "bot3": {
-      "scanDelay": 2000,
+      "scanDelay": 1000,
       "batchSize": 10
     },
     "trackingInterval": 1000,
