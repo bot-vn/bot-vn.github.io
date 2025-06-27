@@ -21,12 +21,12 @@
     "scanDelay": 3000,
     "enableScanning": true,
     "bot1": {
-      "batchSize": 2,
+      "batchSize": 1,
       "maxRounds": 2,
       "restartAfterHours": 0.5
     },
     "bot2": {
-      "batchSize": 5,
+      "batchSize": 1,
       "maxRounds": 2,
       "restartAfterHours": 1
     },
