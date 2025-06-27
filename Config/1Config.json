@@ -33,7 +33,7 @@
     "bot3": {
       "batchSize": 10,
       "maxRounds": 2,
-      "restartAfterHours": 2
+      "restartAfterHours": 1
     },
     "trackingInterval": 1000,
     "maxLoggedMessages": 1000,
