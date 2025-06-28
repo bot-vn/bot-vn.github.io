@@ -47,7 +47,7 @@
     "disconnectDelay": 10000,
     "maxEnvelopes": 10000,
     "logInterval": 10000,
-    "logIntervalOffset": 1000
+    "logIntervalOffset": 500
   },
   "file": {
     "state": "./Data/ResumeData.json",
