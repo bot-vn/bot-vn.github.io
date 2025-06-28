@@ -36,7 +36,7 @@
        },
        "Bot_3": {
          "batchSize": 10,
-         "maxRounds": 0,
+         "maxRounds": 4,
          "restartAfterHours": 0
        },
        "trackingInterval": 1000,
