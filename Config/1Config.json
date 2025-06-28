@@ -40,9 +40,9 @@
          "restartAfterHours": 0
        },
        "trackingInterval": 1000,
-       "maxLoggedMessages": 1000,
-       "maxRamThreshold": 0.9,
-       "resumeRamThreshold": 0.85,
+       "maxLoggedMessages": 2000,
+       "maxRamThreshold": 1,
+       "resumeRamThreshold": 0.95,
        "pauseDurationMS": 60000,
        "disconnectDelay": 10000,
        "maxEnvelopes": 10000,
