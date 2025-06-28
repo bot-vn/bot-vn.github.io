@@ -30,7 +30,7 @@
       "restartAfterHours": 0
     },
     "Bot_2": {
-      "batchSize": 1,
+      "batchSize": 20,
       "maxRounds": 0,
       "restartAfterHours": 0
     },
