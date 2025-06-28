@@ -10,7 +10,7 @@
   "telegram": {
     "SmallBox": {
       "minCoins": 40,
-      "minRate": 1.9,
+      "minRate": 1.0,
       "minTime": 81
     },
     "BigBox": {
