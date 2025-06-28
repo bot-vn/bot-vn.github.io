@@ -9,7 +9,7 @@
   },
   "telegram": {
     "SmallBox": {
-      "minCoins": 40,
+      "minCoins": 20,
       "minRate": 1.0,
       "minTime": 81
     },
