@@ -36,8 +36,8 @@
     },
     "Bot_3": {
       "batchSize": 5,
-      "maxRounds": 0,
-      "restartAfterHours": 0
+      "maxRounds": 2,
+      "restartAfterHours": 0.5
     },
     "trackingInterval": 1000,
     "maxLoggedMessages": 2000,
