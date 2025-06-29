@@ -27,7 +27,7 @@
     "Bot_1": {
       "batchSize": 3,
       "maxRounds": 0,
-      "restartAfterHours": 0
+      "restartAfterHours": 0.5
     },
     "Bot_2": {
       "batchSize": 5,
