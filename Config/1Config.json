@@ -30,13 +30,13 @@
       "restartAfterHours": 0
     },
     "Bot_2": {
-      "batchSize": 30,
+      "batchSize": 15,
       "maxRounds": 0,
       "restartAfterHours": 0
     },
     "Bot_3": {
-      "batchSize": 1,
-      "maxRounds": 1,
+      "batchSize": 15,
+      "maxRounds": 0,
       "restartAfterHours": 0.5
     },
     "trackingInterval": 1000,
