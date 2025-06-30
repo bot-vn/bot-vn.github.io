@@ -9,8 +9,8 @@
   },
   "telegram": {
     "SmallBox": {
-      "minCoins": 1,
-      "minRate": 1,
+      "minCoins": 30,
+      "minRate": 1.5,
       "minTime": 81
     },
     "BigBox": {
@@ -22,12 +22,12 @@
     "idolIds": "trdkhanh999, jimmyhoang99"
   },
   "websocket": {
-    "scanDelay": 5000,
+    "scanDelay": 1000,
     "enableScanning": true,
     "Bot_1": {
-      "batchSize": 1,
+      "batchSize": 10,
       "maxRounds": 0,
-      "restartAfterHours": 0.5
+      "restartAfterHours": 0
     },
     "Bot_2": {
       "batchSize": 10,
@@ -35,9 +35,9 @@
       "restartAfterHours": 0
     },
     "Bot_3": {
-      "batchSize": 1,
-      "maxRounds": 1,
-      "restartAfterHours": 0.5
+      "batchSize": 10,
+      "maxRounds": 0,
+      "restartAfterHours": 0
     },
     "trackingInterval": 1000,
     "maxLoggedMessages": 2000,
