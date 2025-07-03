@@ -25,7 +25,7 @@
     "scanDelay": 1000,
     "enableScanning": true,
     "Bot_1": {
-      "batchSize": 3,
+      "batchSize": 5,
       "maxRounds": 0,
       "restartAfterHours": 0
     },
@@ -35,7 +35,7 @@
       "restartAfterHours": 0
     },
     "Bot_3": {
-      "batchSize": 1,
+      "batchSize": 2,
       "maxRounds": 0,
       "restartAfterHours": 0
     },
