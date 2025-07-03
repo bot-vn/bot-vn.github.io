@@ -48,7 +48,7 @@
     "maxEnvelopes": 10000,
     "logInterval": 10000,
     "logIntervalOffset": 500,
-    "decodeProtobuf": true
+    "decodeProtobuf": false
   },
   "file": {
     "state": "./Data/ResumeData.json",
