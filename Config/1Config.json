@@ -22,7 +22,7 @@
     "idolIds": "trdkhanh999, jimmyhoang99"
   },
   "websocket": {
-    "scanDelay": 9000,
+    "scanDelay": 1000,
     "enableScanning": true,
     "Bot_1": {
       "batchSize": 2,
@@ -48,7 +48,7 @@
     "maxEnvelopes": 10000,
     "logInterval": 10000,
     "logIntervalOffset": 500,
-    "decodeProtobuf": true
+    "decodeProtobuf": false
   },
   "file": {
     "state": "./Data/ResumeData.json",
