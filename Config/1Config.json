@@ -1,6 +1,6 @@
 {
   "bot": {
-    "sendStartupMessage": false,
+    "sendStartupMessage": true,
     "webhookPollingInterval": 10000,
     "restartCodeAll": 0,
     "restartCodeBot1": 0,
