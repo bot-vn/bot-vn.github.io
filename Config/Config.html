@@ -203,7 +203,7 @@ function confirmPasswordAndSave() {
   const password = prompt("🔒 Nhập mật khẩu để lưu cấu hình:");
   if (!password) return;
 
-  fetch("https://juicy-transparent-chocolate.glitch.me/check-password", {
+  fetch("https://api-config.onrender.com/check-password", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ password })
@@ -305,7 +305,7 @@ function saveConfig() {
     targetCountries: countryCodes  
   };
 
-  fetch("https://juicy-transparent-chocolate.glitch.me/save-config", {
+  fetch("https://api-config.onrender.com/save-config", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
@@ -324,7 +324,7 @@ function saveConfig() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  fetch("https://juicy-transparent-chocolate.glitch.me/get-config")
+  fetch("https://api-config.onrender.com/get-config")
     .then(res => res.json())
     .then(config => {
       const t = config?.telegram || {};
