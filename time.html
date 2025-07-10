@@ -140,7 +140,8 @@
     const viewerRewardCount = parseInt(params.divide, 10);
     const viewers = parseInt(params.viewers, 10);
     const countryCode = params.country;
-    const endTime = parseInt(params.end, 10); // giữ nguyên endTime cố định
+    const endTime = parseInt(params.end, 10);
+    let stopped = false;
 
     document.getElementById('username').innerText = `@${username}`;
     document.getElementById('coins').innerText = coins;
@@ -149,11 +150,12 @@
     document.getElementById('flag').innerText = getFlag(countryCode);
 
     function updateTimer() {
+      if (stopped) return;
+
       const now = Date.now();
       const remainingMs = Math.max(0, endTime - now);
       const totalSeconds = Math.floor(remainingMs / 1000);
       const ms = Math.floor((remainingMs % 1000) / 100);
-      const hours = Math.floor(totalSeconds / 3600);
       const minutes = Math.floor((totalSeconds % 3600) / 60);
       const seconds = totalSeconds % 60;
 
@@ -171,20 +173,22 @@
           countdownFullElement.style.color = '#000';
         }
 
-        // Chớp đỏ body khi còn 0.9s
         if (remainingMs <= 900 && remainingMs > 600) {
           const body = document.body;
-          if (getComputedStyle(body).backgroundColor === 'rgb(26, 26, 26)') {
+          const currentBg = getComputedStyle(body).backgroundColor;
+          if (!body.classList.contains('flashing') && currentBg.includes('26')) {
+            body.classList.add('flashing');
             body.style.backgroundColor = '#ff0000';
             setTimeout(() => {
               body.style.backgroundColor = '#1a1a1a';
+              body.classList.remove('flashing');
             }, 300);
           }
         }
 
-        // chỉ gọi updateTimer khi còn thời gian
         requestAnimationFrame(updateTimer);
       } else {
+        stopped = true;
         countdownMsElement.innerText = '0.0';
         countdownFullElement.innerText = '00:00';
         countdownMsElement.style.color = '#800020';
@@ -217,6 +221,5 @@
       z-index: 9999;
     }
   </style>
-
 </body>
 </html>
