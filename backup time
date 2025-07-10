@@ -94,7 +94,7 @@
     <div class="box-info" id="boxinfo">🎁 BOX: <span id="coins">--</span>/<span id="viewerRewardCount">--</span> <span class="flag" id="flag">🏳️</span> 👀 <span id="viewers">--</span></div>
     <div class="timer-grid">
       <div class="countdown-ms" id="countdownMs">--</div>
-      <div class="countdown-full" id="countdownFull">--:--:--</div>
+      <div class="countdown-full" id="countdownFull">--:--</div>
     </div>
     <button id="actionButton" onclick="openTikTokLive()">Canh giờ hoàng đạo</button>
   </div>
@@ -130,7 +130,7 @@
         divide: 50,
         viewers: 56,
         country: 'US',
-        end: Date.now() + 32500,
+        end: Date.now() + 10000,
         createAt: Date.now().toString()
       };
     }
@@ -141,6 +141,7 @@
     const viewers = parseInt(params.viewers, 10);
     const countryCode = params.country;
     const endTime = parseInt(params.end, 10);
+    
 
     document.getElementById('username').innerText = `@${username}`;
     document.getElementById('coins').innerText = coins;
@@ -149,11 +150,11 @@
     document.getElementById('flag').innerText = getFlag(countryCode);
 
     function updateTimer() {
+     
       const now = Date.now();
       const remainingMs = Math.max(0, endTime - now);
       const totalSeconds = Math.floor(remainingMs / 1000);
       const ms = Math.floor((remainingMs % 1000) / 100);
-      const hours = Math.floor(totalSeconds / 3600);
       const minutes = Math.floor((totalSeconds % 3600) / 60);
       const seconds = totalSeconds % 60;
 
@@ -161,20 +162,35 @@
       const countdownFullElement = document.getElementById('countdownFull');
 
       countdownMsElement.innerText = `${seconds}.${ms}`;
-      countdownFullElement.innerText = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      countdownFullElement.innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
       if (remainingMs > 0) {
-        if (totalSeconds < 6) {
+        if (totalSeconds < 4) {
           countdownMsElement.style.color = '#800020';
         } else {
           countdownMsElement.style.color = '#000';
           countdownFullElement.style.color = '#000';
         }
+
+        if (remainingMs <= 900 && remainingMs > 600) {
+          const body = document.body;
+          const currentBg = getComputedStyle(body).backgroundColor;
+          if (!body.classList.contains('flashing') && currentBg.includes('26')) {
+            body.classList.add('flashing');
+            body.style.backgroundColor = '#ff0000';
+            setTimeout(() => {
+              body.style.backgroundColor = '#1a1a1a';
+              body.classList.remove('flashing');
+            }, 300);
+          }
+        }
+
         requestAnimationFrame(updateTimer);
       } else {
+        
         countdownMsElement.innerText = '0.0';
-        countdownFullElement.innerText = '00:00:00';
-        countdownMsElement.style.color = '#800020'; // fix: giữ màu đỏ khi reload
+        countdownFullElement.innerText = '00:00';
+        countdownMsElement.style.color = '#800020';
         const btn = document.getElementById('actionButton');
         btn.innerText = 'Rương này đã được mở';
         btn.classList.add('disabled');
@@ -186,24 +202,23 @@
       }
     }
 
-   requestAnimationFrame(updateTimer);
-</script>
+    requestAnimationFrame(updateTimer);
+  </script>
 
-<div id="footerContact">Telegram & Facebook: JimmyHoang68</div>
+  <div id="footerContact">Telegram & Facebook: JimmyHoang68</div>
 
-<style>
-  #footerContact {
-    text-align: center;
-    color: white;
-    font-size: 13px;
-    padding: 10px 0;
-    width: 100%;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    z-index: 9999;
-  }
-</style>
-
+  <style>
+    #footerContact {
+      text-align: center;
+      color: white;
+      font-size: 13px;
+      padding: 10px 0;
+      width: 100%;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      z-index: 9999;
+    }
+  </style>
 </body>
 </html>
