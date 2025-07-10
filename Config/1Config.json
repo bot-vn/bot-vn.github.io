@@ -1,4 +1,4 @@
- {
+{
   "bot": {
     "sendStartupMessage": false,
     "webhookPollingInterval": 10000,
@@ -14,7 +14,7 @@
       "minTime": 81
     },
     "BigBox": {
-      "minCoins": 800,
+      "minCoins": 1000,
       "minRate": 1,
       "minTime": 120
     },
