@@ -94,7 +94,7 @@
     <div class="box-info" id="boxinfo">🎁 BOX: <span id="coins">--</span>/<span id="viewerRewardCount">--</span> <span class="flag" id="flag">🏳️</span> 👀 <span id="viewers">--</span></div>
     <div class="timer-grid">
       <div class="countdown-ms" id="countdownMs">--</div>
-      <div class="countdown-full" id="countdownFull">--:--</div>
+      <div class="countdown-full" id="countdownFull">--:--:--</div>
     </div>
     <button id="actionButton" onclick="openTikTokLive()">Canh giờ hoàng đạo</button>
   </div>
@@ -130,7 +130,7 @@
         divide: 50,
         viewers: 56,
         country: 'US',
-        end: Date.now() + 10000,
+        end: Date.now() + 32500,
         createAt: Date.now().toString()
       };
     }
@@ -161,32 +161,20 @@
       const countdownFullElement = document.getElementById('countdownFull');
 
       countdownMsElement.innerText = `${seconds}.${ms}`;
-      countdownFullElement.innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      countdownFullElement.innerText = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
       if (remainingMs > 0) {
-        if (totalSeconds < 4) {
+        if (totalSeconds < 6) {
           countdownMsElement.style.color = '#800020';
         } else {
           countdownMsElement.style.color = '#000';
           countdownFullElement.style.color = '#000';
         }
-
-        // Chớp đỏ body khi còn 0.9s
-        if (remainingMs <= 900 && remainingMs > 600) {
-          const body = document.body;
-          if (getComputedStyle(body).backgroundColor === 'rgb(26, 26, 26)') {
-            body.style.backgroundColor = '#ff0000';
-            setTimeout(() => {
-              body.style.backgroundColor = '#1a1a1a';
-            }, 300);
-          }
-        }
-
         requestAnimationFrame(updateTimer);
       } else {
         countdownMsElement.innerText = '0.0';
-        countdownFullElement.innerText = '00:00';
-        countdownMsElement.style.color = '#800020';
+        countdownFullElement.innerText = '00:00:00';
+        countdownMsElement.style.color = '#800020'; // fix: giữ màu đỏ khi reload
         const btn = document.getElementById('actionButton');
         btn.innerText = 'Rương này đã được mở';
         btn.classList.add('disabled');
@@ -198,24 +186,24 @@
       }
     }
 
-    requestAnimationFrame(updateTimer);
-  </script>
+   requestAnimationFrame(updateTimer);
+</script>
 
-  <div id="footerContact">Telegram & Facebook: JimmyHoang68</div>
+<div id="footerContact">Telegram & Facebook: JimmyHoang68</div>
 
-  <style>
-    #footerContact {
-      text-align: center;
-      color: white;
-      font-size: 13px;
-      padding: 10px 0;
-      width: 100%;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      z-index: 9999;
-    }
-  </style>
+<style>
+  #footerContact {
+    text-align: center;
+    color: white;
+    font-size: 13px;
+    padding: 10px 0;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 9999;
+  }
+</style>
 
 </body>
 </html>
