@@ -144,7 +144,7 @@
     const viewers = parseInt(params.viewers, 10);
     const countryCode = params.country;
     const endTime = parseInt(params.end, 10);
-    const createAt = parseInt(params.createAt || Date.now(), 10);
+    const createAt = Number(params.createAt) || Date.now();
 const timeOffset = createAt - Date.now();
     
 
