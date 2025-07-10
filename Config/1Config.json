@@ -49,7 +49,7 @@
     "logInterval": 10000,
     "logIntervalOffset": 500,
     "decodeProtobuf": false,
-    "countryCodeDelay": 1000
+    "countryCodeDelay": 500
   },
   "file": {
     "state": "./Data/ResumeData.json",
