@@ -141,7 +141,7 @@
     const viewers = parseInt(params.viewers, 10);
     const countryCode = params.country;
     const endTime = parseInt(params.end, 10);
-    let stopped = false;
+    
 
     document.getElementById('username').innerText = `@${username}`;
     document.getElementById('coins').innerText = coins;
@@ -150,8 +150,7 @@
     document.getElementById('flag').innerText = getFlag(countryCode);
 
     function updateTimer() {
-      if (stopped) return;
-
+     
       const now = Date.now();
       const remainingMs = Math.max(0, endTime - now);
       const totalSeconds = Math.floor(remainingMs / 1000);
@@ -188,7 +187,7 @@
 
         requestAnimationFrame(updateTimer);
       } else {
-        stopped = true;
+        
         countdownMsElement.innerText = '0.0';
         countdownFullElement.innerText = '00:00';
         countdownMsElement.style.color = '#800020';
