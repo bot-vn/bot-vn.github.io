@@ -2,6 +2,9 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>Time Interface</title>
   <style>
@@ -141,6 +144,8 @@
     const viewers = parseInt(params.viewers, 10);
     const countryCode = params.country;
     const endTime = parseInt(params.end, 10);
+    const createAt = parseInt(params.createAt || Date.now(), 10);
+const timeOffset = createAt - Date.now();
     
 
     document.getElementById('username').innerText = `@${username}`;
@@ -151,7 +156,7 @@
 
     function updateTimer() {
      
-      const now = Date.now();
+      const now = Date.now() + timeOffset;
       const remainingMs = Math.max(0, endTime - now);
       const totalSeconds = Math.floor(remainingMs / 1000);
       const ms = Math.floor((remainingMs % 1000) / 100);
