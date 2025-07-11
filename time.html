@@ -21,6 +21,7 @@
     .container {
       display: inline-block;
       text-align: center;
+position: relative;
       background-color: white;
       padding: 24px;
       border: 4px solid #000000;
@@ -86,10 +87,40 @@
       50% { opacity: 0.5; }
       100% { opacity: 1; }
     }
+.border-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 999;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.border-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.border-path {
+  fill: none;
+  stroke: limegreen;
+  stroke-width: 10;
+  stroke-dasharray: 1320;
+  stroke-dashoffset: 1320;
+  transition: stroke-dashoffset 0.05s linear;
+}
   </style>
 </head>
 <body>
   <div class="container">
+<div class="border-overlay">
+  <svg class="border-svg" viewBox="0 0 300 360" preserveAspectRatio="none">
+    <rect class="border-path" x="0" y="0" rx="12" ry="12" width="300" height="360" />
+  </svg>
+</div>
     <h2 class="username" id="username">@username</h2>
     <div class="box-info" id="boxinfo">🎁 BOX: <span id="coins">--</span>/<span id="viewerRewardCount">--</span> <span class="flag" id="flag">🏳️</span> 👀 <span id="viewers">--</span></div>
     <div class="timer-grid">
@@ -98,6 +129,29 @@
     </div>
     <button id="actionButton" onclick="openTikTokLive()">Canh giờ hoàng đạo</button>
   </div>
+
+
+<script>
+  const path = document.querySelector('.border-path');
+path.style.strokeDashoffset = 1320;
+  let start = null;
+  let duration = 3000;
+
+  function animateBorder(timestamp) {
+    if (!start) start = timestamp;
+    let progress = (timestamp - start) / duration;
+    if (progress > 1) progress = 1;
+
+    path.style.strokeDashoffset = 1320 - 1320 * progress;
+
+    if (progress < 1) {
+      requestAnimationFrame(animateBorder);
+    } else {
+      path.style.stroke = 'transparent';
+    }
+  }
+</script>
+
   <script>
     function getParam(name) {
       const urlParams = new URLSearchParams(window.location.search);
@@ -130,7 +184,7 @@
         divide: 50,
         viewers: 56,
         country: 'US',
-        end: Date.now() + 10000,
+        end: Date.now() + 6000,
         createAt: Date.now().toString()
       };
     }
@@ -165,6 +219,10 @@
       countdownFullElement.innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
       if (remainingMs > 0) {
+if (!window.borderStarted && remainingMs <= 3000) {
+  window.borderStarted = true;
+  requestAnimationFrame(animateBorder);
+}
         if (totalSeconds < 4) {
           countdownMsElement.style.color = '#800020';
         } else {
