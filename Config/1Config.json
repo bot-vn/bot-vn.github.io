@@ -23,7 +23,7 @@
   },
   "websocket": {
     "scanDelay": 10000,
-    "enableScanning": true,
+    "enableScanning": false,
     "Bot_1": {
       "batchSize": 7,
       "maxRounds": 0,
