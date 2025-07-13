@@ -4,8 +4,8 @@
     "webhookPollingInterval": 10000,
     "restartCodeAll": 0,
     "restartCodeBot1": 1,
-    "restartCodeBot2": 2,
-    "restartCodeBot3": 3
+    "restartCodeBot2": 0,
+    "restartCodeBot3": 0
   },
   "telegram": {
     "SmallBox": {
