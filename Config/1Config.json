@@ -24,6 +24,7 @@
   "websocket": {
     "scanDelay": 15000,
     "enableScanning": true,
+    "enableAutoScanDelay": true,
     "Bot_1": {
       "batchSize": 5,
       "maxRounds": 0,
