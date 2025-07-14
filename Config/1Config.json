@@ -22,7 +22,7 @@
     "idolIds": "jimmyhoang99"
   },
   "websocket": {
-    "scanDelay": 1000,
+    "scanDelay": 15000,
     "enableScanning": true,
     "Bot_1": {
       "batchSize": 5,
@@ -35,12 +35,11 @@
       "restartAfterHours": 0
     },
     "Bot_3": {
-      "batchSize": 1,
+      "batchSize": 5,
       "maxRounds": 0,
       "restartAfterHours": 0
     },
     "trackingInterval": 1000,
-    "maxLoggedMessages": 2000,
     "maxRamThreshold": 1,
     "resumeRamThreshold": 0.95,
     "pauseDurationMS": 60000,
@@ -48,11 +47,9 @@
     "maxEnvelopes": 10000,
     "logInterval": 10000,
     "logIntervalOffset": 500,
-    "decodeProtobuf": false,
     "countryCodeDelay": 500
   },
   "file": {
-    "state": "./Data/ResumeData.json",
     "Bot_1_List": "./Data/2UserList.txt",
     "Bot_2_List": "./Data/2UserList.txt",
     "Bot_3_List": "./Data/3NewList.txt",
