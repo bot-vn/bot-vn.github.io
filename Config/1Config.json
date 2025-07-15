@@ -22,7 +22,7 @@
     "idolIds": "jimmyhoang99"
   },
   "websocket": {
-    "scanDelay": 12000,
+    "scanDelay": 13000,
     "enableScanning": true,
     "enableAutoScanDelay": true,
     "Bot_1": {
