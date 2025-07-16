@@ -47,7 +47,7 @@
     "maxEnvelopes": 10000,
     "logInterval": 10000,
     "logIntervalOffset": 500,
-    "countryCodeDelay": 500
+    "countryCodeDelay": 1000
   },
   "file": {
     "Bot_1_List": "./Data/2UserList.txt",
